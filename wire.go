@@ -3,6 +3,7 @@
 package main
 
 import (
+	"api/api"
 	"api/app"
 	"api/config"
 
@@ -12,6 +13,7 @@ import (
 var appSet = wire.NewSet(
 	app.NewEngine,
 	config.NewConfig,
+	api.NewHelloAPI,
 )
 
 func InitializeApp() (*app.App, error) {

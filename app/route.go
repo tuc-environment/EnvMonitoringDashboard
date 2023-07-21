@@ -1,6 +1,7 @@
 package app
 
 import (
+	"api/api"
 	"api/config"
 	"time"
 
@@ -11,8 +12,9 @@ import (
 
 func NewEngine(
 	c *config.Config,
+	helloAPI *api.HelloAPI,
 ) (*gin.Engine, error) {
-	gin.SetMode(gin.ReleaseMode)
+	// gin.SetMode(gin.ReleaseMode)
 	e := gin.Default()
 	e.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true,
@@ -22,6 +24,8 @@ func NewEngine(
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
+
+	e.GET("/", helloAPI.Ping)
 
 	return e, nil
 }
