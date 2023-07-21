@@ -6,6 +6,7 @@ import (
 	"api/api"
 	"api/app"
 	"api/config"
+	"api/db"
 
 	"github.com/google/wire"
 )
@@ -13,6 +14,8 @@ import (
 var appSet = wire.NewSet(
 	app.NewEngine,
 	config.NewConfig,
+	db.NewDB,
+	db.NewService,
 	api.NewHelloAPI,
 )
 
