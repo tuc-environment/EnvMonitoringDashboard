@@ -45,6 +45,34 @@ const docTemplate = `{
                 }
             }
         },
+        "/api": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "api"
+                ],
+                "summary": "Get data",
+                "responses": {
+                    "200": {
+                        "description": "Return data"
+                    },
+                    "401": {
+                        "description": "Token is incorrect"
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "Login to an account with username and password",

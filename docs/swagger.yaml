@@ -46,6 +46,23 @@ paths:
       summary: Get account information
       tags:
       - accounts
+  /api:
+    get:
+      consumes:
+      - application/json
+      description: Get data
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Return data
+        "401":
+          description: Token is incorrect
+      security:
+      - ApiKeyAuth: []
+      summary: Get data
+      tags:
+      - api
   /login:
     post:
       consumes:

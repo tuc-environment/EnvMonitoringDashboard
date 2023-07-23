@@ -9,6 +9,19 @@ func NewDataAPI() *DataAPI {
 	return &DataAPI{}
 }
 
+// Basic Data godoc
+//
+//	@Summary		Get data
+//	@Description	Get data
+//	@Tags			api
+//	@Accept			json
+//	@Produce		json
+//	@Security		ApiKeyAuth
+//	@Success		200	"Return data"
+//	@Failure		401	"Token is incorrect"
+//	@Router			/api [get]
 func (api *DataAPI) Ping(g *gin.Context) {
-	g.String(200, "pong")
+	c := WrapContext(g)
+
+	c.OK("pong")
 }
