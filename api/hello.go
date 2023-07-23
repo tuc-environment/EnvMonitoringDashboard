@@ -2,17 +2,17 @@ package api
 
 import (
 	"api/config"
-	"api/db"
+	"api/service"
 
 	"github.com/gin-gonic/gin"
 )
 
 type HelloAPI struct {
-	c *config.Config
-	s *db.Service
+	config         *config.Config
+	accountService *service.AccountService
 }
 
-func NewHelloAPI(c *config.Config, s *db.Service) *HelloAPI {
+func NewHelloAPI(c *config.Config, s *service.AccountService) *HelloAPI {
 	return &HelloAPI{c, s}
 }
 

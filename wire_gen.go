@@ -10,8 +10,9 @@ import (
 	"api/api"
 	"api/app"
 	"api/config"
-	"api/db"
 	"api/logger"
+	"api/service"
+	"api/store"
 	"github.com/google/wire"
 )
 
@@ -23,12 +24,12 @@ func InitializeApp() (*app.App, error) {
 	if err != nil {
 		return nil, err
 	}
-	dbDB, err := db.NewDB(configConfig)
+	db, err := store.NewDB(configConfig)
 	if err != nil {
 		return nil, err
 	}
-	service := db.NewService(dbDB)
-	helloAPI := api.NewHelloAPI(configConfig, service)
+	accountService := service.NewAccountService(db)
+	helloAPI := api.NewHelloAPI(configConfig, accountService)
 	engine, err := app.NewEngine(configConfig, loggerLogger, helloAPI)
 	if err != nil {
 		return nil, err
@@ -39,4 +40,4 @@ func InitializeApp() (*app.App, error) {
 
 // wire.go:
 
-var appSet = wire.NewSet(app.NewEngine, config.NewConfig, logger.NewLogger, db.NewDB, db.NewService, api.NewHelloAPI)
+var appSet = wire.NewSet(app.NewEngine, config.NewConfig, logger.NewLogger, store.NewDB, service.NewAccountService, api.NewHelloAPI)
