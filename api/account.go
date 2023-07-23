@@ -18,6 +18,27 @@ func NewAccountAPI(c *config.Config, l *logger.Logger, s *service.AccountService
 	return &AccountAPI{c, l, s}
 }
 
+func (api *AccountAPI) Register(g *gin.Context) {
+	c := WrapContext(g)
+
+	body := struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}{}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.BadRequest(err)
+		return
+	}
+
+	account, err := api.accountService.CreateAccount(body.Username, body.Password)
+	if err != nil {
+		c.BadRequest(err)
+		return
+	}
+
+	c.OK(account)
+}
+
 func (api *AccountAPI) Ping(g *gin.Context) {
 	c := WrapContext(g)
 	c.OK("pong")

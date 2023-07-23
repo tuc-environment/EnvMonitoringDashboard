@@ -28,7 +28,7 @@ func InitializeApp() (*app.App, error) {
 	if err != nil {
 		return nil, err
 	}
-	accountService := service.NewAccountService(dbClient, loggerLogger)
+	accountService := service.NewAccountService(configConfig, dbClient, loggerLogger)
 	accountAPI := api.NewAccountAPI(configConfig, loggerLogger, accountService)
 	engine, err := app.NewEngine(configConfig, loggerLogger, accountAPI)
 	if err != nil {
