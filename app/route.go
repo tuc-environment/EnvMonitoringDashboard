@@ -14,7 +14,7 @@ import (
 func NewEngine(
 	c *config.Config,
 	log *logger.Logger,
-	helloAPI *api.HelloAPI,
+	accountAPI *api.AccountAPI,
 ) (*gin.Engine, error) {
 	gin.SetMode(gin.ReleaseMode)
 	e := gin.Default()
@@ -29,7 +29,7 @@ func NewEngine(
 		MaxAge:           12 * time.Hour,
 	}))
 
-	e.GET("/", helloAPI.Ping)
+	e.GET("/", accountAPI.Ping)
 
 	return e, nil
 }
