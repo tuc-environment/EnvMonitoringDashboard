@@ -8,6 +8,11 @@ import (
 
 	"github.com/gin-contrib/cors"
 
+	_ "api/docs"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,6 +33,9 @@ func NewEngine(
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
+
+	// append docs
+	e.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	e.GET("/", accountAPI.Ping)
 

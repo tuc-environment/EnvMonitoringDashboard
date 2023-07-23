@@ -1,0 +1,17 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "天津商业大学环境监测系统API文档",
+        "title": "天津商业大学环境监测系统API",
+        "termsOfService": "https://www.tjcu.edu.cn/",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "www.tjcu.edu.cn",
+    "basePath": "/",
+    "paths": {},
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
+    }
+}
