@@ -8,10 +8,13 @@ import (
 )
 
 type Config struct {
+	PORT int
 }
 
 func NewConfig() *Config {
-	return &Config{}
+	return &Config{
+		PORT: GetenvInt("PORT", 8080),
+	}
 }
 
 func GetenvString(key string, defaults string) string {

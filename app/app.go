@@ -2,6 +2,7 @@ package app
 
 import (
 	"api/config"
+	"api/logger"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,11 +10,13 @@ import (
 type App struct {
 	*gin.Engine
 	*config.Config
+	*logger.Logger
 }
 
 func NewApp(
 	e *gin.Engine,
 	c *config.Config,
+	l *logger.Logger,
 ) *App {
-	return &App{e, c}
+	return &App{e, c, l}
 }

@@ -3,6 +3,7 @@ package app
 import (
 	"api/api"
 	"api/config"
+	"api/logger"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -12,10 +13,13 @@ import (
 
 func NewEngine(
 	c *config.Config,
+	log *logger.Logger,
 	helloAPI *api.HelloAPI,
 ) (*gin.Engine, error) {
-	// gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 	e := gin.Default()
+	e.Use(NewLoggerMiddleware(log), gin.Recovery())
+
 	e.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true,
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},

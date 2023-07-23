@@ -7,15 +7,20 @@ import (
 	"api/app"
 	"api/config"
 	"api/db"
+	"api/logger"
 
 	"github.com/google/wire"
 )
 
 var appSet = wire.NewSet(
 	app.NewEngine,
+	// config and logger
 	config.NewConfig,
+	logger.NewLogger,
+	// store
 	db.NewDB,
 	db.NewService,
+	// api
 	api.NewHelloAPI,
 )
 
