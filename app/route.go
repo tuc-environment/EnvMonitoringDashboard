@@ -35,8 +35,9 @@ func NewEngine(
 	}))
 
 	e.POST("/register", accountAPI.Register)
+	e.POST("/login", accountAPI.Login)
 
 	// append docs
-	e.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	e.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	return e, nil
 }

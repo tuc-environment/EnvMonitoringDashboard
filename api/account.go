@@ -47,3 +47,33 @@ func (api *AccountAPI) Register(g *gin.Context) {
 
 	c.OK(account)
 }
+
+// Login godoc
+//
+// @Summary      Login to an account
+// @Description  Login to an account with username and password
+// @Tags         accounts
+// @Accept       json
+// @Produce      json
+// @Param        account body args.AccountLoginArgs true "username and password"
+// @Success      200 "Login success, return account information"
+// @Failure      400 "Username or password is missing"
+// @Failure      401 "Username or password is incorrect"
+// @Router       /login [post]
+func (api *AccountAPI) Login(g *gin.Context) {
+	c := WrapContext(g)
+
+	body := args.AccountLoginArgs{}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.BadRequest(err)
+		return
+	}
+
+	account, err := api.accountService.GetAccount(body.Username, body.Password)
+	if err != nil {
+		c.BadRequest(err)
+		return
+	}
+
+	c.OK(account)
+}

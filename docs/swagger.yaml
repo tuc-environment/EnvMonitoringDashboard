@@ -1,10 +1,21 @@
 basePath: /
 definitions:
+  args.AccountLoginArgs:
+    properties:
+      password:
+        example: "123456"
+        type: string
+      username:
+        example: bob
+        type: string
+    type: object
   args.AccountRegisterArgs:
     properties:
       password:
+        example: "123456"
         type: string
       username:
+        example: bob
         type: string
     type: object
 externalDocs:
@@ -18,6 +29,30 @@ info:
   title: 天津商业大学环境监测系统API
   version: "1.0"
 paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login to an account with username and password
+      parameters:
+      - description: username and password
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/args.AccountLoginArgs'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login success, return account information
+        "400":
+          description: Username or password is missing
+        "401":
+          description: Username or password is incorrect
+      summary: Login to an account
+      tags:
+      - accounts
   /register:
     post:
       consumes:

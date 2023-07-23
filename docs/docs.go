@@ -17,6 +17,43 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/login": {
+            "post": {
+                "description": "Login to an account with username and password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Login to an account",
+                "parameters": [
+                    {
+                        "description": "username and password",
+                        "name": "account",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/args.AccountLoginArgs"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login success, return account information"
+                    },
+                    "400": {
+                        "description": "Username or password is missing"
+                    },
+                    "401": {
+                        "description": "Username or password is incorrect"
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "description": "Register a new account with username and password",
@@ -53,14 +90,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "args.AccountLoginArgs": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "bob"
+                }
+            }
+        },
         "args.AccountRegisterArgs": {
             "type": "object",
             "properties": {
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "123456"
                 },
                 "username": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "bob"
                 }
             }
         }
