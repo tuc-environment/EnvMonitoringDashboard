@@ -19,7 +19,7 @@ var appSet = wire.NewSet(
 	config.NewConfig,
 	logger.NewLogger,
 	// store
-	store.NewDB,
+	store.NewDBClient,
 	// service
 	service.NewAccountService,
 	// api

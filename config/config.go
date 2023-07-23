@@ -9,11 +9,17 @@ import (
 
 type Config struct {
 	PORT int
+
+	DB_DRIVER            string
+	DB_CONNECTION_STRING string
 }
 
 func NewConfig() *Config {
 	return &Config{
 		PORT: GetenvInt("PORT", 8080),
+
+		DB_DRIVER:            GetenvString("DB_DRIVER", "sqlite"),
+		DB_CONNECTION_STRING: GetenvString("DB_CONNECTION_STRING", "db.sqlite"),
 	}
 }
 
