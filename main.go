@@ -12,9 +12,9 @@ import (
 //	@host		localhost:8080
 //	@BasePath	/
 
-// @securityDefinitions.apikey  ApiKeyAuth
-// @in header
-// @name Authorization
+//	@securityDefinitions.apikey	ApiKeyAuth
+//	@in							header
+//	@name						Authorization
 
 // @externalDocs.description	OpenAPI
 // @externalDocs.url			https://swagger.io/resources/open-api/

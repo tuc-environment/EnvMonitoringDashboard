@@ -20,6 +20,7 @@ wire:
 
 docs:
 	swag init
+	swag fmt
 
 clean:
 	rm -rf api.exe

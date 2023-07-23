@@ -29,6 +29,23 @@ info:
   title: 天津商业大学环境监测系统API
   version: "1.0"
 paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Get account information with token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Return account information
+        "401":
+          description: Token is incorrect
+      security:
+      - ApiKeyAuth: []
+      summary: Get account information
+      tags:
+      - accounts
   /login:
     post:
       consumes:

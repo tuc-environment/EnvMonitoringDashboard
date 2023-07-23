@@ -20,6 +20,7 @@ func NewEngine(
 	c *config.Config,
 	log *logger.Logger,
 	accountAPI *api.AccountAPI,
+	dataAPI *api.DataAPI,
 ) (*gin.Engine, error) {
 	gin.SetMode(gin.ReleaseMode)
 	e := gin.New()
@@ -36,6 +37,10 @@ func NewEngine(
 
 	e.POST("/register", accountAPI.Register)
 	e.POST("/login", accountAPI.Login)
+	e.GET("/", accountAPI.AuthMiddleware, accountAPI.GetAccount)
+
+	e.Group("/api", accountAPI.AuthMiddleware).
+		GET("/", dataAPI.Ping)
 
 	// append docs
 	e.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

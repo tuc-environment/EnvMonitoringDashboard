@@ -17,6 +17,34 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get account information with token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Get account information",
+                "responses": {
+                    "200": {
+                        "description": "Return account information"
+                    },
+                    "401": {
+                        "description": "Token is incorrect"
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "Login to an account with username and password",

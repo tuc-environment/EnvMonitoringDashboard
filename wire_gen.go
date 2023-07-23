@@ -30,7 +30,8 @@ func InitializeApp() (*app.App, error) {
 	}
 	accountService := service.NewAccountService(configConfig, dbClient, loggerLogger)
 	accountAPI := api.NewAccountAPI(configConfig, loggerLogger, accountService)
-	engine, err := app.NewEngine(configConfig, loggerLogger, accountAPI)
+	dataAPI := api.NewDataAPI()
+	engine, err := app.NewEngine(configConfig, loggerLogger, accountAPI, dataAPI)
 	if err != nil {
 		return nil, err
 	}
@@ -40,4 +41,4 @@ func InitializeApp() (*app.App, error) {
 
 // wire.go:
 
-var appSet = wire.NewSet(app.NewEngine, config.NewConfig, logger.NewLogger, store.NewDBClient, service.NewAccountService, api.NewAccountAPI)
+var appSet = wire.NewSet(app.NewEngine, config.NewConfig, logger.NewLogger, store.NewDBClient, service.NewAccountService, api.NewAccountAPI, api.NewDataAPI)

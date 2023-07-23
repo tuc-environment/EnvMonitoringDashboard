@@ -24,6 +24,7 @@ var appSet = wire.NewSet(
 	service.NewAccountService,
 	// api
 	api.NewAccountAPI,
+	api.NewDataAPI,
 )
 
 func InitializeApp() (*app.App, error) {
