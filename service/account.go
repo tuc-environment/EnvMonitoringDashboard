@@ -14,9 +14,9 @@ import (
 
 type Account struct {
 	gorm.Model
-	Username string `gorm:"uniqueIndex"`
-	Password string
-	Token    string
+	Username string `json:"username" gorm:"unique"`
+	Password string `json:"password"`
+	Token    string `json:"token" gorm:"unique"`
 }
 
 type AccountService struct {
@@ -30,7 +30,7 @@ func NewAccountService(c *config.Config, db *store.DBClient, logger *logger.Logg
 	defer log.Sync()
 
 	db.AutoMigrate(&Account{})
-	log.Info("database table 'accounts' migrated")
+	log.Infoln("database table 'accounts' migrated")
 	return &AccountService{c, db, logger}
 }
 
@@ -68,7 +68,7 @@ func (s *AccountService) CreateAccount(username, password string) (Account, erro
 		log.Error(err)
 		return Account{}, err
 	}
-	log.Infof("account %s created", username)
+	log.Infoln("account %s created", username)
 	return account, nil
 }
 
@@ -82,7 +82,7 @@ func (s *AccountService) GetAccount(username, password string) (Account, error) 
 		log.Error(err)
 		return Account{}, err
 	}
-	log.Infof("account %s retrieved", username)
+	log.Infoln("account %s retrieved", username)
 	return account, nil
 }
 
@@ -96,6 +96,6 @@ func (s *AccountService) GetAccountWithToken(token string) (Account, error) {
 		log.Error(err)
 		return Account{}, err
 	}
-	log.Infof("account %s retrieved", account.Username)
+	log.Infoln("account %s retrieved", account.Username)
 	return account, nil
 }

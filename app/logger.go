@@ -1,6 +1,7 @@
 package app
 
 import (
+	"api/config"
 	"api/logger"
 	"fmt"
 	"time"
@@ -8,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewLoggerMiddleware(logger *logger.Logger) gin.HandlerFunc {
+func NewLoggerMiddleware(c *config.Config, logger *logger.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		log := logger.Sugar()
 		defer log.Sync()

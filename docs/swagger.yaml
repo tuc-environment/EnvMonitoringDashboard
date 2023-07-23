@@ -2,12 +2,28 @@ basePath: /
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
-host: www.tjcu.edu.cn
+host: localhost:8080
 info:
   contact: {}
   description: 天津商业大学环境监测系统API文档
   termsOfService: https://www.tjcu.edu.cn/
   title: 天津商业大学环境监测系统API
   version: "1.0"
-paths: {}
+paths:
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new account with username and password
+      produces:
+      - application/json
+      responses: {}
+      summary: Register a new account
+      tags:
+      - accounts
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

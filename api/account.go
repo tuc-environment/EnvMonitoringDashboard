@@ -18,6 +18,14 @@ func NewAccountAPI(c *config.Config, l *logger.Logger, s *service.AccountService
 	return &AccountAPI{c, l, s}
 }
 
+// Register godoc
+//
+// @Summary      Register a new account
+// @Description  Register a new account with username and password
+// @Tags         accounts
+// @Accept       json
+// @Produce      json
+// @Router       /register [post]
 func (api *AccountAPI) Register(g *gin.Context) {
 	c := WrapContext(g)
 

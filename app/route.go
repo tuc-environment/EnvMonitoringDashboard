@@ -22,8 +22,8 @@ func NewEngine(
 	accountAPI *api.AccountAPI,
 ) (*gin.Engine, error) {
 	gin.SetMode(gin.ReleaseMode)
-	e := gin.Default()
-	e.Use(NewLoggerMiddleware(log), gin.Recovery())
+	e := gin.New()
+	e.Use(NewLoggerMiddleware(c, log), gin.Recovery())
 
 	e.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true,
@@ -34,10 +34,9 @@ func NewEngine(
 		MaxAge:           12 * time.Hour,
 	}))
 
+	e.POST("/register", accountAPI.Register)
+
 	// append docs
-	e.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-	e.GET("/", accountAPI.Ping)
-
+	e.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	return e, nil
 }
