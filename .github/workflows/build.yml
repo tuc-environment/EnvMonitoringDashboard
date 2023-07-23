@@ -11,6 +11,5 @@ jobs:
           go-version: ">=1.18.0"
       - name: Build binary
         run: |
-          go install github.com/google/wire/cmd/wire@latest
-          make wire
+          make deps
           make

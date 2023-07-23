@@ -10,17 +10,24 @@ type Context struct {
 	*gin.Context
 }
 
+type ResponseBody struct {
+	Code    int
+	Status  string
+	Error   *string
+	Payload interface{}
+}
+
 func WrapContext(c *gin.Context) *Context {
 	return &Context{c}
 }
 
-func (c *Context) makeResponse(code int, err error, payload interface{}) gin.H {
-	return gin.H{
-		"code":    code,
-		"status":  http.StatusText(code),
-		"error":   nil,
-		"payload": payload,
+func (c *Context) makeResponse(code int, err error, payload interface{}) ResponseBody {
+	var errMsg *string = nil
+	if err != nil {
+		msg := err.Error()
+		errMsg = &msg
 	}
+	return ResponseBody{code, http.StatusText(code), errMsg, payload}
 }
 
 func (c *Context) InternalServerError(err error) {

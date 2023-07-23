@@ -14,9 +14,9 @@ import (
 
 type Account struct {
 	gorm.Model
-	Username string `json:"username" gorm:"unique"`
-	Password string `json:"password"`
-	Token    string `json:"token" gorm:"unique"`
+	Username string `gorm:"unique"`
+	Password string
+	Token    string `gorm:"unique"`
 }
 
 type AccountService struct {

@@ -30,7 +30,38 @@ const docTemplate = `{
                     "accounts"
                 ],
                 "summary": "Register a new account",
-                "responses": {}
+                "parameters": [
+                    {
+                        "description": "username and password",
+                        "name": "account",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/args.AccountRegisterArgs"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account created, return account information"
+                    },
+                    "400": {
+                        "description": "Username or password is missing"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "args.AccountRegisterArgs": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
             }
         }
     },

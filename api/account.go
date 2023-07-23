@@ -1,6 +1,7 @@
 package api
 
 import (
+	"api/api/args"
 	"api/config"
 	"api/logger"
 	"api/service"
@@ -25,14 +26,14 @@ func NewAccountAPI(c *config.Config, l *logger.Logger, s *service.AccountService
 // @Tags         accounts
 // @Accept       json
 // @Produce      json
+// @Param        account body args.AccountRegisterArgs true "username and password"
+// @Success      200 "Account created, return account information"
+// @Failure      400 "Username or password is missing"
 // @Router       /register [post]
 func (api *AccountAPI) Register(g *gin.Context) {
 	c := WrapContext(g)
 
-	body := struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}{}
+	body := args.AccountRegisterArgs{}
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.BadRequest(err)
 		return
@@ -45,9 +46,4 @@ func (api *AccountAPI) Register(g *gin.Context) {
 	}
 
 	c.OK(account)
-}
-
-func (api *AccountAPI) Ping(g *gin.Context) {
-	c := WrapContext(g)
-	c.OK("pong")
 }

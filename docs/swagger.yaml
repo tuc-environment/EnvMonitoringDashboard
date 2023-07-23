@@ -1,4 +1,12 @@
 basePath: /
+definitions:
+  args.AccountRegisterArgs:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -15,9 +23,20 @@ paths:
       consumes:
       - application/json
       description: Register a new account with username and password
+      parameters:
+      - description: username and password
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/args.AccountRegisterArgs'
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: Account created, return account information
+        "400":
+          description: Username or password is missing
       summary: Register a new account
       tags:
       - accounts
