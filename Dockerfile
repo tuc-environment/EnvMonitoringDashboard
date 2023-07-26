@@ -2,7 +2,7 @@ FROM golang
 
 WORKDIR /app
 COPY . /app
-RUN make
+RUN go build -o api.exe
 
 EXPOSE 8080
 
