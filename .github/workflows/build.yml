@@ -12,7 +12,7 @@ jobs:
       - name: Build binary
         run: |
           make deps
-          make
+          make linux
       - name: Deploy to Server
         uses: mai-space/action-sshpass-rsync@v1
         with:
@@ -22,7 +22,5 @@ jobs:
           pass: ${{ secrets.DEPLOY_PASS }}
           local: api.exe
           remote: /root/api/api.exe
-          runBeforeDeployment: |
-            cd somewhere/
           runAfterDeployment: |
             cd ../somewhere/back/to

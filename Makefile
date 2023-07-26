@@ -9,10 +9,9 @@ deps:
 build:
 	go build -o api.exe
 
-aliyunfun:
+linux:
 	make wire docs fmt
-	CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -tags lambda -a -ldflags '-extldflags "-static"' -o main
-	zip main.zip main
+	CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -tags lambda -a -ldflags '-extldflags "-static"' -o api.exe
 
 watch:
 	air --build.cmd "make" --build.bin "./api.exe"
@@ -30,4 +29,4 @@ docs:
 clean:
 	rm -rf api.exe
 
-.PHONY: all deps build watch fmt wire docs clean
+.PHONY: all deps build linux watch fmt wire docs clean
