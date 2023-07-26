@@ -22,5 +22,7 @@ jobs:
           pass: ${{ secrets.DEPLOY_PASS }}
           local: api.exe
           remote: /root/api/api.exe
+          runBeforeDeployment: |
+            docker stop api
           runAfterDeployment: |
-            cd ../somewhere/back/to
+            docker start api
