@@ -22,9 +22,11 @@ var appSet = wire.NewSet(
 	store.NewDBClient,
 	// service
 	service.NewAccountService,
+	service.NewStationService,
 	// api
 	api.NewAccountAPI,
 	api.NewDataAPI,
+	api.NewStationAPI,
 )
 
 func InitializeApp() (*app.App, error) {

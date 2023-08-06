@@ -8,15 +8,13 @@ import (
 	"encoding/hex"
 	"fmt"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type Account struct {
-	gorm.Model
-	Username string `gorm:"unique"`
-	Password string
-	Token    string `gorm:"unique"`
+	Base
+	Username string `gorm:"unique" json:"username"`
+	Password string `json:"password"`
+	Token    string `gorm:"unique" json:"token"`
 }
 
 type AccountService struct {

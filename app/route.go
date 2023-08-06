@@ -20,6 +20,7 @@ func NewEngine(
 	c *config.Config,
 	log *logger.Logger,
 	accountAPI *api.AccountAPI,
+	stationApi *api.StationAPI,
 	dataAPI *api.DataAPI,
 ) (*gin.Engine, error) {
 	gin.SetMode(gin.ReleaseMode)
@@ -35,12 +36,19 @@ func NewEngine(
 		MaxAge:           12 * time.Hour,
 	}))
 
-	e.POST("/register", accountAPI.Register)
-	e.POST("/login", accountAPI.Login)
-	e.GET("/", accountAPI.AuthMiddleware, accountAPI.GetAccount)
+	api := e.Group("/api")
 
-	e.Group("/api", accountAPI.AuthMiddleware).
-		GET("/", dataAPI.Ping)
+	// public apis
+	api.GET("/", dataAPI.Ping)
+	api.POST("/register", accountAPI.Register)
+	api.POST("/login", accountAPI.Login)
+	api.GET("/stations", stationApi.GetStations)
+
+	// authorised required apis
+	api.Use(accountAPI.AuthMiddleware)
+	{
+		api.GET("/account", accountAPI.GetAccount)
+	}
 
 	// append docs
 	e.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
