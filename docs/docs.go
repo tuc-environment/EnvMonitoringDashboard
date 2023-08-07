@@ -143,6 +143,26 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/stations": {
+            "get": {
+                "description": "Get stations with params",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "stations"
+                ],
+                "summary": "Get stations",
+                "responses": {
+                    "200": {
+                        "description": "Return station json array"
+                    }
+                }
+            }
         }
     },
     "definitions": {

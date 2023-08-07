@@ -26,7 +26,7 @@ func NewStationService(c *config.Config, db *store.DBClient, logger *logger.Logg
 
 	db.AutoMigrate(&Station{})
 	log.Infoln("database table 'stations' migrated")
-	
+
 	return &StationService{c, db, logger}
 }
 

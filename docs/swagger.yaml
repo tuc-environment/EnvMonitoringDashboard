@@ -109,6 +109,19 @@ paths:
       summary: Register a new account
       tags:
       - accounts
+  /stations:
+    get:
+      consumes:
+      - application/json
+      description: Get stations with params
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Return station json array
+      summary: Get stations
+      tags:
+      - stations
 securityDefinitions:
   ApiKeyAuth:
     in: header
