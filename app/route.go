@@ -20,7 +20,8 @@ func NewEngine(
 	c *config.Config,
 	log *logger.Logger,
 	accountAPI *api.AccountAPI,
-	stationApi *api.StationAPI,
+	stationAPI *api.StationAPI,
+	recordAPI *api.RecordAPI,
 	dataAPI *api.DataAPI,
 ) (*gin.Engine, error) {
 	gin.SetMode(gin.ReleaseMode)
@@ -42,7 +43,7 @@ func NewEngine(
 	api.GET("/", dataAPI.Ping)
 	api.POST("/register", accountAPI.Register)
 	api.POST("/login", accountAPI.Login)
-	api.GET("/stations", stationApi.GetStations)
+	api.GET("/stations", stationAPI.GetStations)
 
 	// authorised required apis
 	api.Use(accountAPI.AuthMiddleware)

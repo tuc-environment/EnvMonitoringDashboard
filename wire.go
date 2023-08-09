@@ -23,10 +23,12 @@ var appSet = wire.NewSet(
 	// service
 	service.NewAccountService,
 	service.NewStationService,
+	service.NewRecordService,
 	// api
-	api.NewAccountAPI,
 	api.NewDataAPI,
+	api.NewAccountAPI,
 	api.NewStationAPI,
+	api.NewRecordAPI,
 )
 
 func InitializeApp() (*app.App, error) {
