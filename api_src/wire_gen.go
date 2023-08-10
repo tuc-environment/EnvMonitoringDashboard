@@ -4,15 +4,15 @@
 //go:build !wireinject
 // +build !wireinject
 
-package main
+package api_src
 
 import (
-	"api/app"
-	"api/config"
-	"api/controller"
-	"api/logger"
-	"api/service"
-	"api/store"
+	"api/api_src/app"
+	"api/api_src/config"
+	"api/api_src/controller"
+	"api/api_src/logger"
+	"api/api_src/service"
+	"api/api_src/store"
 	"github.com/google/wire"
 )
 

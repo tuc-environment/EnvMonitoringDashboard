@@ -1,8 +1,8 @@
 package app
 
 import (
-	"api/config"
-	"api/logger"
+	"api/api_src/config"
+	"api/api_src/logger"
 
 	"github.com/gin-gonic/gin"
 )

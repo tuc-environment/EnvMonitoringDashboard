@@ -1,0 +1,130 @@
+basePath: /
+definitions:
+  args.AccountLoginArgs:
+    properties:
+      password:
+        example: "123456"
+        type: string
+      username:
+        example: bob
+        type: string
+    type: object
+  args.AccountRegisterArgs:
+    properties:
+      password:
+        example: "123456"
+        type: string
+      username:
+        example: bob
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:8080
+info:
+  contact: {}
+  description: 天津商业大学环境监测系统API文档
+  termsOfService: https://www.tjcu.edu.cn/
+  title: 天津商业大学环境监测系统API
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Get account information with token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Return account information
+        "401":
+          description: Token is incorrect
+      security:
+      - ApiKeyAuth: []
+      summary: Get account information
+      tags:
+      - accounts
+  /api:
+    get:
+      consumes:
+      - application/json
+      description: Get data
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Return data
+        "401":
+          description: Token is incorrect
+      security:
+      - ApiKeyAuth: []
+      summary: Get data
+      tags:
+      - api
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login to an account with username and password
+      parameters:
+      - description: username and password
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/args.AccountLoginArgs'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login success, return account information
+        "400":
+          description: Username or password is missing
+        "401":
+          description: Username or password is incorrect
+      summary: Login to an account
+      tags:
+      - accounts
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new account with username and password
+      parameters:
+      - description: username and password
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/args.AccountRegisterArgs'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Account created, return account information
+        "400":
+          description: Username or password is missing
+      summary: Register a new account
+      tags:
+      - accounts
+  /stations:
+    get:
+      consumes:
+      - application/json
+      description: Get stations with params
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Return station json array
+      summary: Get stations
+      tags:
+      - stations
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

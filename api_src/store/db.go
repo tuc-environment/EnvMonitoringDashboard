@@ -1,7 +1,7 @@
 package store
 
 import (
-	"api/config"
+	"api/api_src/config"
 	"fmt"
 
 	"gorm.io/driver/mysql"

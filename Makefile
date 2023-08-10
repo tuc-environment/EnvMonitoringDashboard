@@ -21,7 +21,7 @@ fmt:
 	swag fmt
 
 wire:
-	wire
+	cd api_src && wire
 
 docs:
 	swag init

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api/api"
 	"fmt"
 )
 
@@ -19,10 +20,7 @@ import (
 //	@externalDocs.description	OpenAPI
 //	@externalDocs.url			https://swagger.io/resources/open-api/
 func main() {
-	app, err := InitializeApp()
-	if err != nil {
-		panic(err)
-	}
+	app := api.NewApp(nil)
 
 	log := app.Sugar()
 	defer log.Sync()

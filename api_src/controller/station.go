@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"api/config"
-	"api/logger"
-	"api/service"
+	"api/api_src/config"
+	"api/api_src/logger"
+	"api/api_src/service"
 
 	"github.com/gin-gonic/gin"
 )

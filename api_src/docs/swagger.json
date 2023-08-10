@@ -1,0 +1,200 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "天津商业大学环境监测系统API文档",
+        "title": "天津商业大学环境监测系统API",
+        "termsOfService": "https://www.tjcu.edu.cn/",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get account information with token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Get account information",
+                "responses": {
+                    "200": {
+                        "description": "Return account information"
+                    },
+                    "401": {
+                        "description": "Token is incorrect"
+                    }
+                }
+            }
+        },
+        "/api": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get data",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "api"
+                ],
+                "summary": "Get data",
+                "responses": {
+                    "200": {
+                        "description": "Return data"
+                    },
+                    "401": {
+                        "description": "Token is incorrect"
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "description": "Login to an account with username and password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Login to an account",
+                "parameters": [
+                    {
+                        "description": "username and password",
+                        "name": "account",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/args.AccountLoginArgs"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login success, return account information"
+                    },
+                    "400": {
+                        "description": "Username or password is missing"
+                    },
+                    "401": {
+                        "description": "Username or password is incorrect"
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "description": "Register a new account with username and password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Register a new account",
+                "parameters": [
+                    {
+                        "description": "username and password",
+                        "name": "account",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/args.AccountRegisterArgs"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Account created, return account information"
+                    },
+                    "400": {
+                        "description": "Username or password is missing"
+                    }
+                }
+            }
+        },
+        "/stations": {
+            "get": {
+                "description": "Get stations with params",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "stations"
+                ],
+                "summary": "Get stations",
+                "responses": {
+                    "200": {
+                        "description": "Return station json array"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "args.AccountLoginArgs": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "bob"
+                }
+            }
+        },
+        "args.AccountRegisterArgs": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "bob"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
+    }
+}

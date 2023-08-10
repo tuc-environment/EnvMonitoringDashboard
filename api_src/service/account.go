@@ -1,9 +1,9 @@
 package service
 
 import (
-	"api/config"
-	"api/logger"
-	"api/store"
+	"api/api_src/config"
+	"api/api_src/logger"
+	"api/api_src/store"
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"

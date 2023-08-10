@@ -1,14 +1,14 @@
 package app
 
 import (
-	"api/config"
-	"api/controller"
-	"api/logger"
+	"api/api_src/config"
+	"api/api_src/controller"
+	"api/api_src/logger"
 	"time"
 
 	"github.com/gin-contrib/cors"
 
-	_ "api/docs"
+	_ "api/api_src/docs"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
