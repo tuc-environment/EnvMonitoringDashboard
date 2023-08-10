@@ -17,7 +17,9 @@ func NewNoRouteAPI() *NoRouteAPI {
 
 func (api *NoRouteAPI) ServeWebapp(webappFS fs.FS) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if strings.HasPrefix(c.Request.URL.Path, "/api") || webappFS == nil {
+		if strings.HasPrefix(c.Request.URL.Path, "/api") ||
+			strings.HasPrefix(c.Request.URL.Path, "/swagger") ||
+			webappFS == nil {
 			g := WrapContext(c)
 			g.NotFound(nil)
 			return
