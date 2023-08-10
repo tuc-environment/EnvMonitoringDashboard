@@ -9,7 +9,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 
-	_ "EnvMonitoringDashboard/docs"
+	_ "EnvMonitoringDashboard/api_src/docs"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"

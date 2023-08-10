@@ -24,7 +24,7 @@ wire:
 	cd api_src && wire
 
 docs:
-	swag init
+	swag init -o api_src/docs
 
 clean:
 	rm -rf EnvMonitoringDashboard.exe

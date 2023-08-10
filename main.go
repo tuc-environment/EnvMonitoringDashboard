@@ -16,7 +16,7 @@ var embedWebappFS embed.FS
 //	@termsOfService	https://www.tjcu.edu.cn/
 
 //	@host		localhost:8080
-//	@BasePath	/
+//	@BasePath	/api
 
 //	@securityDefinitions.apikey	ApiKeyAuth
 //	@in							header
