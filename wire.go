@@ -3,9 +3,9 @@
 package main
 
 import (
-	"api/api"
 	"api/app"
 	"api/config"
+	"api/controller"
 	"api/logger"
 	"api/service"
 	"api/store"
@@ -25,10 +25,10 @@ var appSet = wire.NewSet(
 	service.NewStationService,
 	service.NewRecordService,
 	// api
-	api.NewDataAPI,
-	api.NewAccountAPI,
-	api.NewStationAPI,
-	api.NewRecordAPI,
+	controller.NewDataAPI,
+	controller.NewAccountAPI,
+	controller.NewStationAPI,
+	controller.NewRecordAPI,
 )
 
 func InitializeApp() (*app.App, error) {

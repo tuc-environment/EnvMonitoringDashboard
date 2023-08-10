@@ -1,8 +1,8 @@
-package api
+package controller
 
 import (
-	"api/api/args"
 	"api/config"
+	"api/controller/args"
 	"api/logger"
 	"api/service"
 

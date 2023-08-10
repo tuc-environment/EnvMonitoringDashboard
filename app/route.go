@@ -1,8 +1,8 @@
 package app
 
 import (
-	"api/api"
 	"api/config"
+	"api/controller"
 	"api/logger"
 	"time"
 
@@ -19,10 +19,10 @@ import (
 func NewEngine(
 	c *config.Config,
 	log *logger.Logger,
-	accountAPI *api.AccountAPI,
-	stationAPI *api.StationAPI,
-	recordAPI *api.RecordAPI,
-	dataAPI *api.DataAPI,
+	accountAPI *controller.AccountAPI,
+	stationAPI *controller.StationAPI,
+	recordAPI *controller.RecordAPI,
+	dataAPI *controller.DataAPI,
 ) (*gin.Engine, error) {
 	gin.SetMode(gin.ReleaseMode)
 	e := gin.New()

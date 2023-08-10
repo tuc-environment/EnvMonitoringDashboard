@@ -7,9 +7,9 @@
 package main
 
 import (
-	"api/api"
 	"api/app"
 	"api/config"
+	"api/controller"
 	"api/logger"
 	"api/service"
 	"api/store"
@@ -29,12 +29,12 @@ func InitializeApp() (*app.App, error) {
 		return nil, err
 	}
 	accountService := service.NewAccountService(configConfig, dbClient, loggerLogger)
-	accountAPI := api.NewAccountAPI(configConfig, loggerLogger, accountService)
+	accountAPI := controller.NewAccountAPI(configConfig, loggerLogger, accountService)
 	stationService := service.NewStationService(configConfig, dbClient, loggerLogger)
-	stationAPI := api.NewStationAPI(configConfig, loggerLogger, stationService)
+	stationAPI := controller.NewStationAPI(configConfig, loggerLogger, stationService)
 	recordService := service.NewRecordService(configConfig, dbClient, loggerLogger)
-	recordAPI := api.NewRecordAPI(configConfig, loggerLogger, recordService)
-	dataAPI := api.NewDataAPI()
+	recordAPI := controller.NewRecordAPI(configConfig, loggerLogger, recordService)
+	dataAPI := controller.NewDataAPI()
 	engine, err := app.NewEngine(configConfig, loggerLogger, accountAPI, stationAPI, recordAPI, dataAPI)
 	if err != nil {
 		return nil, err
@@ -45,4 +45,4 @@ func InitializeApp() (*app.App, error) {
 
 // wire.go:
 
-var appSet = wire.NewSet(app.NewEngine, config.NewConfig, logger.NewLogger, store.NewDBClient, service.NewAccountService, service.NewStationService, service.NewRecordService, api.NewDataAPI, api.NewAccountAPI, api.NewStationAPI, api.NewRecordAPI)
+var appSet = wire.NewSet(app.NewEngine, config.NewConfig, logger.NewLogger, store.NewDBClient, service.NewAccountService, service.NewStationService, service.NewRecordService, controller.NewDataAPI, controller.NewAccountAPI, controller.NewStationAPI, controller.NewRecordAPI)
