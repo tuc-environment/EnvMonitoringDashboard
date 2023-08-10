@@ -14,16 +14,18 @@ import (
 	"api/api_src/service"
 	"api/api_src/store"
 	"github.com/google/wire"
+	"io/fs"
 )
 
 // Injectors from wire.go:
 
-func InitializeApp() (*app.App, error) {
+func InitializeApp(webappFS fs.FS) (*app.App, error) {
 	configConfig := config.NewConfig()
 	loggerLogger, err := logger.NewLogger()
 	if err != nil {
 		return nil, err
 	}
+	noRouteAPI := controller.NewNoRouteAPI()
 	dbClient, err := store.NewDBClient(configConfig)
 	if err != nil {
 		return nil, err
@@ -35,7 +37,7 @@ func InitializeApp() (*app.App, error) {
 	recordService := service.NewRecordService(configConfig, dbClient, loggerLogger)
 	recordAPI := controller.NewRecordAPI(configConfig, loggerLogger, recordService)
 	dataAPI := controller.NewDataAPI()
-	engine, err := app.NewEngine(configConfig, loggerLogger, accountAPI, stationAPI, recordAPI, dataAPI)
+	engine, err := app.NewEngine(webappFS, configConfig, loggerLogger, noRouteAPI, accountAPI, stationAPI, recordAPI, dataAPI)
 	if err != nil {
 		return nil, err
 	}
@@ -45,4 +47,4 @@ func InitializeApp() (*app.App, error) {
 
 // wire.go:
 
-var appSet = wire.NewSet(app.NewEngine, config.NewConfig, logger.NewLogger, store.NewDBClient, service.NewAccountService, service.NewStationService, service.NewRecordService, controller.NewDataAPI, controller.NewAccountAPI, controller.NewStationAPI, controller.NewRecordAPI)
+var appSet = wire.NewSet(app.NewEngine, config.NewConfig, logger.NewLogger, store.NewDBClient, service.NewAccountService, service.NewStationService, service.NewRecordService, controller.NewNoRouteAPI, controller.NewDataAPI, controller.NewAccountAPI, controller.NewStationAPI, controller.NewRecordAPI)

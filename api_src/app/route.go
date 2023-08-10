@@ -4,6 +4,7 @@ import (
 	"api/api_src/config"
 	"api/api_src/controller"
 	"api/api_src/logger"
+	"io/fs"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -17,8 +18,11 @@ import (
 )
 
 func NewEngine(
+	webappFS fs.FS,
+
 	c *config.Config,
 	log *logger.Logger,
+	noRouteAPI *controller.NoRouteAPI,
 	accountAPI *controller.AccountAPI,
 	stationAPI *controller.StationAPI,
 	recordAPI *controller.RecordAPI,
@@ -36,6 +40,8 @@ func NewEngine(
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
+
+	e.NoRoute(noRouteAPI.ServeWebapp(webappFS))
 
 	api := e.Group("/api")
 

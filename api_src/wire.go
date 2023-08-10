@@ -9,6 +9,7 @@ import (
 	"api/api_src/logger"
 	"api/api_src/service"
 	"api/api_src/store"
+	"io/fs"
 
 	"github.com/google/wire"
 )
@@ -25,13 +26,14 @@ var appSet = wire.NewSet(
 	service.NewStationService,
 	service.NewRecordService,
 	// api
+	controller.NewNoRouteAPI,
 	controller.NewDataAPI,
 	controller.NewAccountAPI,
 	controller.NewStationAPI,
 	controller.NewRecordAPI,
 )
 
-func InitializeApp() (*app.App, error) {
+func InitializeApp(webappFS fs.FS) (*app.App, error) {
 	wire.Build(appSet, app.NewApp)
 	return &app.App{}, nil
 }

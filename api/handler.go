@@ -8,7 +8,7 @@ import (
 )
 
 func NewApp(webappFS fs.FS) *app.App {
-	app, err := api_src.InitializeApp()
+	app, err := api_src.InitializeApp(webappFS)
 	if err != nil {
 		panic(err)
 	}
