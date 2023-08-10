@@ -50,6 +50,8 @@ func NewEngine(
 	api.POST("/register", accountAPI.Register)
 	api.POST("/login", accountAPI.Login)
 	api.GET("/stations", stationAPI.GetStations)
+	
+	api.POST("/records/upload", recordAPI.UploadRecords)
 
 	// authorised required apis
 	api.Use(accountAPI.AuthMiddleware)

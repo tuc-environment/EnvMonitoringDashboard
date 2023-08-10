@@ -10,9 +10,17 @@ import (
 type RecordPosition string
 
 const (
-	RecordPositionBelow  RecordPosition = "below"
+	RecordPositionUp     RecordPosition = "up"
 	RecordPositionMiddle RecordPosition = "middle"
-	RecordPositionAbove  RecordPosition = "above"
+	RecordPositionDown   RecordPosition = "down"
+)
+
+var (
+	RecordPositionMap = map[string]RecordPosition{
+		"up":     RecordPositionUp,
+		"middle": RecordPositionMiddle,
+		"down":   RecordPositionDown,
+	}
 )
 
 type Record struct {
@@ -24,6 +32,7 @@ type Record struct {
 	Sensor    string         `json:"sensor"`
 	Group     string         `json:"group"`
 	Value     float64        `json:"value"`
+	Unit      string         `json:"unit"`
 	Time      time.Time      `json:"time"`
 }
 
