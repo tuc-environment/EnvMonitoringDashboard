@@ -1,0 +1,13 @@
+{
+    "trailingSlash": false,
+    "rewrites": [
+      {
+        "source": "/api",
+        "destination": "/api/handler.go"
+      },
+      {
+        "source": "/api/(.*)",
+        "destination": "/api/handler.go"
+      }
+    ]
+  }
