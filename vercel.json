@@ -1,13 +1,15 @@
 {
-    "trailingSlash": false,
-    "rewrites": [
-      {
-        "source": "/api",
-        "destination": "/api/handler.go"
-      },
-      {
-        "source": "/api/(.*)",
-        "destination": "/api/handler.go"
-      }
-    ]
-  }
+  "buildCommand": "cd _webapp && npm i && npm run build",
+  "outputDirectory": "_webapp/dist",
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/api",
+      "destination": "/api/handler.go"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/handler.go"
+    }
+  ]
+}
