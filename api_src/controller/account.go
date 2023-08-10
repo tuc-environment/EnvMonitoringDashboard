@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"api/api_src/config"
-	"api/api_src/controller/args"
-	"api/api_src/logger"
-	"api/api_src/service"
+	"EnvMonitoringDashboard/api_src/config"
+	"EnvMonitoringDashboard/api_src/controller/args"
+	"EnvMonitoringDashboard/api_src/logger"
+	"EnvMonitoringDashboard/api_src/service"
 
 	"github.com/gin-gonic/gin"
 )

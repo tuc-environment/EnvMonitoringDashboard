@@ -1,8 +1,8 @@
 package api
 
 import (
-	"api/api_src"
-	"api/api_src/app"
+	"EnvMonitoringDashboard/api_src"
+	"EnvMonitoringDashboard/api_src/app"
 	"io/fs"
 	"net/http"
 )

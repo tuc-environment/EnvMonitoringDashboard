@@ -1,4 +1,4 @@
-module api
+module EnvMonitoringDashboard
 
 go 1.20
 

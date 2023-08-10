@@ -1,9 +1,9 @@
 package service
 
 import (
-	"api/api_src/config"
-	"api/api_src/logger"
-	"api/api_src/store"
+	"EnvMonitoringDashboard/api_src/config"
+	"EnvMonitoringDashboard/api_src/logger"
+	"EnvMonitoringDashboard/api_src/store"
 	"time"
 )
 

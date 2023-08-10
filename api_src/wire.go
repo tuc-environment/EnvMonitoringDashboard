@@ -3,12 +3,12 @@
 package api_src
 
 import (
-	"api/api_src/app"
-	"api/api_src/config"
-	"api/api_src/controller"
-	"api/api_src/logger"
-	"api/api_src/service"
-	"api/api_src/store"
+	"EnvMonitoringDashboard/api_src/app"
+	"EnvMonitoringDashboard/api_src/config"
+	"EnvMonitoringDashboard/api_src/controller"
+	"EnvMonitoringDashboard/api_src/logger"
+	"EnvMonitoringDashboard/api_src/service"
+	"EnvMonitoringDashboard/api_src/store"
 	"io/fs"
 
 	"github.com/google/wire"

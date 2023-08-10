@@ -1,7 +1,7 @@
 package main
 
 import (
-	"api/api"
+	"EnvMonitoringDashboard/api"
 	"embed"
 	"fmt"
 	"io/fs"

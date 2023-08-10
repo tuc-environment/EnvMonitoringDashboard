@@ -1,8 +1,8 @@
 package app
 
 import (
-	"api/api_src/config"
-	"api/api_src/logger"
+	"EnvMonitoringDashboard/api_src/config"
+	"EnvMonitoringDashboard/api_src/logger"
 	"fmt"
 	"time"
 

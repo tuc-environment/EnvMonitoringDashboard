@@ -7,14 +7,14 @@ deps:
 	go install github.com/cosmtrek/air@latest
 
 build:
-	go build -o api.exe
+	go build -o EnvMonitoringDashboard.exe
 
 linux:
 	make wire docs fmt
-	CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -tags lambda -a -ldflags '-extldflags "-static"' -o api.exe
+	CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -tags lambda -a -ldflags '-extldflags "-static"' -o EnvMonitoringDashboard.exe
 
 watch:
-	air --build.cmd "make" --build.bin "./api.exe"
+	air --build.cmd "make" --build.bin "./EnvMonitoringDashboard.exe"
 
 fmt:
 	go fmt ./...
@@ -27,6 +27,6 @@ docs:
 	swag init
 
 clean:
-	rm -rf api.exe
+	rm -rf EnvMonitoringDashboard.exe
 
 .PHONY: all deps build linux watch fmt wire docs clean
