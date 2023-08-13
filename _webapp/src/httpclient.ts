@@ -8,6 +8,41 @@ interface Response<T> {
   status: string
 }
 
+interface Base {
+  id: number
+  createdAt?: Date
+  updatedAt?: Date
+  deletedAt?: Date
+}
+
+export interface Station extends Base {
+  name?: string
+  lat?: number
+  lng?: number
+  altitude?: number
+}
+
+export enum SensorPosition {
+  up = 'up',
+  middle = 'middle',
+  down = 'down',
+}
+
+export interface Sensor extends Base {
+  stationID: number
+  position?: SensorPosition
+  tag?: string
+  name?: string
+  group?: string
+  unit?: string
+}
+
+export interface Record extends Base {
+  sensorID: number
+  value?: number
+  time?: Date
+}
+
 class HttpClient {
   public baseUrl: string = 'http://localhost:8080/api'
 
@@ -40,13 +75,19 @@ class HttpClient {
     return headers
   }
 
-  public async get<T>(url: string): Promise<Response<T> | null> {
+  // base
+  private async get<T>(url: string): Promise<Response<T> | null> {
     url = this.absoluteUrl(url)
-    const resp = await axios.get<Response<T>>(url, { headers: this._headers() })
-    return resp?.data
+    try {
+      const resp = await axios.get<Response<T>>(url, { headers: this._headers() })
+      return resp?.data
+    } catch (err: any) {
+      return err?.response.data
+    }
+
   }
 
-  public async post<T>(url: string, data: any = null): Promise<Response<T> | null> {
+  private async post<T>(url: string, data: any = null): Promise<Response<T> | null> {
     url = this.absoluteUrl(url)
     try {
       const resp = await axios.post<Response<T>>(url, data, { headers: this._headers() })
@@ -56,17 +97,27 @@ class HttpClient {
     }
   }
 
-  public async put<T>(url: string, data: any = null): Promise<Response<T> | null> {
+  private async put<T>(url: string, data: any = null): Promise<Response<T> | null> {
     url = this.absoluteUrl(url)
-    const resp = await axios.put<Response<T>>(url, data, { headers: this._headers() })
-    return resp?.data
+    try {
+      const resp = await axios.put<Response<T>>(url, data, { headers: this._headers() })
+      return resp?.data
+    } catch (err: any) {
+      return err?.response.data
+    }
   }
 
-  public async delete<T>(url: string): Promise<Response<T> | null> {
+  private async delete<T>(url: string): Promise<Response<T> | null> {
     url = this.absoluteUrl(url)
-    const resp = await axios.delete<Response<T>>(url, { headers: this._headers() })
-    return resp?.data
+    try {
+      const resp = await axios.delete<Response<T>>(url, { headers: this._headers() })
+      return resp?.data
+    } catch (err: any) {
+      return err?.response.data
+    }
   }
+
+  // auth  
 
   public isAuthorized(): boolean {
     if (!this.token) return false
@@ -98,6 +149,34 @@ class HttpClient {
   public async logout() {
     this.token = ''
   }
+
+  // stations
+
+  public async getStations(): Promise<Response<Array<Station>> | null> {
+    const resp = await this.get<Array<Station>>('/stations')
+    return resp
+  }
+
+  public async upsertStation(station: Station): Promise<Response<Station> | null> {
+    const resp = await this.post<Station>('/stations')
+    return resp
+  }
+
+  // sensors
+
+  public async getSensors(stationID: string): Promise<Response<Array<Sensor>> | null> {
+    const resp = await this.get<Array<Sensor>>(`/sensors?station_id=${stationID}`)
+    return resp
+  }
+
+  public async upsertSensor(sensor: Sensor): Promise<Response<Sensor> | null> {
+    const resp = await this.post<Sensor>('/sensors', sensor)
+    return resp
+  }
+
+  // records
+
+
 }
 
 export default new HttpClient()
