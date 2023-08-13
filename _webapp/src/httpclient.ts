@@ -181,6 +181,11 @@ class HttpClient {
     const resp = await axios.get<string>(url, { headers: this._headers() })
     return resp.data;
   }
+
+  public async uploadCSVRecords(data: any): Promise<Response<any> | null> {
+    const resp = await this.post<any>('/records/upload', data)
+    return resp
+  }
 }
 
 export default new HttpClient()
