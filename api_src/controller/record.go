@@ -4,6 +4,7 @@ import (
 	"EnvMonitoringDashboard/api_src/config"
 	"EnvMonitoringDashboard/api_src/logger"
 	"EnvMonitoringDashboard/api_src/service"
+	"bytes"
 	"encoding/csv"
 	"errors"
 	"fmt"
@@ -32,7 +33,7 @@ func NewRecordAPI(c *config.Config, l *logger.Logger, s *service.RecordService) 
 // Register godoc
 //
 //	@Summary		upload csv records
-//	@Description	csv column - "name-unit-sensor-position-tag-group"
+//	@Description	csv column - "sensorId"
 //	@Tags			records
 //	@Accept			json
 //	@Produce		json
@@ -102,4 +103,27 @@ func (api *RecordAPI) UploadRecords(g *gin.Context) {
 	} else {
 		c.BadRequest(insertErr)
 	}
+}
+
+// Register godoc
+//
+//	@Summary		download csv records
+//	@Description	generate record upload csv template
+//	@Tags			records
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	"export csv template"
+//	@Router			/records/template [get]
+func (api *RecordAPI) ExportCSVTemplate(g *gin.Context) {
+	log := api.logger.Sugar()
+	defer log.Sync()
+	c := WrapContext(g)
+	csvData := [][]string{
+		{"数据时间(ignored)", "$Sensor_ID_1 (can be get from 'admin page / Sensors tab')", "$Sensor_ID_2 (can be get from 'admin page / Sensors tab')"},
+		{"2023/4/1 15:30:00 (standard datetime format)", "(number only)", "(number only)"},
+	}
+	b := new(bytes.Buffer)
+	w := csv.NewWriter(b)
+	w.WriteAll(csvData)
+	c.Writer.Write(b.Bytes())
 }

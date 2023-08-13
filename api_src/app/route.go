@@ -53,9 +53,10 @@ func NewEngine(
 	api.GET("/stations", stationAPI.GetStations)
 
 	api.POST("/records/upload", recordAPI.UploadRecords)
+	api.GET("/records/template", recordAPI.ExportCSVTemplate)
 	api.POST("/sensors", sensorAPI.UpsertSensor)
 	api.GET("/sensors", sensorAPI.GetSensors)
-	
+
 	// authorised required apis
 	api.Use(accountAPI.AuthMiddleware)
 	{

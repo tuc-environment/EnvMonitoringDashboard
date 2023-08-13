@@ -44,7 +44,8 @@ export interface Record extends Base {
 }
 
 class HttpClient {
-  public baseUrl: string = 'https://tuc-env-monitoring-dashboard.vercel.app/api'
+
+  public baseUrl: string = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api' : 'https://tuc-env-monitoring-dashboard.vercel.app/api'
 
   private _token: string = ''
 
@@ -151,8 +152,8 @@ class HttpClient {
 
   // stations
 
-  public async getStations(): Promise<Response<Array<Station>> | null> {
-    const resp = await this.get<Array<Station>>('/stations')
+  public async getStations(): Promise<Response<Station[]> | null> {
+    const resp = await this.get<Station[]>('/stations')
     return resp
   }
 
@@ -163,8 +164,8 @@ class HttpClient {
 
   // sensors
 
-  public async getSensors(stationID: string): Promise<Response<Array<Sensor>> | null> {
-    const resp = await this.get<Array<Sensor>>(`/sensors?station_id=${stationID}`)
+  public async getSensors(stationID: string): Promise<Response<Sensor[]> | null> {
+    const resp = await this.get<Sensor[]>(`/sensors?station_id=${stationID}`)
     return resp
   }
 
@@ -174,6 +175,12 @@ class HttpClient {
   }
 
   // records
+
+  public async downloadTemplate(): Promise<string | null> {
+    const url = this.absoluteUrl('/records/template')
+    const resp = await axios.get<string>(url, { headers: this._headers() })
+    return resp.data;
+  }
 }
 
 export default new HttpClient()
