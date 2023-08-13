@@ -1,11 +1,14 @@
 <template>
-  <SidebarLayout name="Account" :sub-views="subViews" default-sub-view="Account" />
+  <SidebarLayout :sections="sections" default-sub-view="Account" />
 </template>
 
 <script lang="ts">
 import SidebarLayout from '@/layouts/SidebarLayout.vue'
 
 import AccountView from '@/views/admin/AccountView.vue'
+import StationView from '@/views/admin/management/StationView.vue'
+import SensorView from '@/views/admin/management/SensorView.vue'
+import RecordView from '@/views/admin/management/RecordView.vue'
 
 export default {
   components: {
@@ -13,13 +16,38 @@ export default {
   },
   data() {
     return {
-      subViews: [
+      sections: [
         {
           name: 'Account',
-          icon: 'bi-person',
-          component: AccountView
+          subViews: [
+            {
+              name: 'Account',
+              icon: 'bi-person',
+              component: AccountView
+            },
+          ],
+        },
+        {
+          name: 'Management',
+          subViews: [
+            {
+              name: 'Stations',
+              icon: 'bi-building',
+              component: StationView
+            },
+            {
+              name: 'Sensors',
+              icon: 'bi-camera-video',
+              component: SensorView
+            },
+            {
+              name: 'Records',
+              icon: 'bi-activity',
+              component: RecordView
+            }
+          ],
         }
-      ]
+      ],
     }
   }
 }
