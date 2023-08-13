@@ -11,10 +11,10 @@ type Context struct {
 }
 
 type ResponseBody struct {
-	Code    int         `json:"code"`
-	Status  string      `json:"status"`
+	Code    int         `json:"code,omitempty"`
+	Status  string      `json:"status,omitempty"`
 	Error   *string     `json:"error,omitempty"`
-	Payload interface{} `json:"payload"`
+	Payload interface{} `json:"payload,omitempty"`
 }
 
 func WrapContext(c *gin.Context) *Context {

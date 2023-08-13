@@ -12,9 +12,9 @@ import (
 
 type Account struct {
 	Base
-	Username string `gorm:"unique" json:"username"`
-	Password string `json:"password"`
-	Token    string `gorm:"unique" json:"token"`
+	Username string `gorm:"unique" json:"username,omitempty"`
+	Password string `json:"password,omitempty"`
+	Token    string `gorm:"unique" json:"token,omitempty"`
 }
 
 type AccountService struct {

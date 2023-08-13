@@ -25,3 +25,5 @@ go.work
 tmp/
 *.sqlite
 main
+
+*.DS_Store

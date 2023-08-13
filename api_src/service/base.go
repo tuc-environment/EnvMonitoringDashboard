@@ -19,8 +19,8 @@ func (b SqlNullTime) MarshalJSON() ([]byte, error) {
 }
 
 type Base struct {
-	ID        uint         `gorm:"primarykey" json:"id"`
-	CreatedAt time.Time    `json:"created_at"`
-	UpdatedAt time.Time    `json:"updated_at"`
+	ID        uint         `gorm:"primarykey" json:"id,omitempty"`
+	CreatedAt time.Time    `json:"created_at,omitempty"`
+	UpdatedAt time.Time    `json:"updated_at,omitempty"`
 	DeletedAt *SqlNullTime `gorm:"index" json:"deleted_at,omitempty"`
 }

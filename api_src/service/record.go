@@ -5,35 +5,15 @@ import (
 	"EnvMonitoringDashboard/api_src/logger"
 	"EnvMonitoringDashboard/api_src/store"
 	"time"
-)
 
-type RecordPosition string
-
-const (
-	RecordPositionUp     RecordPosition = "up"
-	RecordPositionMiddle RecordPosition = "middle"
-	RecordPositionDown   RecordPosition = "down"
-)
-
-var (
-	RecordPositionMap = map[string]RecordPosition{
-		"up":     RecordPositionUp,
-		"middle": RecordPositionMiddle,
-		"down":   RecordPositionDown,
-	}
+	"gorm.io/gorm/clause"
 )
 
 type Record struct {
 	Base
-	StationId string         `json:"station_id"`
-	Position  RecordPosition `json:"position"`
-	Tag       string         `json:"tag"`
-	Name      string         `json:"name"`
-	Sensor    string         `json:"sensor"`
-	Group     string         `json:"group"`
-	Value     float64        `json:"value"`
-	Unit      string         `json:"unit"`
-	Time      time.Time      `json:"time"`
+	SensorId uint    `json:"sensor_id,omitempty" gorm:"uniqueIndex:sensor_time"`
+	Value    float64   `json:"value,omitempty"`
+	Time     time.Time `json:"time,omitempty" gorm:"uniqueIndex:sensor_time"`
 }
 
 type RecordService struct {
@@ -52,11 +32,34 @@ func NewRecordService(c *config.Config, db *store.DBClient, logger *logger.Logge
 	return &RecordService{c, db, logger}
 }
 
-func (s *RecordService) UploadRecords() ([]Record, error) {
+func (s *RecordService) GetRecords(sensorId uint) (*[]Record, error) {
 	log := s.logger.Sugar()
 	defer log.Sync()
-	var records []Record
+	var records *[]Record
+	err := s.db.Find(records).Where("sensor_id = ? and deleted_at IS NOT NULL", sensorId).Error
+	if err != nil {
+		log.Errorf("get records for sensor_id: %d, error: %s\n", sensorId, err.Error())
+		return nil, err
+	} else {
+		return records, nil
+	}
+}
 
-	log.Infoln("no. of records %d retrieved", len(records))
-	return nil, nil
+func (s *RecordService) BatchUpsert(records *[]Record) (*[]Record, error) {
+	log := s.logger.Sugar()
+	defer log.Sync()
+	log.Infoln("batch upsert records count: ", len(*records))
+	err := s.db.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "sensor_id"}, {Name: "time"}},
+		DoUpdates: clause.AssignmentColumns([]string{"value", "updated_at", "deleted_at"}),
+	}).Create(records).Error
+	return records, err
+}
+
+func (s *RecordService) DeleteRecord(id uint) error {
+	log := s.logger.Sugar()
+	defer log.Sync()
+	log.Infoln("delete record with id: ", id)
+	err := s.db.Model(&Record{}).Where("id = ?", id).Update("deleted_at", time.Now()).Error
+	return err
 }

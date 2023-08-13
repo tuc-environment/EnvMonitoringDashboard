@@ -26,6 +26,7 @@ func NewEngine(
 	accountAPI *controller.AccountAPI,
 	stationAPI *controller.StationAPI,
 	recordAPI *controller.RecordAPI,
+	sensorAPI *controller.SensorAPI,
 	dataAPI *controller.DataAPI,
 ) (*gin.Engine, error) {
 	gin.SetMode(gin.ReleaseMode)
@@ -50,8 +51,9 @@ func NewEngine(
 	api.POST("/register", accountAPI.Register)
 	api.POST("/login", accountAPI.Login)
 	api.GET("/stations", stationAPI.GetStations)
-	
+
 	api.POST("/records/upload", recordAPI.UploadRecords)
+	api.POST("/sensors", sensorAPI.UpsertSensor)
 
 	// authorised required apis
 	api.Use(accountAPI.AuthMiddleware)

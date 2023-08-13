@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"mime/multipart"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -19,15 +18,6 @@ type RecordAPI struct {
 	config        *config.Config
 	logger        *logger.Logger
 	recordService *service.RecordService
-}
-
-type RecordTemplate struct {
-	Name     string
-	Unit     string
-	Sensor   string
-	Position service.RecordPosition
-	Tag      string
-	Group    string
 }
 
 type FileUpload struct {
@@ -61,7 +51,6 @@ func (api *RecordAPI) UploadRecords(g *gin.Context) {
 		log.Fatalln("csv file is missing")
 		return
 	}
-	stationId := csvFile.StationId
 	file, err := csvFile.CSVFile.Open()
 	if err != nil {
 		log.Fatalln("failed to open file: ", err)
@@ -70,25 +59,14 @@ func (api *RecordAPI) UploadRecords(g *gin.Context) {
 	defer file.Close()
 
 	lines, err := csv.NewReader(file).ReadAll()
-	var templates []RecordTemplate
+	var sensorIds []string
 	var records []service.Record
 	// column name - name-unit-sensor-position-tag-group
 	for index, line := range lines {
 		for columnIndex, column := range line {
 			if index == 0 {
-				log.Debugln("line: ", line)
 				if columnIndex > 0 {
-					if strings.Contains(column, "-") {
-						template, ok := api.processTemplate(column)
-						if ok {
-							templates = append(templates, *template)
-						} else {
-							c.BadRequest(errors.New("invalid column format"))
-							return
-						}
-					} else {
-						templates = append(templates, RecordTemplate{Name: column})
-					}
+					sensorIds = append(sensorIds, column)
 				}
 			} else if columnIndex > 0 {
 				time, err := time.Parse("2006/1/2 15:04:05", line[0])
@@ -96,57 +74,32 @@ func (api *RecordAPI) UploadRecords(g *gin.Context) {
 					c.BadRequest(errors.New(fmt.Sprintf("failed to parse %s, error: %s", line[0], err.Error())))
 					return
 				}
-				templateIndex := index - 1
-				if len(templates) > templateIndex {
-					template := templates[templateIndex]
+				sensorIndex := columnIndex - 1
+				if len(sensorIds) > sensorIndex {
+					sensorId, err := strconv.ParseUint(sensorIds[sensorIndex], 10, 64)
+					if err != nil {
+						c.BadRequest(errors.New(fmt.Sprintf("failed to parse sensor id: %s, error: %s\n", sensorIds[sensorIndex], err.Error())))
+						return
+					}
 					value, err := strconv.ParseFloat(column, 64)
 					if err != nil {
-						c.BadRequest(errors.New(fmt.Sprintf("failed to parse %s, error: %s\n", line[columnIndex], err.Error())))
+						c.BadRequest(errors.New(fmt.Sprintf("failed to parse %s, error: %s\n", column, err.Error())))
 						return
 					}
 					record := service.Record{
-						StationId: stationId,
-						Position:  template.Position,
-						Tag:       template.Tag,
-						Name:      template.Name,
-						Sensor:    template.Sensor,
-						Group:     template.Group,
-						Value:     value,
-						Unit:      template.Unit,
-						Time:      time,
+						SensorId: uint(sensorId),
+						Value:    value,
+						Time:     time,
 					}
 					records = append(records, record)
 				}
 			}
 		}
 	}
-	c.OK(records)
-}
-
-func (api *RecordAPI) processTemplate(str string) (*RecordTemplate, bool) {
-	items := strings.Split(str, "-")
-	if len(items) < 6 {
-		return nil, false
+	updatedRecords, insertErr := api.recordService.BatchUpsert(&records)
+	if insertErr == nil {
+		c.OK(updatedRecords)
 	} else {
-		position, _ := api.parsePosition(items[3])
-		name := items[0]
-		unit := items[1]
-		sensor := items[2]
-		tag := items[4]
-		group := items[5]
-		template := &RecordTemplate{
-			Name:     name,
-			Unit:     unit,
-			Sensor:   sensor,
-			Position: position,
-			Tag:      tag,
-			Group:    group,
-		}
-		return template, true
+		c.BadRequest(insertErr)
 	}
-}
-
-func (api *RecordAPI) parsePosition(str string) (service.RecordPosition, bool) {
-	c, ok := service.RecordPositionMap[strings.ToLower(str)]
-	return c, ok
 }
