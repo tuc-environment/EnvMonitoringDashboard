@@ -25,7 +25,7 @@ export interface Station extends Base {
 export enum SensorPosition {
   up = 'up',
   middle = 'middle',
-  down = 'down',
+  down = 'down'
 }
 
 export interface Sensor extends Base {
@@ -44,7 +44,7 @@ export interface Record extends Base {
 }
 
 class HttpClient {
-  public baseUrl: string = 'http://localhost:8080/api'
+  public baseUrl: string = 'https://tuc-env-monitoring-dashboard.vercel.app/api'
 
   private _token: string = ''
 
@@ -84,7 +84,6 @@ class HttpClient {
     } catch (err: any) {
       return err?.response.data
     }
-
   }
 
   private async post<T>(url: string, data: any = null): Promise<Response<T> | null> {
@@ -117,7 +116,7 @@ class HttpClient {
     }
   }
 
-  // auth  
+  // auth
 
   public isAuthorized(): boolean {
     if (!this.token) return false
@@ -175,8 +174,6 @@ class HttpClient {
   }
 
   // records
-
-
 }
 
 export default new HttpClient()

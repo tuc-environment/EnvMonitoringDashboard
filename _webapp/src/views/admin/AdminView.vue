@@ -24,8 +24,8 @@ export default {
               name: 'Account',
               icon: 'bi-person',
               component: AccountView
-            },
-          ],
+            }
+          ]
         },
         {
           name: 'Management',
@@ -45,9 +45,9 @@ export default {
               icon: 'bi-activity',
               component: RecordView
             }
-          ],
+          ]
         }
-      ],
+      ]
     }
   }
 }
