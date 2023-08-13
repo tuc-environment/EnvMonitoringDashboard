@@ -11,7 +11,7 @@ import (
 
 type Record struct {
 	Base
-	SensorId uint    `json:"sensor_id,omitempty" gorm:"uniqueIndex:sensor_time"`
+	SensorId uint      `json:"sensor_id,omitempty" gorm:"uniqueIndex:sensor_time"`
 	Value    float64   `json:"value,omitempty"`
 	Time     time.Time `json:"time,omitempty" gorm:"uniqueIndex:sensor_time"`
 }
@@ -36,7 +36,7 @@ func (s *RecordService) GetRecords(sensorId uint) (*[]Record, error) {
 	log := s.logger.Sugar()
 	defer log.Sync()
 	var records *[]Record
-	err := s.db.Find(records).Where("sensor_id = ? and deleted_at IS NOT NULL", sensorId).Error
+	err := s.db.Where("sensor_id = ? and deleted_at IS NULL", sensorId).Find(records).Error
 	if err != nil {
 		log.Errorf("get records for sensor_id: %d, error: %s\n", sensorId, err.Error())
 		return nil, err

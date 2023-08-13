@@ -28,7 +28,7 @@ var (
 
 type Sensor struct {
 	Base
-	StationId uint         `json:"station_id,omitempty"`
+	StationId uint           `json:"station_id,omitempty"`
 	Position  SensorPosition `json:"position,omitempty"`
 	Tag       string         `json:"tag,omitempty"`
 	Name      string         `json:"name,omitempty"`
@@ -52,17 +52,22 @@ func NewSensorService(c *config.Config, db *store.DBClient, logger *logger.Logge
 	return &SensorService{c, db, logger}
 }
 
-func (s *SensorService) GetSensor(stationId uint) (*[]Sensor, error) {
+func (s *SensorService) Get(stationId uint) (*[]Sensor, error) {
 	log := s.logger.Sugar()
 	defer log.Sync()
 	log.Infoln("get sensors for station id: ", stationId)
-	var sensors *[]Sensor
-	err := s.db.Find(sensors).Where("station_id = ? and deleted_at IS NOT NULL", stationId).Error
+	var sensors []Sensor
+	var err error
+	if stationId == 0 {
+		err = s.db.Where("deleted_at IS NULL").Find(&sensors).Error
+	} else {
+		err = s.db.Where("station_id = ? and deleted_at IS NULL", stationId).Find(&sensors).Error
+	}
 	if err != nil {
 		log.Errorln("get sensors with error: ", err)
 		return nil, err
 	} else {
-		return sensors, nil
+		return &sensors, nil
 	}
 }
 
@@ -70,10 +75,10 @@ func (s *SensorService) Upsert(sensor *Sensor) (*Sensor, error) {
 	log := s.logger.Sugar()
 	defer log.Sync()
 	jsonVal, _ := json.Marshal(sensor)
-	log.Infoln("upsert sensor: ", jsonVal)
+	log.Infoln("upsert sensor: ", string(jsonVal))
 	err := s.db.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "id"}},
-		DoUpdates: clause.AssignmentColumns([]string{"position", "tag", "name", "group", "unit", "updated_at", "deleted_at"}),
+		DoUpdates: clause.AssignmentColumns([]string{"station_id", "position", "tag", "name", "group", "unit", "updated_at", "deleted_at"}),
 	}).Create(sensor).Error
 	return sensor, err
 }

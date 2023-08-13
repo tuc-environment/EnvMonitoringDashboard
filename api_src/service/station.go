@@ -39,7 +39,7 @@ func (s *StationService) GetStations() (*[]Station, error) {
 	defer log.Sync()
 	log.Infoln("get stations")
 	var stations []Station
-	err := s.db.Find(&stations).Where("deleted_at IS NOT NULL").Error
+	err := s.db.Where("deleted_at IS NULL").Find(&stations).Error
 	if err != nil {
 		log.Error(err)
 		return &[]Station{}, err

@@ -22,6 +22,31 @@ func NewSensorAPI(c *config.Config, l *logger.Logger, s *service.SensorService) 
 
 // Register godoc
 //
+//	@Summary		get sensors
+//	@Tags			sensors
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	"return sensors by station_id"
+//	@Router			/sensors [get]
+func (api *SensorAPI) GetSensors(g *gin.Context) {
+	log := api.logger.Sugar()
+	defer log.Sync()
+	c := WrapContext(g)
+	body := args.SensorGetArgs{}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.BadRequest(err)
+		return
+	}
+	sensors, err := api.sensorService.Get(body.StationId)
+	if err != nil {
+		c.BadRequest(err)
+	} else {
+		c.OK(sensors)
+	}
+}
+
+// Register godoc
+//
 //	@Summary		create sensor
 //	@Tags			sensors
 //	@Accept			json

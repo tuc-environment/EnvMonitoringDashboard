@@ -54,7 +54,8 @@ func NewEngine(
 
 	api.POST("/records/upload", recordAPI.UploadRecords)
 	api.POST("/sensors", sensorAPI.UpsertSensor)
-
+	api.GET("/sensors", sensorAPI.GetSensors)
+	
 	// authorised required apis
 	api.Use(accountAPI.AuthMiddleware)
 	{

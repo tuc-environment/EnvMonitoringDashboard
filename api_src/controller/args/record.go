@@ -1,5 +1,5 @@
 package args
 
 type RecordUploadArgs struct {
-	StationId string
+	StationId string `json:"station_id"`
 }
