@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"mime/multipart"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -30,7 +31,7 @@ func NewRecordAPI(c *config.Config, l *logger.Logger, s *service.RecordService) 
 	return &RecordAPI{c, l, s}
 }
 
-// Register godoc
+// Upload record godoc
 //
 //	@Summary		upload csv records
 //	@Description	csv column - "sensorId"
@@ -105,7 +106,7 @@ func (api *RecordAPI) UploadRecords(g *gin.Context) {
 	}
 }
 
-// Register godoc
+// Export csv template godoc
 //
 //	@Summary		download csv records
 //	@Description	generate record upload csv template
@@ -126,4 +127,69 @@ func (api *RecordAPI) ExportCSVTemplate(g *gin.Context) {
 	w := csv.NewWriter(b)
 	w.WriteAll(csvData)
 	c.Writer.Write(b.Bytes())
+}
+
+// Get records godoc
+//
+//	@Summary		get records by query
+//	@Description	query records data with time range, pagination & filters
+//	@Tags			records
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	"return records json"
+//	@Router			/records [get]
+func (api *RecordAPI) GetRecords(g *gin.Context) {
+	log := api.logger.Sugar()
+	defer log.Sync()
+	c := WrapContext(g)
+	var sensorIds *[]uint
+	var startTime *time.Time
+	var endTime *time.Time
+	var offset *int
+	var limit *int
+	q := c.Request.URL.Query()
+	if q.Has("start_time") {
+		str := q.Get("start_time")
+		startTimeV, _ := time.Parse(time.RFC3339, str)
+		startTime = &startTimeV
+	}
+	if q.Has("end_time") {
+		str := q.Get("end_time")
+		endTimeV, _ := time.Parse(time.RFC3339, str)
+		endTime = &endTimeV
+	}
+	if q.Has("sensor_ids") {
+		str := q.Get("sensor_ids")
+		strArr := strings.Split(str, ",")
+		if len(strArr) > 0 {
+			sensorIdsV := make([]uint, len(strArr))
+			for i, s := range strArr {
+				num, err := strconv.Atoi(s)
+				if err != nil {
+					c.BadRequest(errors.New("invalid sensor_ids"))
+					return
+				}
+				sensorIdsV[i] = uint(num)
+			}
+			sensorIds = &sensorIdsV
+		}
+	}
+	if q.Has("offset") {
+		str := q.Get("offset")
+		offsetV, _ := strconv.Atoi(str)
+		offset = &offsetV
+	}
+	if q.Has("limit") {
+		str := q.Get("limit")
+		limitV, _ := strconv.Atoi(str)
+		limit = &limitV
+	}
+
+	log.Infof("query records with sensor_ids: %v, start_time: %v, end_time: %v, offset: %d, limit: %d", sensorIds, startTime, endTime, *offset, *limit)
+	records, err := api.recordService.GetRecords(sensorIds, startTime, endTime, offset, limit)
+	if err != nil {
+		c.BadRequest(err)
+	} else {
+		c.OK(records)
+	}
 }

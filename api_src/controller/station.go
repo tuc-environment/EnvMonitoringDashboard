@@ -18,7 +18,7 @@ func NewStationAPI(c *config.Config, l *logger.Logger, s *service.StationService
 	return &StationAPI{c, l, s}
 }
 
-// Register godoc
+// Get stations godoc
 //
 //	@Summary		Get stations
 //	@Description	Get stations with params

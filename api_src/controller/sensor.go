@@ -20,7 +20,7 @@ func NewSensorAPI(c *config.Config, l *logger.Logger, s *service.SensorService) 
 	return &SensorAPI{c, l, s}
 }
 
-// Register godoc
+// Get sensors godoc
 //
 //	@Summary		get sensors
 //	@Tags			sensors
@@ -45,7 +45,7 @@ func (api *SensorAPI) GetSensors(g *gin.Context) {
 	}
 }
 
-// Register godoc
+// Upsert sensor godoc
 //
 //	@Summary		create sensor
 //	@Tags			sensors
