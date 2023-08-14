@@ -185,7 +185,6 @@ func (api *RecordAPI) GetRecords(g *gin.Context) {
 		limit = &limitV
 	}
 
-	log.Infof("query records with sensor_ids: %v, start_time: %v, end_time: %v, offset: %d, limit: %d", sensorIds, startTime, endTime, *offset, *limit)
 	records, err := api.recordService.GetRecords(sensorIds, startTime, endTime, offset, limit)
 	if err != nil {
 		c.BadRequest(err)

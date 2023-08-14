@@ -37,7 +37,7 @@ export interface Sensor extends Base {
   unit?: string
 }
 
-export interface Record extends Base {
+export interface DataRecord extends Base {
   sensorID: number
   value?: number
   time?: Date
@@ -184,6 +184,28 @@ class HttpClient {
 
   public async uploadCSVRecords(data: any): Promise<Response<any> | null> {
     const resp = await this.post<any>('/records/upload', data)
+    return resp
+  }
+
+  public async getRecords(sensorIDs?: number[], startTime?: Date, endTime?: Date, offset?: number, limit?: number): Promise<Response<DataRecord[]> | null> {
+    const ret = [];
+    if (sensorIDs) {
+      const str = sensorIDs.map((sensorID) => sensorID.toString()).join(',')
+      ret.push('sensor_ids=' + encodeURIComponent(str));
+    }
+    if (startTime) {
+      ret.push('start_time=' + encodeURIComponent(startTime.toISOString()));
+    }
+    if (endTime) {
+      ret.push('end_time=' + encodeURIComponent(endTime.toISOString()));
+    }
+    if (offset != undefined) {
+      ret.push(`offset=${offset}`);
+    }
+    if (limit != undefined) {
+      ret.push(`limit=${limit}`);
+    }
+    const resp = await this.get<DataRecord[]>(`/records?${ret.join('&')}`)
     return resp
   }
 }
