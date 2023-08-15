@@ -50,7 +50,9 @@ func NewEngine(
 	api.GET("/", dataAPI.Ping)
 	api.POST("/register", accountAPI.Register)
 	api.POST("/login", accountAPI.Login)
+
 	api.GET("/stations", stationAPI.GetStations)
+	api.POST("/stations", stationAPI.UpsertStations)
 
 	api.POST("/records/upload", recordAPI.UploadRecords)
 	api.GET("/records/template", recordAPI.ExportCSVTemplate)

@@ -52,11 +52,11 @@ func (s *StationService) Upsert(station *Station) (*Station, error) {
 	log := s.logger.Sugar()
 	defer log.Sync()
 	jsonVal, _ := json.Marshal(station)
-	log.Infoln("upsert station: ", jsonVal)
+	log.Infoln("upsert station: ", string(jsonVal))
 	err := s.db.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "stations_id"}},
 		DoUpdates: clause.AssignmentColumns([]string{"name", "lat", "lng", "altitude"}),
-	}).Error
+	}).Create(station).Error
 	return station, err
 }
 
