@@ -53,13 +53,14 @@ export default {
     dataUrl: { type: String, required: true, default: 'http://sample-data/api' }
   },
   async created() {
-    await this.request()
+    // await this.request()
   },
   data() {
     return {
       count: 100,
       offset: 21,
-      limit: 10
+      limit: 10,
+      url: ''
     }
   },
   computed: {
@@ -81,17 +82,17 @@ export default {
     async request(url: string) {
       console.log(url)
     },
-    apiUrl(offset: number, limit: number, order: string) {
+    apiUrl(offset: number, limit: number, order: string): string {
       const url = new URL(this.url)
-      url.searchParams.set('offset', offset)
-      url.searchParams.set('limit', limit)
-      url.searchParams.set('order', order)
+      // url.searchParams.set('offset', offset)
+      // url.searchParams.set('limit', limit)
+      // url.searchParams.set('order', order)
       return url.toString()
     },
     async clickPrevious() {
       const offset = this.offset - this.limit
-      if (offset < 0) offset = 0
-      await this.request(this.apiUrl(offset, this.limit, ''))
+      // if (offset < 0) offset = 0
+      // await this.request(this.apiUrl(offset, this.limit, ''))
     },
     async clickNext() {
       const offset = this.offset + this.limit
