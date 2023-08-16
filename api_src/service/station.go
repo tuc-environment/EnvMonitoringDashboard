@@ -54,7 +54,7 @@ func (s *StationService) Upsert(station *Station) (*Station, error) {
 	jsonVal, _ := json.Marshal(station)
 	log.Infoln("upsert station: ", string(jsonVal))
 	err := s.db.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "stations_id"}},
+		Columns:   []clause.Column{{Name: "id"}},
 		DoUpdates: clause.AssignmentColumns([]string{"name", "lat", "lng", "altitude"}),
 	}).Create(station).Error
 	return station, err
