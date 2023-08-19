@@ -44,8 +44,10 @@ export interface DataRecord extends Base {
 }
 
 class HttpClient {
-
-  public baseUrl: string = process.env.NODE_ENV === 'development' ? 'http://localhost:8080/api' : 'https://tuc-env-monitoring-dashboard.vercel.app/api'
+  public baseUrl: string =
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:8080/api'
+      : 'https://tuc-env-monitoring-dashboard.vercel.app/api'
 
   private _token: string = ''
 
@@ -179,7 +181,7 @@ class HttpClient {
   public async downloadTemplate(): Promise<string | null> {
     const url = this.absoluteUrl('/records/template')
     const resp = await axios.get<string>(url, { headers: this._headers() })
-    return resp.data;
+    return resp.data
   }
 
   public async uploadCSVRecords(data: any): Promise<Response<any> | null> {
@@ -187,23 +189,29 @@ class HttpClient {
     return resp
   }
 
-  public async getRecords(sensorIDs?: number[], startTime?: Date, endTime?: Date, offset?: number, limit?: number): Promise<Response<DataRecord[]> | null> {
-    const ret = [];
+  public async getRecords(
+    sensorIDs?: number[],
+    startTime?: Date,
+    endTime?: Date,
+    offset?: number,
+    limit?: number
+  ): Promise<Response<DataRecord[]> | null> {
+    const ret = []
     if (sensorIDs) {
       const str = sensorIDs.map((sensorID) => sensorID.toString()).join(',')
-      ret.push('sensor_ids=' + encodeURIComponent(str));
+      ret.push('sensor_ids=' + encodeURIComponent(str))
     }
     if (startTime) {
-      ret.push('start_time=' + encodeURIComponent(startTime.toISOString()));
+      ret.push('start_time=' + encodeURIComponent(startTime.toISOString()))
     }
     if (endTime) {
-      ret.push('end_time=' + encodeURIComponent(endTime.toISOString()));
+      ret.push('end_time=' + encodeURIComponent(endTime.toISOString()))
     }
     if (offset != undefined) {
-      ret.push(`offset=${offset}`);
+      ret.push(`offset=${offset}`)
     }
     if (limit != undefined) {
-      ret.push(`limit=${limit}`);
+      ret.push(`limit=${limit}`)
     }
     const resp = await this.get<DataRecord[]>(`/records?${ret.join('&')}`)
     return resp

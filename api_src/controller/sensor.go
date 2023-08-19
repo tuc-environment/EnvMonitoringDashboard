@@ -22,12 +22,12 @@ func NewSensorAPI(c *config.Config, l *logger.Logger, s *service.SensorService) 
 
 // Get sensors godoc
 //
-//	@Summary		get sensors
-//	@Tags			sensors
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	"return sensors by station_id"
-//	@Router			/sensors [get]
+//	@Summary	get sensors
+//	@Tags		sensors
+//	@Accept		json
+//	@Produce	json
+//	@Success	200	"return sensors by station_id"
+//	@Router		/sensors [get]
 func (api *SensorAPI) GetSensors(g *gin.Context) {
 	log := api.logger.Sugar()
 	defer log.Sync()
@@ -47,12 +47,12 @@ func (api *SensorAPI) GetSensors(g *gin.Context) {
 
 // Upsert sensor godoc
 //
-//	@Summary		create sensor
-//	@Tags			sensors
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	"return sensor"
-//	@Router			/sensors [post]
+//	@Summary	create sensor
+//	@Tags		sensors
+//	@Accept		json
+//	@Produce	json
+//	@Success	200	"return sensor"
+//	@Router		/sensors [post]
 func (api *SensorAPI) UpsertSensor(g *gin.Context) {
 	log := api.logger.Sugar()
 	defer log.Sync()
