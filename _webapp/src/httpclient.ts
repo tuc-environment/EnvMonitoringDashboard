@@ -1,5 +1,4 @@
 import axios from 'axios'
-import md5 from 'md5'
 
 interface Response<T> {
   code: number
@@ -44,10 +43,12 @@ export interface DataRecord extends Base {
 }
 
 class HttpClient {
-  public baseUrl: string =
-    process.env.NODE_ENV === 'development'
+  public baseUrl: string = (function (): string {
+    if (import.meta.env.VITE_API_ENDPOINT) return import.meta.env.VITE_API_ENDPOINT
+    return import.meta.env.DEV
       ? 'http://localhost:8080/api'
       : 'https://tuc-env-monitoring-dashboard.vercel.app/api'
+  })()
 
   private _token: string = ''
 
