@@ -14,6 +14,11 @@ interface Base {
   deletedAt?: Date
 }
 
+export interface Account extends Base {
+  username: string
+  token: string
+}
+
 export interface Station extends Base {
   name?: string
   lat?: number
@@ -151,6 +156,11 @@ class HttpClient {
 
   public async logout() {
     this.token = ''
+  }
+
+  public async getAccount(): Promise<Response<Account> | null> {
+    const resp = await this.get<Account>('/account')
+    return resp
   }
 
   // stations

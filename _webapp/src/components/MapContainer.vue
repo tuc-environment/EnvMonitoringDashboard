@@ -1,9 +1,8 @@
 <template>
-    <div id="container" ref="container"></div>
+  <div id="container" ref="container"></div>
 </template>
 
 <script setup lang="ts">
-
 import AMapLoader from '@amap/amap-jsapi-loader'
 import { computed, reactive, ref, onMounted, nextTick } from 'vue'
 import httpclient, { type Station } from '@/httpclient'
@@ -15,13 +14,13 @@ var map: any | null
 var aMap: any | null
 const container = ref()
 const stations = reactive<{
-    allStations: Station[]
+  allStations: Station[]
 }>({
-    allStations: []
+  allStations: []
 })
 var markers: any[]
 onMounted(async () => {
-    initMap()
+  initMap()
 })
 
 const initMap = async () => {
@@ -51,14 +50,14 @@ const initMap = async () => {
 }
 
 const loadStations = async () => {
-    requesting.value = true
-    const resp = await httpclient.getStations()
-    if (resp?.code == 200) {
-        stations.allStations = resp.payload
-    } else {
-    }
-    requesting.value = false
-    await addStationMarks()
+  requesting.value = true
+  const resp = await httpclient.getStations()
+  if (resp?.code == 200) {
+    stations.allStations = resp.payload
+  } else {
+  }
+  requesting.value = false
+  await addStationMarks()
 }
 
 const addStationMarks = async () => {
@@ -134,15 +133,16 @@ const markerIconSelected = () => {
 
 <style scoped>
 #container {
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    padding: 0px;
-    margin: 0px;
-    width: 100%;
-    height: calc(100vh);
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  height: calc(100vh);
 }
 </style>
+
 <style>
 .amap-marker-label {
     border: 0;
@@ -152,3 +152,4 @@ const markerIconSelected = () => {
     border-radius: 8px;
 }
 </style>
+

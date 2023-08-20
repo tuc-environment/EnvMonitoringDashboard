@@ -88,7 +88,7 @@ func (api *AccountAPI) Login(g *gin.Context) {
 //	@Security		ApiKeyAuth
 //	@Success		200	"Return account information"
 //	@Failure		401	"Token is incorrect"
-//	@Router			/ [get]
+//	@Router			/account [get]
 func (api *AccountAPI) GetAccount(g *gin.Context) {
 	c := WrapContext(g)
 
@@ -99,7 +99,43 @@ func (api *AccountAPI) GetAccount(g *gin.Context) {
 		return
 	}
 
+	// hide password
+	account.Password = ""
 	c.OK(account)
+}
+
+// Regenrate Token godoc
+//
+//	@Summary		Regenrate Access Token
+//	@Description	Regenrate account access token
+//	@Tags			accounts
+//	@Accept			json
+//	@Produce		json
+//	@Security		ApiKeyAuth
+//	@Success		200	"Return account information with new token"
+//	@Failure		401	"Token is incorrect"
+//	@Router			/account/regenrateToken [post]
+func (api *AccountAPI) RegenrateToken(g *gin.Context) {
+	c := WrapContext(g)
+
+	c.OK("regenrate token")
+}
+
+// Change Passsword godoc
+//
+//	@Summary		Change Passsword
+//	@Description	Change account password
+//	@Tags			accounts
+//	@Accept			json
+//	@Produce		json
+//	@Security		ApiKeyAuth
+//	@Success		200	"Return account information"
+//	@Failure		401	"Token is incorrect"
+//	@Router			/account/changePassword [post]
+func (api *AccountAPI) ChangePassword(g *gin.Context) {
+	c := WrapContext(g)
+
+	c.OK("change password")
 }
 
 func (api *AccountAPI) AuthMiddleware(g *gin.Context) {
