@@ -171,6 +171,11 @@ class HttpClient {
     return resp
   }
 
+  public async changePassword(newPassword: string): Promise<Response<Account> | null> {
+    const resp = await this.post<Account>('/account/changePassword', { new_password: newPassword })
+    return resp
+  }
+
   // stations
 
   public async getStations(): Promise<Response<Station[]> | null> {

@@ -7,7 +7,7 @@
       class="form-control"
       :value="field"
       :placeholder="placeholder"
-      @change="onChange"
+      @input="onInput"
       :disabled="disabled"
     />
     <label class="text-secondary small" v-if="footnote">{{ footnote }}</label>
@@ -27,7 +27,7 @@ export default {
   },
   emits: ['update:field'],
   methods: {
-    onChange(e: any) {
+    onInput(e: any) {
       this.$emit('update:field', e.target.value)
     }
   }
