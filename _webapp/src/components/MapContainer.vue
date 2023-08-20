@@ -5,8 +5,10 @@
 <script setup lang="ts">
 
 import AMapLoader from '@amap/amap-jsapi-loader'
-import { computed, reactive, ref, onMounted } from 'vue'
+import { computed, reactive, ref, onMounted, nextTick } from 'vue'
 import httpclient, { type Station } from '@/httpclient'
+import iconMarker from "@/assets/img/marker.png"
+import iconMarkerSelected from "@/assets/img/marker-selected.png"
 
 const requesting = ref(false)
 var map: any | null
@@ -17,7 +19,7 @@ const stations = reactive<{
 }>({
     allStations: []
 })
-
+var markers: any[]
 onMounted(async () => {
     initMap()
 })
@@ -35,8 +37,14 @@ const initMap = async () => {
             pitch: 0,
             viewMode: '2D',
             mapStyle: 'amap://styles/grey',
+            clickable: true,
+            dragEnable: false,
+            zoomEnable: false,
+            doubleClickZoom: false,
+            keyboardEnable: false,
         })
         await loadStations()
+        map.on('click', clickMapHandler);
     } catch (err: any) {
         console.log('[map] load map with error: ', err.toString())
     }
@@ -54,22 +62,73 @@ const loadStations = async () => {
 }
 
 const addStationMarks = async () => {
-    stations.allStations.forEach((station: Station) => {
+    const icon = markerIcon();
+    markers = stations.allStations.flatMap((station: Station) => {
         console.log('[map] add marker for station: ', JSON.stringify(station))
         if (station.name && station.lat && station.lng) {
             const marker = new aMap.Marker({
+                extData: station,
                 position: new aMap.LngLat(station.lng, station.lat),
                 title: station.name,
-                offset: new aMap.Pixel(-13, -30)
+                icon: icon,
+                label: {
+                    content: station.name,
+                    direction: 'top',
+                    offset: new aMap.Pixel(0, -5)
+                },
+                offset: new aMap.Pixel(0, 0),
+                anchor: 'bottom-center',
+                animation: 'AMAP_ANIMATION_BOUNCE',
+                clickable: true,
             })
-            map.add(marker)
+            marker.on('click', clickMarkerHandler)
+            return marker;
         } else {
             console.log('[map] invalid station: ', station.id)
+            return null
         }
     })
+    map.add(markers)
 }
 
+const clickMapHandler = (event: any) => {
+    console.log('[map] click map: ', event)
+};
 
+const clickMarkerHandler = (event: any) => {
+    const icon = markerIcon();
+    const selectedIcon = markerIconSelected()
+    markers.forEach((marker) => {
+        if (marker == event.target) {
+            marker.setIcon(selectedIcon)
+        } else {
+            marker.setIcon(icon)
+        }
+    })
+    console.log('[map] click mark: ', event)
+    const station: Station = event.target.getExtData()
+    console.log('[map] selectedStation: ', JSON.stringify(station))
+}
+
+const markerIcon = () => {
+    const icon = new aMap.Icon({
+        size: new aMap.Size(20, 20),
+        image: iconMarker,
+        imageOffset: new aMap.Pixel(0, 0),
+        imageSize: new aMap.Size(20, 20),
+    })
+    return icon
+}
+
+const markerIconSelected = () => {
+    const icon = new aMap.Icon({
+        size: new aMap.Size(30, 30),
+        image: iconMarkerSelected,
+        imageOffset: new aMap.Pixel(0, 0),
+        imageSize: new aMap.Size(30, 30),
+    })
+    return icon
+}
 
 </script>
 
@@ -82,5 +141,14 @@ const addStationMarks = async () => {
     margin: 0px;
     width: 100%;
     height: calc(100vh);
+}
+</style>
+<style>
+.amap-marker-label {
+    border: 0;
+    font-size: 14px;
+    padding: 4px;
+    background-color: silver;
+    border-radius: 8px;
 }
 </style>
