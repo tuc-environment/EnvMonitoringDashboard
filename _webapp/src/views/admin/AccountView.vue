@@ -1,13 +1,7 @@
 <template>
   <div class="main-content">
     <SectionLayout title="Overview">
-      <LabelInputComponent
-        label="Username"
-        type="text"
-        placeholder="Username"
-        :field="username"
-        disabled
-      />
+      <LabelInputComponent label="Username" type="text" :field="username" disabled />
       <LabelInputComponent
         label="Access Token"
         type="text"
@@ -40,9 +34,14 @@ export default {
     SectionLayout,
     LabelInputComponent
   },
+  async created() {
+    const resp = await httpclient.getAccount()
+    this.username = resp?.payload.username || ''
+    this.token = resp?.payload.token || ''
+  },
   data() {
     return {
-      username: 'yiwei',
+      username: '',
       token: httpclient.token
     }
   }

@@ -17,7 +17,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/": {
+        "/account": {
             "get": {
                 "security": [
                     {
@@ -38,6 +38,62 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "Return account information"
+                    },
+                    "401": {
+                        "description": "Token is incorrect"
+                    }
+                }
+            }
+        },
+        "/account/changePassword": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Change account password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Change Passsword",
+                "responses": {
+                    "200": {
+                        "description": "Return account information"
+                    },
+                    "401": {
+                        "description": "Token is incorrect"
+                    }
+                }
+            }
+        },
+        "/account/regenrateToken": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Regenrate account access token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Regenrate Access Token",
+                "responses": {
+                    "200": {
+                        "description": "Return account information with new token"
                     },
                     "401": {
                         "description": "Token is incorrect"
@@ -110,6 +166,66 @@ const docTemplate = `{
                 }
             }
         },
+        "/records": {
+            "get": {
+                "description": "query records data with time range, pagination \u0026 filters",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "records"
+                ],
+                "summary": "get records by query",
+                "responses": {
+                    "200": {
+                        "description": "return records json"
+                    }
+                }
+            }
+        },
+        "/records/template": {
+            "get": {
+                "description": "generate record upload csv template",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "records"
+                ],
+                "summary": "download csv records",
+                "responses": {
+                    "200": {
+                        "description": "export csv template"
+                    }
+                }
+            }
+        },
+        "/records/upload": {
+            "post": {
+                "description": "csv column - \"sensorId\"",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "records"
+                ],
+                "summary": "upload csv records",
+                "responses": {
+                    "200": {
+                        "description": "return uploaded csv"
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "description": "Register a new account with username and password",
@@ -144,6 +260,42 @@ const docTemplate = `{
                 }
             }
         },
+        "/sensors": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sensors"
+                ],
+                "summary": "get sensors",
+                "responses": {
+                    "200": {
+                        "description": "return sensors by station_id"
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "sensors"
+                ],
+                "summary": "create sensor",
+                "responses": {
+                    "200": {
+                        "description": "return sensor"
+                    }
+                }
+            }
+        },
         "/stations": {
             "get": {
                 "description": "Get stations with params",
@@ -157,6 +309,24 @@ const docTemplate = `{
                     "stations"
                 ],
                 "summary": "Get stations",
+                "responses": {
+                    "200": {
+                        "description": "Return station json array"
+                    }
+                }
+            },
+            "post": {
+                "description": "Upsert stations",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "stations"
+                ],
+                "summary": "Upsert stations",
                 "responses": {
                     "200": {
                         "description": "Return station json array"

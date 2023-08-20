@@ -64,6 +64,8 @@ func NewEngine(
 	api.Use(accountAPI.AuthMiddleware)
 	{
 		api.GET("/account", accountAPI.GetAccount)
+		api.POST("/account/regenrateToken", accountAPI.RegenrateToken)
+		api.POST("/account/changePassword", accountAPI.ChangePassword)
 	}
 
 	// append docs

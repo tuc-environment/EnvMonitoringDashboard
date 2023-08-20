@@ -29,7 +29,7 @@ info:
   title: 天津商业大学环境监测系统API
   version: "1.0"
 paths:
-  /:
+  /account:
     get:
       consumes:
       - application/json
@@ -44,6 +44,40 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Get account information
+      tags:
+      - accounts
+  /account/changePassword:
+    post:
+      consumes:
+      - application/json
+      description: Change account password
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Return account information
+        "401":
+          description: Token is incorrect
+      security:
+      - ApiKeyAuth: []
+      summary: Change Passsword
+      tags:
+      - accounts
+  /account/regenrateToken:
+    post:
+      consumes:
+      - application/json
+      description: Regenrate account access token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Return account information with new token
+        "401":
+          description: Token is incorrect
+      security:
+      - ApiKeyAuth: []
+      summary: Regenrate Access Token
       tags:
       - accounts
   /api:
@@ -87,6 +121,45 @@ paths:
       summary: Login to an account
       tags:
       - accounts
+  /records:
+    get:
+      consumes:
+      - application/json
+      description: query records data with time range, pagination & filters
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: return records json
+      summary: get records by query
+      tags:
+      - records
+  /records/template:
+    get:
+      consumes:
+      - application/json
+      description: generate record upload csv template
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: export csv template
+      summary: download csv records
+      tags:
+      - records
+  /records/upload:
+    post:
+      consumes:
+      - application/json
+      description: csv column - "sensorId"
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: return uploaded csv
+      summary: upload csv records
+      tags:
+      - records
   /register:
     post:
       consumes:
@@ -109,6 +182,29 @@ paths:
       summary: Register a new account
       tags:
       - accounts
+  /sensors:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: return sensors by station_id
+      summary: get sensors
+      tags:
+      - sensors
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: return sensor
+      summary: create sensor
+      tags:
+      - sensors
   /stations:
     get:
       consumes:
@@ -120,6 +216,18 @@ paths:
         "200":
           description: Return station json array
       summary: Get stations
+      tags:
+      - stations
+    post:
+      consumes:
+      - application/json
+      description: Upsert stations
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Return station json array
+      summary: Upsert stations
       tags:
       - stations
 securityDefinitions:
