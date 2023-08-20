@@ -163,6 +163,14 @@ class HttpClient {
     return resp
   }
 
+  public async regenrateToken(): Promise<Response<Account> | null> {
+    const resp = await this.post<Account>('/account/regenrateToken')
+    if (resp?.payload.token) {
+      this.token = resp?.payload.token
+    }
+    return resp
+  }
+
   // stations
 
   public async getStations(): Promise<Response<Station[]> | null> {

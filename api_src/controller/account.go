@@ -176,6 +176,7 @@ func (api *AccountAPI) AuthMiddleware(g *gin.Context) {
 	_, err := api.accountService.GetAccountWithToken(apiToken)
 	if err != nil {
 		c.Unauthorized(err)
+		c.Abort()
 		return
 	}
 

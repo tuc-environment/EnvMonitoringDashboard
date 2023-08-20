@@ -9,7 +9,7 @@
         footnote="Please keep access token secretly."
         disabled
       />
-      <button class="btn btn-primary">Regenerate Token</button>
+      <button class="btn btn-primary" @click="regenrateToken">Regenerate Token</button>
     </SectionLayout>
 
     <SectionLayout title="Change Password">
@@ -42,8 +42,16 @@ export default {
   data() {
     return {
       username: '',
-      token: httpclient.token
+      token: ''
     }
+  },
+  methods: {
+    async regenrateToken() {
+      const resp = await httpclient.regenrateToken()
+      this.username = resp?.payload.username || ''
+      this.token = resp?.payload.token || ''
+    },
+    async changePassword() {}
   }
 }
 </script>
