@@ -97,3 +97,19 @@ func (s *AccountService) GetAccountWithToken(token string) (Account, error) {
 	log.Infoln("account %s retrieved", account.Username)
 	return account, nil
 }
+
+func (s *AccountService) RegenrateToken(userID uint) (Account, error) {
+	log := s.logger.Sugar()
+	defer log.Sync()
+
+	token := s.NewToken()
+	var account Account
+	err := s.db.Model(&Account{}).Where("id = ?", userID).Update("token", token).First(&account).Error
+	if err != nil {
+		log.Error(err)
+		return Account{}, err
+	}
+	log.Infoln("account %s token regenrated", account.Username)
+
+	return account, nil
+}

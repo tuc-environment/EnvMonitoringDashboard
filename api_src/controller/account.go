@@ -118,7 +118,18 @@ func (api *AccountAPI) GetAccount(g *gin.Context) {
 func (api *AccountAPI) RegenrateToken(g *gin.Context) {
 	c := WrapContext(g)
 
-	c.OK("regenrate token")
+	apiToken := c.GetHeader("Authorization")
+	account, err := api.accountService.GetAccountWithToken(apiToken)
+	if err != nil {
+		c.Unauthorized(err)
+		return
+	}
+	account, err = api.accountService.RegenrateToken(account.ID)
+	if err != nil {
+		c.BadRequest(err)
+		return
+	}
+	c.OK(account)
 }
 
 // Change Passsword godoc
