@@ -120,6 +120,7 @@ const clearForm = () => {
   width: 72px;
   margin: 20px auto;
   display: block;
+  border-radius: 5px;
 }
 
 .register-link {

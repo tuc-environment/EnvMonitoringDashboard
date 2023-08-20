@@ -102,4 +102,10 @@ function preventDefault(e: Event) {
   display: block;
   border-radius: 5px;
 }
+
+.register-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+}
 </style>
