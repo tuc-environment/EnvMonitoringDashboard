@@ -28,7 +28,7 @@
           :disabled="requesting"
           @click="login(username, password)"
         >
-          <div v-if="requesting" class="spinner-border text-light" role="status" />
+          <div v-if="requesting" class="spinner-border text-light mx-auto d-block" role="status" />
           <div v-else>Login</div>
         </button>
 
@@ -36,9 +36,9 @@
           class="mt-5 d-flex justify-content-between mb-2"
           style="color: rgba(0, 0, 0, 0.5); font-size: 0.99rem"
         >
-          <div>Privacy Policy</div>
-          <div>Term of Service</div>
-          <div>Contact</div>
+          <div style="cursor: pointer">Privacy Policy</div>
+          <div style="cursor: pointer">Term of Service</div>
+          <div style="cursor: pointer">Contact</div>
         </div>
       </form>
     </div>
