@@ -1,13 +1,13 @@
 <template>
-    <div id="container" ref="container"></div>
+  <div id="container" ref="container"></div>
 </template>
 
 <script setup lang="ts">
 import AMapLoader from '@amap/amap-jsapi-loader'
 import { computed, reactive, ref, onMounted, nextTick } from 'vue'
 import httpclient, { type Station } from '@/httpclient'
-import iconMarker from "@/assets/img/marker.png"
-import iconMarkerSelected from "@/assets/img/marker-selected.png"
+import iconMarker from '@/assets/img/marker.png'
+import iconMarkerSelected from '@/assets/img/marker-selected.png'
 
 const requesting = ref(false)
 var map: any | null
@@ -16,83 +16,82 @@ var currentMarkerInfoPopup: any | null
 var markerSelected: any | null
 const container = ref()
 const stations = reactive<{
-    allStations: Station[]
+  allStations: Station[]
 }>({
-    allStations: []
+  allStations: []
 })
 var markers: any[]
 onMounted(async () => {
-    initMap()
+  initMap()
 })
 
 const initMap = async () => {
-    try {
-        aMap = await AMapLoader.load({
-            key: "d9997a27b8b492c266a01c2d5e5be64a",
-            version: "2.0",
-            plugins: [''],
-        })
-        map = new aMap.Map('container', {
-            zoom: 4.1,
-            center: [110, 35],
-            pitch: 0,
-            viewMode: '2D',
-            mapStyle: 'amap://styles/grey',
-            clickable: true,
-            dragEnable: false,
-            zoomEnable: false,
-            doubleClickZoom: false,
-            keyboardEnable: false,
-        })
-        await loadStations()
-        map.on('click', clickMapHandler);
-    } catch (err: any) {
-        console.log('[map] load map with error: ', err.toString())
-    }
+  try {
+    aMap = await AMapLoader.load({
+      key: 'd9997a27b8b492c266a01c2d5e5be64a',
+      version: '2.0',
+      plugins: ['']
+    })
+    map = new aMap.Map('container', {
+      zoom: 4.1,
+      center: [110, 35],
+      pitch: 0,
+      viewMode: '2D',
+      mapStyle: 'amap://styles/grey',
+      clickable: true,
+      dragEnable: false,
+      zoomEnable: false,
+      doubleClickZoom: false,
+      keyboardEnable: false
+    })
+    await loadStations()
+    map.on('click', clickMapHandler)
+  } catch (err: any) {
+    console.log('[map] load map with error: ', err.toString())
+  }
 }
 
 const loadStations = async () => {
-    requesting.value = true
-    const resp = await httpclient.getStations()
-    if (resp?.code == 200) {
-        stations.allStations = resp.payload
-    } else {
-    }
-    requesting.value = false
-    await addStationMarks()
+  requesting.value = true
+  const resp = await httpclient.getStations()
+  if (resp?.code == 200) {
+    stations.allStations = resp.payload
+  } else {
+  }
+  requesting.value = false
+  await addStationMarks()
 }
 
 // add map elements
 
 const addStationMarks = async () => {
-    const icon = markerIcon();
-    markers = stations.allStations.flatMap((station: Station) => {
-        console.log('[map] add marker for station: ', JSON.stringify(station))
-        if (station.name && station.lat && station.lng) {
-            const marker = new aMap.Marker({
-                extData: station,
-                position: new aMap.LngLat(station.lng, station.lat),
-                title: station.name,
-                icon: icon,
-                label: markerLabel(station.name),
-                offset: new aMap.Pixel(0, 0),
-                anchor: 'bottom-center',
-                animation: 'AMAP_ANIMATION_BOUNCE',
-                clickable: true,
-            })
-            marker.on('click', clickMarkerHandler)
-            return marker;
-        } else {
-            console.log('[map] invalid station: ', station.id)
-            return null
-        }
-    })
-    map.add(markers)
+  const icon = markerIcon()
+  markers = stations.allStations.flatMap((station: Station) => {
+    console.log('[map] add marker for station: ', JSON.stringify(station))
+    if (station.name && station.lat && station.lng) {
+      const marker = new aMap.Marker({
+        extData: station,
+        position: new aMap.LngLat(station.lng, station.lat),
+        title: station.name,
+        icon: icon,
+        label: markerLabel(station.name),
+        offset: new aMap.Pixel(0, 0),
+        anchor: 'bottom-center',
+        animation: 'AMAP_ANIMATION_BOUNCE',
+        clickable: true
+      })
+      marker.on('click', clickMarkerHandler)
+      return marker
+    } else {
+      console.log('[map] invalid station: ', station.id)
+      return null
+    }
+  })
+  map.add(markers)
 }
 
 const addStationPopup = (station: Station, position: number[]) => {
-
-    const dom: string = `
+  const dom: string = `
         <div class="markerPopupContainer">
             <div class="popLabelRow"> 
                 <b>Name</b> 
@@ -113,123 +112,121 @@ const addStationPopup = (station: Station, position: number[]) => {
         </div>
     `
 
-    // 创建 infoWindow 实例	
-    currentMarkerInfoPopup = new aMap.InfoWindow({
-        content: dom,
-        anchor: 'bottom-center',
-        offset: new aMap.Pixel(0, -60)
-    });
-    currentMarkerInfoPopup.open(map, position)
+  // 创建 infoWindow 实例
+  currentMarkerInfoPopup = new aMap.InfoWindow({
+    content: dom,
+    anchor: 'bottom-center',
+    offset: new aMap.Pixel(0, -60)
+  })
+  currentMarkerInfoPopup.open(map, position)
 }
 
 // handlers
 
 const clickMapHandler = (event: any) => {
-    console.log('[map] click map: ', event)
-    if (currentMarkerInfoPopup) {
-        currentMarkerInfoPopup.close()
-    }
-    deselectMarker(markerSelected)
-};
+  console.log('[map] click map: ', event)
+  if (currentMarkerInfoPopup) {
+    currentMarkerInfoPopup.close()
+  }
+  deselectMarker(markerSelected)
+}
 
 const clickMarkerHandler = (event: any) => {
-    console.log('[map] click mark: ', event)
-    selectMarker(event.target)
+  console.log('[map] click mark: ', event)
+  selectMarker(event.target)
 }
 
 // utils
 
 const selectMarker = (selectedMarker: any) => {
-    markerSelected = selectedMarker;
-    const icon = markerIcon();
-    const selectedIcon = markerIconSelected()
-    markers.forEach((marker) => {
-        if (marker == selectedMarker) {
-            marker.setIcon(selectedIcon)
-        } else {
-            marker.setIcon(icon)
-            marker.setLabel(markerLabel(marker.getExtData().name));
-        }
-    })
-    const station: Station = selectedMarker.getExtData()
-    console.log('[map] selectedStation: ', JSON.stringify(station))
-    addStationPopup(station, selectedMarker.getPosition())
+  markerSelected = selectedMarker
+  const icon = markerIcon()
+  const selectedIcon = markerIconSelected()
+  markers.forEach((marker) => {
+    if (marker == selectedMarker) {
+      marker.setIcon(selectedIcon)
+    } else {
+      marker.setIcon(icon)
+      marker.setLabel(markerLabel(marker.getExtData().name))
+    }
+  })
+  const station: Station = selectedMarker.getExtData()
+  console.log('[map] selectedStation: ', JSON.stringify(station))
+  addStationPopup(station, selectedMarker.getPosition())
 }
 
 const deselectMarker = (deselectedMarker: any) => {
-    const icon = markerIcon();
-    deselectedMarker.setIcon(icon)
-    deselectedMarker.setLabel(markerLabel(deselectedMarker.getExtData().name));
+  const icon = markerIcon()
+  deselectedMarker.setIcon(icon)
+  deselectedMarker.setLabel(markerLabel(deselectedMarker.getExtData().name))
 }
 
 const markerLabel = (title: string) => {
-    return {
-        content: title,
-        direction: 'top',
-        offset: new aMap.Pixel(0, -5)
-    }
+  return {
+    content: title,
+    direction: 'top',
+    offset: new aMap.Pixel(0, -5)
+  }
 }
 
 const markerIcon = () => {
-    const icon = new aMap.Icon({
-        size: new aMap.Size(20, 20),
-        image: iconMarker,
-        imageOffset: new aMap.Pixel(0, 0),
-        imageSize: new aMap.Size(20, 20),
-    })
-    return icon
+  const icon = new aMap.Icon({
+    size: new aMap.Size(20, 20),
+    image: iconMarker,
+    imageOffset: new aMap.Pixel(0, 0),
+    imageSize: new aMap.Size(20, 20)
+  })
+  return icon
 }
 
 const markerIconSelected = () => {
-    const icon = new aMap.Icon({
-        size: new aMap.Size(30, 30),
-        image: iconMarkerSelected,
-        imageOffset: new aMap.Pixel(0, 0),
-        imageSize: new aMap.Size(30, 30),
-    })
-    return icon
+  const icon = new aMap.Icon({
+    size: new aMap.Size(30, 30),
+    image: iconMarkerSelected,
+    imageOffset: new aMap.Pixel(0, 0),
+    imageSize: new aMap.Size(30, 30)
+  })
+  return icon
 }
-
 </script>
 
 <style scoped>
 #container {
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    padding: 0px;
-    margin: 0px;
-    width: 100%;
-    height: calc(100vh);
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  height: calc(100vh);
 }
 </style>
 
 <style>
 .amap-marker-label {
-    border: 0;
-    font-size: 14px;
-    padding: 4px;
-    background-color: silver;
-    border-radius: 8px;
+  border: 0;
+  font-size: 14px;
+  padding: 4px;
+  background-color: silver;
+  border-radius: 8px;
 }
 
 .amap-info-content {
-    border-radius: 8px;
+  border-radius: 8px;
 }
 
 .markerPopupContainer {
-    font-size: 12px;
-    padding-right: 8px;
-    padding-left: 8px;
+  font-size: 12px;
+  padding-right: 8px;
+  padding-left: 8px;
 }
 
 .popLabelValue {
-    margin-left: 8px;
-    text-align: right;
-    flex: 1;
+  margin-left: 8px;
+  text-align: right;
+  flex: 1;
 }
 .popLabelRow {
-    display: flex;
+  display: flex;
 }
 </style>
-

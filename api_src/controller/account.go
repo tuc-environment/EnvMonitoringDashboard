@@ -146,7 +146,27 @@ func (api *AccountAPI) RegenrateToken(g *gin.Context) {
 func (api *AccountAPI) ChangePassword(g *gin.Context) {
 	c := WrapContext(g)
 
-	c.OK("change password")
+	apiToken := c.GetHeader("Authorization")
+	account, err := api.accountService.GetAccountWithToken(apiToken)
+	if err != nil {
+		c.Unauthorized(err)
+		return
+	}
+
+	body := args.AccountChangePasswordArgs{}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.BadRequest(err)
+		return
+	}
+
+	account, err = api.accountService.ChangePassword(account.ID, body.NewPassword)
+	if err != nil {
+		c.BadRequest(err)
+		return
+	}
+
+	account.Password = ""
+	c.OK(account)
 }
 
 func (api *AccountAPI) AuthMiddleware(g *gin.Context) {

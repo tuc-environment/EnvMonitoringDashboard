@@ -113,3 +113,19 @@ func (s *AccountService) RegenrateToken(userID uint) (Account, error) {
 
 	return account, nil
 }
+
+func (s *AccountService) ChangePassword(userID uint, newPassword string) (Account, error) {
+	log := s.logger.Sugar()
+	defer log.Sync()
+
+	var account Account
+	err := s.db.Model(&Account{}).Where("id = ?", userID).Update("password", s.HashedPassword(newPassword)).First(&account).Error
+	if err != nil {
+		log.Error(err)
+		return Account{}, err
+	}
+
+	log.Infoln("account %s password updated", account.Username)
+
+	return account, nil
+}
