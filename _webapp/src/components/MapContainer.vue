@@ -1,5 +1,5 @@
 <template>
-  <div id="container" ref="container"></div>
+    <div id="container" ref="container"></div>
 </template>
 
 <script setup lang="ts">
@@ -12,15 +12,17 @@ import iconMarkerSelected from "@/assets/img/marker-selected.png"
 const requesting = ref(false)
 var map: any | null
 var aMap: any | null
+var currentMarkerInfoPopup: any | null
+var markerSelected: any | null
 const container = ref()
 const stations = reactive<{
-  allStations: Station[]
+    allStations: Station[]
 }>({
-  allStations: []
+    allStations: []
 })
 var markers: any[]
 onMounted(async () => {
-  initMap()
+    initMap()
 })
 
 const initMap = async () => {
@@ -50,15 +52,17 @@ const initMap = async () => {
 }
 
 const loadStations = async () => {
-  requesting.value = true
-  const resp = await httpclient.getStations()
-  if (resp?.code == 200) {
-    stations.allStations = resp.payload
-  } else {
-  }
-  requesting.value = false
-  await addStationMarks()
+    requesting.value = true
+    const resp = await httpclient.getStations()
+    if (resp?.code == 200) {
+        stations.allStations = resp.payload
+    } else {
+    }
+    requesting.value = false
+    await addStationMarks()
 }
+
+// add map elements
 
 const addStationMarks = async () => {
     const icon = markerIcon();
@@ -70,11 +74,7 @@ const addStationMarks = async () => {
                 position: new aMap.LngLat(station.lng, station.lat),
                 title: station.name,
                 icon: icon,
-                label: {
-                    content: station.name,
-                    direction: 'top',
-                    offset: new aMap.Pixel(0, -5)
-                },
+                label: markerLabel(station.name),
                 offset: new aMap.Pixel(0, 0),
                 anchor: 'bottom-center',
                 animation: 'AMAP_ANIMATION_BOUNCE',
@@ -90,23 +90,84 @@ const addStationMarks = async () => {
     map.add(markers)
 }
 
+const addStationPopup = (station: Station, position: number[]) => {
+
+    const dom: string = `
+        <div class="markerPopupContainer">
+            <div class="popLabelRow"> 
+                <b>Name</b> 
+                <span class="popLabelValue">${station.name}</span>
+            </div>
+            <div class="popLabelRow"> 
+                <b>Latitude</b> 
+                <span class="popLabelValue">${station.lat}</span>
+            </div>
+            <div class="popLabelRow"> 
+                <b>Longitude</b> 
+                <span class="popLabelValue">${station.lng}</span>
+            </div>
+            <div class="popLabelRow"> 
+                <b>Altitude</b> 
+                <span class="popLabelValue">${station.altitude}</span>
+            </div>
+        </div>
+    `
+
+    // 创建 infoWindow 实例	
+    currentMarkerInfoPopup = new aMap.InfoWindow({
+        content: dom,
+        anchor: 'bottom-center',
+        offset: new aMap.Pixel(0, -60)
+    });
+    currentMarkerInfoPopup.open(map, position)
+}
+
+// handlers
+
 const clickMapHandler = (event: any) => {
     console.log('[map] click map: ', event)
+    if (currentMarkerInfoPopup) {
+        currentMarkerInfoPopup.close()
+    }
+    deselectMarker(markerSelected)
 };
 
 const clickMarkerHandler = (event: any) => {
+    console.log('[map] click mark: ', event)
+    selectMarker(event.target)
+}
+
+// utils
+
+const selectMarker = (selectedMarker: any) => {
+    markerSelected = selectedMarker;
     const icon = markerIcon();
     const selectedIcon = markerIconSelected()
     markers.forEach((marker) => {
-        if (marker == event.target) {
+        if (marker == selectedMarker) {
             marker.setIcon(selectedIcon)
         } else {
             marker.setIcon(icon)
+            marker.setLabel(markerLabel(marker.getExtData().name));
         }
     })
-    console.log('[map] click mark: ', event)
-    const station: Station = event.target.getExtData()
+    const station: Station = selectedMarker.getExtData()
     console.log('[map] selectedStation: ', JSON.stringify(station))
+    addStationPopup(station, selectedMarker.getPosition())
+}
+
+const deselectMarker = (deselectedMarker: any) => {
+    const icon = markerIcon();
+    deselectedMarker.setIcon(icon)
+    deselectedMarker.setLabel(markerLabel(deselectedMarker.getExtData().name));
+}
+
+const markerLabel = (title: string) => {
+    return {
+        content: title,
+        direction: 'top',
+        offset: new aMap.Pixel(0, -5)
+    }
 }
 
 const markerIcon = () => {
@@ -133,13 +194,13 @@ const markerIconSelected = () => {
 
 <style scoped>
 #container {
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  padding: 0px;
-  margin: 0px;
-  width: 100%;
-  height: calc(100vh);
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    height: calc(100vh);
 }
 </style>
 
@@ -150,6 +211,25 @@ const markerIconSelected = () => {
     padding: 4px;
     background-color: silver;
     border-radius: 8px;
+}
+
+.amap-info-content {
+    border-radius: 8px;
+}
+
+.markerPopupContainer {
+    font-size: 12px;
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+.popLabelValue {
+    margin-left: 8px;
+    text-align: right;
+    flex: 1;
+}
+.popLabelRow {
+    display: flex;
 }
 </style>
 
