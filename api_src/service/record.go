@@ -66,7 +66,7 @@ func (s *RecordService) BatchUpsert(records *[]Record) (*[]Record, error) {
 	defer log.Sync()
 	log.Infoln("batch upsert records count: ", len(*records))
 	err := s.db.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "sensor_id"}, {Name: "time"}, {Name: "id"}},
+		Columns:   []clause.Column{{Name: "sensor_id"}, {Name: "time"}},
 		DoUpdates: clause.AssignmentColumns([]string{"value", "updated_at", "deleted_at"}),
 	}).Create(records).Error
 	return records, err
