@@ -1,5 +1,5 @@
 <template>
-  <div id="container" ref="container"></div>
+  <div id="container" class="container-fluid" ref="container"></div>
 </template>
 
 <script setup lang="ts">
@@ -34,7 +34,7 @@ const initMap = async () => {
     })
     map = new aMap.Map('container', {
       zoom: 4.1,
-      center: [110, 35],
+      center: [104, 35],
       pitch: 0,
       viewMode: '2D',
       mapStyle: 'amap://styles/grey',
@@ -192,12 +192,10 @@ const markerIconSelected = () => {
 
 <style scoped>
 #container {
-  position: absolute;
   left: 0px;
   right: 0px;
   padding: 0px;
   margin: 0px;
-  width: 100%;
   height: calc(100vh);
 }
 </style>
