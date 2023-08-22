@@ -1,19 +1,55 @@
 <template>
   <div class="dashboardContainer">
-    <div class="leftPanel">
-      <button style="background-color: green; width: 100px; height: 100px" @click="test">
-        test
-      </button>
-    </div>
+    <div class="leftPanel column"></div>
     <div class="centerSpace"></div>
-    <div class="rightPanel"></div>
+    <div class="rightPanel column">
+      <LineChart
+        class="chart"
+        :station="selectedStation"
+        :sensors="relatedSensors"
+        :records="relatedRecords"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const test = () => {
-  console.log('testing')
+import LineChart from '@/components/LineChart.vue'
+import httpclient, { type Station, type Sensor, type DataRecord } from '@/httpclient'
+import { ref, type PropType } from 'vue'
+
+const selectedStation = ref<Station | undefined>(undefined)
+const relatedSensors = ref<Sensor[] | undefined>(undefined)
+const relatedRecords = ref<DataRecord[] | undefined>(undefined)
+
+const selectStation = async (station: Station | undefined) => {
+  console.log('[dashboard] select station: ', JSON.stringify(station))
+  if (selectedStation.value?.id && selectedStation.value?.id == station?.id) {
+    return
+  }
+  selectedStation.value = station
+  relatedSensors.value = []
+  relatedRecords.value = []
+  const stationId = station?.id
+  if (stationId) {
+    const sensorsRes = await httpclient.getSensors(stationId)
+    const sensors = sensorsRes?.payload ?? []
+    if (sensors.length > 0) {
+      const sensorIds = sensors
+        ? (sensors.map((sensors) => sensors.id).filter((id) => id) as number[])
+        : []
+      const recordsRes = await httpclient.getRecords(sensorIds)
+      const records = recordsRes?.payload ?? []
+      relatedSensors.value = sensors
+      relatedRecords.value = records
+      console.log('[dashboard] get records count: ', records.length)
+    }
+  }
 }
+
+defineExpose({
+  selectStation
+})
 </script>
 
 <style scoped>
@@ -34,9 +70,7 @@ const test = () => {
   width: 200px;
   min-width: 200px;
   height: 100%;
-  background-color: red;
   flex: 1;
-  pointer-events: initial;
 }
 
 .centerSpace {
@@ -48,8 +82,6 @@ const test = () => {
   width: 200px;
   min-width: 200px;
   height: 100%;
-  background-color: blue;
   flex: 1;
-  pointer-events: initial;
 }
 </style>

@@ -5,6 +5,8 @@ import (
 	"EnvMonitoringDashboard/api_src/controller/args"
 	"EnvMonitoringDashboard/api_src/logger"
 	"EnvMonitoringDashboard/api_src/service"
+	"errors"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -32,12 +34,18 @@ func (api *SensorAPI) GetSensors(g *gin.Context) {
 	log := api.logger.Sugar()
 	defer log.Sync()
 	c := WrapContext(g)
-	body := args.SensorGetArgs{}
-	if err := c.ShouldBindJSON(&body); err != nil {
-		c.BadRequest(err)
-		return
+	var stationId uint
+	q := c.Request.URL.Query()
+	if q.Has("station_id") {
+		str := q.Get("station_id")
+		num, err := strconv.Atoi(str)
+		if err != nil {
+			c.BadRequest(errors.New("invalid station_id"))
+			return
+		}
+		stationId = uint(num)
 	}
-	sensors, err := api.sensorService.Get(body.StationId)
+	sensors, err := api.sensorService.Get(stationId)
 	if err != nil {
 		c.BadRequest(err)
 	} else {

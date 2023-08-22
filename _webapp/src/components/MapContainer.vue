@@ -10,10 +10,10 @@ import iconMarker from '@/assets/img/marker.png'
 import iconMarkerSelected from '@/assets/img/marker-selected.png'
 
 const requesting = ref(false)
-var map: any | null
-var aMap: any | null
-var currentMarkerInfoPopup: any | null
-var markerSelected: any | null
+var map: any | undefined
+var aMap: any | undefined
+var currentMarkerInfoPopup: any | undefined
+var markerSelected: any | undefined
 const container = ref()
 const stations = reactive<{
   allStations: Station[]
@@ -21,6 +21,11 @@ const stations = reactive<{
   allStations: []
 })
 var markers: any[]
+
+const emit = defineEmits<{
+  (e: 'didSelectStation', station: Station | undefined): void
+}>()
+
 onMounted(async () => {
   initMap()
 })
@@ -153,12 +158,14 @@ const selectMarker = (selectedMarker: any) => {
   const station: Station = selectedMarker.getExtData()
   console.log('[map] selectedStation: ', JSON.stringify(station))
   addStationPopup(station, selectedMarker.getPosition())
+  emit('didSelectStation', station)
 }
 
 const deselectMarker = (deselectedMarker: any) => {
   const icon = markerIcon()
   deselectedMarker.setIcon(icon)
   deselectedMarker.setLabel(markerLabel(deselectedMarker.getExtData().name))
+  emit('didSelectStation', undefined)
 }
 
 const markerLabel = (title: string) => {
@@ -224,6 +231,7 @@ const markerIconSelected = () => {
   text-align: right;
   flex: 1;
 }
+
 .popLabelRow {
   display: flex;
 }

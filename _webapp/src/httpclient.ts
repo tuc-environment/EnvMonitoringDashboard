@@ -9,9 +9,9 @@ interface Response<T> {
 
 interface Base {
   id: number
-  createdAt?: Date
-  updatedAt?: Date
-  deletedAt?: Date
+  created_at?: Date
+  updated_at?: Date
+  deleted_at?: Date
 }
 
 export interface Account extends Base {
@@ -33,7 +33,7 @@ export enum SensorPosition {
 }
 
 export interface Sensor extends Base {
-  stationID: number
+  station_id: number
   position?: SensorPosition
   tag?: string
   name?: string
@@ -42,7 +42,7 @@ export interface Sensor extends Base {
 }
 
 export interface DataRecord extends Base {
-  sensorID: number
+  sensor_id: number
   value?: number
   time?: Date
 }
@@ -190,7 +190,7 @@ class HttpClient {
 
   // sensors
 
-  public async getSensors(stationID: string): Promise<Response<Sensor[]> | null> {
+  public async getSensors(stationID: number): Promise<Response<Sensor[]> | null> {
     const resp = await this.get<Sensor[]>(`/sensors?station_id=${stationID}`)
     return resp
   }
