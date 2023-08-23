@@ -1,95 +1,87 @@
 <template>
-  <div class="p-3 border rounded my-2" style="max-width: 500px">
-    <div class="d-flex flex-wrap">
-      <div class="mx-2 my-2" style="width: 200px">
-        <h4>站点信息</h4>
-        <table class="table">
-          <tr>
-            <td width="20%">名称:</td>
-            <td>{{ station?.name }}</td>
-          </tr>
-          <tr>
-            <td>纬度:</td>
-            <td>{{ station?.lat }}</td>
-          </tr>
-          <tr>
-            <td>经度:</td>
-            <td>{{ station?.lng }}</td>
-          </tr>
-          <tr>
-            <td>海拔:</td>
-            <td>{{ station?.altitude }}</td>
-          </tr>
-        </table>
-      </div>
+  <div class="row">
+    <div class="m-2 p-3 border rounded col-xl-4 col-md-6">
+      <div class="d-flex flex-wrap">
+        <div class="mx-2 my-2" style="width: 200px">
+          <h4>站点信息</h4>
+          <table class="table">
+            <tr>
+              <td width="20%">名称:</td>
+              <td>{{ station?.name }}</td>
+            </tr>
+            <tr>
+              <td>纬度:</td>
+              <td>{{ station?.lat }}</td>
+            </tr>
+            <tr>
+              <td>经度:</td>
+              <td>{{ station?.lng }}</td>
+            </tr>
+            <tr>
+              <td>海拔:</td>
+              <td>{{ station?.altitude }}</td>
+            </tr>
+          </table>
+        </div>
 
-      <div class="mx-2 my-2" style="width: 200px">
-        <h4>传感器信息</h4>
-        <table class="table">
-          <tr>
-            <td width="20%">名称:</td>
-            <td>{{ sensor?.name }}</td>
-          </tr>
-          <tr>
-            <td>位置:</td>
-            <td>{{ sensor?.position }}</td>
-          </tr>
-          <tr>
-            <td>单位:</td>
-            <td>{{ sensor?.unit }}</td>
-          </tr>
-          <tr>
-            <td>组:</td>
-            <td>{{ sensor?.group }}</td>
-          </tr>
-        </table>
-      </div>
+        <div class="mx-2 my-2" style="width: 200px">
+          <h4>传感器信息</h4>
+          <table class="table">
+            <tr>
+              <td width="20%">名称:</td>
+              <td>{{ sensor?.name }}</td>
+            </tr>
+            <tr>
+              <td>位置:</td>
+              <td>{{ sensor?.position }}</td>
+            </tr>
+            <tr>
+              <td>单位:</td>
+              <td>{{ sensor?.unit }}</td>
+            </tr>
+            <tr>
+              <td>组:</td>
+              <td>{{ sensor?.group }}</td>
+            </tr>
+          </table>
+        </div>
 
-      <div class="d-flex">
+        <div class="d-flex">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-primary mx-2"
+            @click="gotoStationsView()"
+          >
+            查看所有站点
+          </button>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-primary mx-2"
+            @click="gotoSensorsView()"
+          >
+            查看所有传感器
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="m-2 p-3 border rounded col-xl-4 col-md-6">
+      <h4>上传数据</h4>
+      <button class="btn btn-sm btn-outline-primary my-2" @click="handleTemplateDownload">
+        下载数据模版
+      </button>
+
+      <div class="input-group my-2">
+        <input type="file" class="form-control" @change="selectCSVFile" />
         <button
+          class="btn btn-outline-primary"
           type="button"
-          class="btn btn-sm btn-outline-primary mx-2"
-          @click="gotoStationsView()"
+          :disabled="disableSubmitButton"
+          @click="uploadCSVFile"
         >
-          查看所有站点
-        </button>
-        <button
-          type="button"
-          class="btn btn-sm btn-outline-primary mx-2"
-          @click="gotoSensorsView()"
-        >
-          查看所有传感器
+          Submit
         </button>
       </div>
     </div>
-  </div>
-
-  <div class="input-group">
-    <button
-      class="btn btn-outline-secondary"
-      type="button"
-      id="inputGroupFileAddon04"
-      @click="handleTemplateDownload"
-    >
-      Download Template
-    </button>
-    <input
-      type="file"
-      class="form-control"
-      id="inputGroupFile04"
-      aria-describedby="inputGroupFileAddon04"
-      aria-label="Upload"
-      @change="selectCSVFile"
-    />
-    <button
-      class="btn btn-outline-primary"
-      type="button"
-      id="inputGroupFileAddon04"
-      :disabled="disableSubmitButton"
-      @click="uploadCSVFile"
-    >
-      Submit
-    </button>
   </div>
 
   <table class="table table-bordered align-middle">
@@ -197,74 +189,3 @@ export default {
   }
 }
 </script>
-
-<!-- <template>
-  <div>
-    <div class="input-group">
-      <button
-        class="btn btn-outline-secondary"
-        type="button"
-        id="inputGroupFileAddon04"
-        @click="handleTemplateDownload"
-      >
-        Download Template
-      </button>
-      <input
-        type="file"
-        class="form-control"
-        id="inputGroupFile04"
-        aria-describedby="inputGroupFileAddon04"
-        aria-label="Upload"
-        @change="selectCSVFile"
-      />
-      <button
-        class="btn btn-outline-primary"
-        type="button"
-        id="inputGroupFileAddon04"
-        :disabled="disableSubmitButton"
-        @click="uploadCSVFile"
-      >
-        Submit
-      </button>
-    </div>
-
-    <PagedTableComponent />
-  </div>
-</template>
-
-<script setup lang="ts">
-import httpclient, { type DataRecord } from '@/httpclient'
-import PagedTableComponent from '@/components/PagedTableComponent.vue'
-import { computed, reactive, ref, onMounted } from 'vue'
-
-const uploading = ref(false)
-const requesting = ref(false)
-const file = ref<string | null>(null)
-const disableSubmitButton = computed((): boolean => {
-  return file.value == null
-})
-const records = reactive<{
-  allRecords: DataRecord[]
-}>({
-  allRecords: []
-})
-
-onMounted(async () => {
-  requesting.value = true
-  const resp = await httpclient.getRecords(
-    [1, 2],
-    new Date('2023-04-02T14:00:00+08:00'),
-    new Date('2023-04-02T14:30:00+08:00'),
-    0,
-    5
-  )
-  if (resp?.code == 200) {
-    records.allRecords = resp.payload
-    console.log(JSON.stringify(records.allRecords))
-  } else {
-  }
-  requesting.value = false
-})
-
-
-</script> -->
