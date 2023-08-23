@@ -36,9 +36,10 @@ export default {
               component: StationView
             },
             {
-              name: 'Sensors',
+              name: 'Sensor',
               icon: 'bi-camera-video',
-              component: SensorView
+              component: SensorView,
+              hidden: true
             },
             {
               name: 'Records',

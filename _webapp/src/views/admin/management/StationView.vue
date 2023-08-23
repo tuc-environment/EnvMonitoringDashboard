@@ -3,10 +3,11 @@
     <thead class="table-dark">
       <tr>
         <th scope="col" width="10%">#</th>
-        <th scope="col" width="30%">Name</th>
-        <th scope="col" width="20%">Latitude</th>
-        <th scope="col" width="20%">Longitude</th>
-        <th scope="col" width="20%">Altitude</th>
+        <th scope="col" width="30%">名称</th>
+        <th scope="col" width="10%">纬度</th>
+        <th scope="col" width="10%">经度</th>
+        <th scope="col" width="10%">海拔</th>
+        <th scope="col" width="30%">操作</th>
       </tr>
     </thead>
     <tbody>
@@ -16,6 +17,16 @@
         <td>{{ station.lat }}</td>
         <td>{{ station.lng }}</td>
         <td>{{ station.altitude }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-outline-success btn-sm mx-2"
+            @click="viewSensorData(station.id)"
+          >
+            查看所有传感器
+          </button>
+          <button type="button" class="btn btn-outline-primary btn-sm mx-2" disabled>编辑</button>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -34,6 +45,11 @@ export default {
     return {
       requesting: true,
       allStations: [] as Station[]
+    }
+  },
+  methods: {
+    viewSensorData(stationID: number) {
+      this.$router.push({ query: { view: 'Sensor', station_id: stationID } })
     }
   }
 }
