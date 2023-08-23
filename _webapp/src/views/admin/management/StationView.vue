@@ -1,5 +1,5 @@
 <template>
-  <table class="table table-bordered">
+  <table class="table table-bordered align-middle">
     <thead class="table-dark">
       <tr>
         <th scope="col" width="10%">#</th>
@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     viewSensorData(stationID: number) {
-      this.$router.push({ query: { view: 'Sensor', station_id: stationID } })
+      this.$router.push({ query: { view: 'Sensors', station_id: stationID } })
     }
   }
 }

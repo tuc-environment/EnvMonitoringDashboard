@@ -36,7 +36,7 @@ export default {
               component: StationView
             },
             {
-              name: 'Sensor',
+              name: 'Sensors',
               icon: 'bi-camera-video',
               component: SensorView,
               hidden: true
@@ -44,7 +44,8 @@ export default {
             {
               name: 'Records',
               icon: 'bi-activity',
-              component: RecordView
+              component: RecordView,
+              hidden: true
             }
           ]
         }

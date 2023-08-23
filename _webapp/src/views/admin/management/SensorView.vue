@@ -3,27 +3,29 @@
     <h4>站点信息</h4>
     <table class="table">
       <tr>
-        <td width="20%">名称</td>
+        <td width="20%">名称:</td>
         <td>{{ station?.name }}</td>
       </tr>
       <tr>
-        <td>纬度</td>
+        <td>纬度:</td>
         <td>{{ station?.lat }}</td>
       </tr>
       <tr>
-        <td>经度</td>
+        <td>经度:</td>
         <td>{{ station?.lng }}</td>
       </tr>
       <tr>
-        <td>海拔</td>
+        <td>海拔:</td>
         <td>{{ station?.altitude }}</td>
       </tr>
     </table>
 
-    <button type="button" class="btn btn-outline-primary" @click="gotoStationsView()">查看所有站点</button>
+    <button type="button" class="btn btn-sm btn-outline-primary" @click="gotoStationsView()">
+      查看所有站点
+    </button>
   </div>
 
-  <table class="table table-bordered">
+  <table class="table table-bordered align-middle">
     <thead class="table-dark">
       <tr>
         <th scope="col" width="10%">#</th>
@@ -35,14 +37,20 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="station in allSensors" :key="station.id">
-        <td>{{ station.id }}</td>
-        <td>{{ station.name }}</td>
-        <td>{{ station.position }}</td>
-        <td>{{ station.unit }}</td>
-        <td>{{ station.group }}</td>
+      <tr v-for="sensor in allSensors" :key="sensor.id">
+        <td>{{ sensor.id }}</td>
+        <td>{{ sensor.name }}</td>
+        <td>{{ sensor.position }}</td>
+        <td>{{ sensor.unit }}</td>
+        <td>{{ sensor.group }}</td>
         <td>
-          <button type="button" class="btn btn-outline-success btn-sm mx-2">查看传感器数据</button>
+          <button
+            type="button"
+            class="btn btn-outline-success btn-sm mx-2"
+            @click="viewSensorRecord(sensor.id)"
+          >
+            查看传感器数据
+          </button>
           <button type="button" class="btn btn-outline-primary btn-sm mx-2" disabled>编辑</button>
         </td>
       </tr>
@@ -71,6 +79,11 @@ export default {
     gotoStationsView() {
       this.$router.push({ query: { view: 'Stations' } })
     },
+    viewSensorRecord(sensorID: number) {
+      this.$router.push({
+        query: { view: 'Records', sensor_id: sensorID, station_id: this.stationID }
+      })
+    }
   },
   computed: {
     stationID(): number {
