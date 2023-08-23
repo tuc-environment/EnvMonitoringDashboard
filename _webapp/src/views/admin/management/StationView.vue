@@ -1,15 +1,17 @@
 <template>
-  <table class="table table-striped table-hover">
-    <thead>
-      <th scope="col">#</th>
-      <th scope="col">Name</th>
-      <th scope="col">Latitude</th>
-      <th scope="col">Longitude</th>
-      <th scope="col">Altitude</th>
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col" width="10%">#</th>
+        <th scope="col" width="30%">Name</th>
+        <th scope="col" width="20%">Latitude</th>
+        <th scope="col" width="20%">Longitude</th>
+        <th scope="col" width="20%">Altitude</th>
+      </tr>
     </thead>
     <tbody>
-      <tr v-for="station in stations.allStations">
-        <th scope="row">{{ station.id }}</th>
+      <tr v-for="station in allStations" :key="station.id">
+        <td>{{ station.id }}</td>
         <td>{{ station.name }}</td>
         <td>{{ station.lat }}</td>
         <td>{{ station.lng }}</td>
@@ -19,28 +21,20 @@
   </table>
 </template>
 
-<script setup lang="ts">
-import { RouterLink, useRouter } from 'vue-router'
+<script lang="ts">
 import httpclient, { type Station } from '@/httpclient'
-import { reactive, ref, onMounted } from 'vue'
 
-const stations = reactive<{
-  allStations: Station[]
-}>({
-  allStations: []
-})
-const requesting = ref(false)
-const router = useRouter()
-
-onMounted(async () => {
-  requesting.value = true
-  const resp = await httpclient.getStations()
-  if (resp?.code == 200) {
-    stations.allStations = resp.payload
-  } else {
+export default {
+  components: {},
+  async created() {
+    const resp = await httpclient.getStations()
+    this.allStations = resp?.payload || []
+  },
+  data() {
+    return {
+      requesting: true,
+      allStations: [] as Station[]
+    }
   }
-  requesting.value = false
-})
+}
 </script>
-
-<style scoped></style>
