@@ -46,31 +46,18 @@
   </div>
 
   <div class="row">
-    <div class="col-md-3 tableFixHead" style="height: 400px">
-      <table class="table align-middle">
-        <thead class="table-dark">
-          <tr>
-            <th scope="col" width="10%">#</th>
-            <th scope="col" width="30%">名称</th>
-            <th scope="col" width="10%">位置</th>
-            <th scope="col" width="10%">组</th>
-            <th scope="col" width="30%">操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="sensor in allSensors" :key="sensor.id">
-            <td>{{ sensor.id }}</td>
-            <td>{{ sensor.name }}</td>
-            <td>{{ sensor.position }}</td>
-            <td>{{ sensor.group }}</td>
-            <td>
-              <button type="button" class="btn btn-outline-primary btn-sm mx-2" disabled>
-                编辑
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="col-md-3">
+      <div class="p-3 border rounded">
+        <div class="h4 mb-0">传感器列表</div>
+        <label class="text-secondary small mb-3">选择查看相应的传感器</label>
+
+        <div class="form-check" v-for="sensor in allSensors" :key="sensor.id">
+          <input class="form-check-input" type="checkbox" />
+          <label class="form-check-label" for="flexCheckDefault">
+            {{ sensor.name }} ({{ sensor.position }})
+          </label>
+        </div>
+      </div>
     </div>
     <div class="col-md-9">
       <table class="table table-bordered align-middle">
