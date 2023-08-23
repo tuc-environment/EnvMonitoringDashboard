@@ -4,7 +4,10 @@
 
     <div class="content d-flex flex-md-row flex-column-reverse">
       <div class="sidebar p-3">
-        <div v-for="(section, sectionIdx) in sections.filter((section) => !section.hidden)" :key="sectionIdx">
+        <div
+          v-for="(section, sectionIdx) in sections.filter((section) => !section.hidden)"
+          :key="sectionIdx"
+        >
           <h5 class="mb-4">{{ section.name }}</h5>
 
           <SideBarButtonComponent

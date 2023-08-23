@@ -73,24 +73,26 @@
       </table>
     </div>
     <div class="col-md-9">
-        <table class="table table-bordered align-middle">
-    <thead class="table-dark">
-      <tr>
-        <th scope="col" width="20%">时间</th>
-        <th scope="col" width="70%">值</th>
-        <th scope="col" width="10%">操作</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="dataRecord in allDataRecords" :key="dataRecord.id">
-        <td>{{ dataRecord.time }}</td>
-        <td>{{ dataRecord.value }}</td>
-        <td>
-          <button type="button" class="btn btn-outline-primary btn-sm mx-2" disabled>编辑</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+      <table class="table table-bordered align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col" width="20%">时间</th>
+            <th scope="col" width="70%">值</th>
+            <th scope="col" width="10%">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="dataRecord in allDataRecords" :key="dataRecord.id">
+            <td>{{ dataRecord.time }}</td>
+            <td>{{ dataRecord.value }}</td>
+            <td>
+              <button type="button" class="btn btn-outline-primary btn-sm mx-2" disabled>
+                编辑
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -103,8 +105,6 @@ export default {
     this.station = (await httpclient.getStations())?.payload
       ?.filter((station) => station.id == this.stationID)
       .at(0)
-
-
 
     const resps = await Promise.all([
       httpclient.getStations(),
