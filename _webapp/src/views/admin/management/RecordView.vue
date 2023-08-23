@@ -64,6 +64,34 @@
     </div>
   </div>
 
+  <div class="input-group">
+    <button
+      class="btn btn-outline-secondary"
+      type="button"
+      id="inputGroupFileAddon04"
+      @click="handleTemplateDownload"
+    >
+      Download Template
+    </button>
+    <input
+      type="file"
+      class="form-control"
+      id="inputGroupFile04"
+      aria-describedby="inputGroupFileAddon04"
+      aria-label="Upload"
+      @change="selectCSVFile"
+    />
+    <button
+      class="btn btn-outline-primary"
+      type="button"
+      id="inputGroupFileAddon04"
+      :disabled="disableSubmitButton"
+      @click="uploadCSVFile"
+    >
+      Submit
+    </button>
+  </div>
+
   <table class="table table-bordered align-middle">
     <thead class="table-dark">
       <tr>
@@ -109,7 +137,11 @@ export default {
     return {
       station: undefined as Station | undefined,
       sensor: undefined as Sensor | undefined,
-      allDataRecords: [] as DataRecord[]
+      allDataRecords: [] as DataRecord[],
+
+      uploading: false,
+      requesting: false,
+      file: null as string | null
     }
   },
   methods: {
@@ -118,9 +150,42 @@ export default {
     },
     gotoSensorsView() {
       this.$router.push({ query: { view: 'Sensors', station_id: this.stationID } })
+    },
+
+    async handleTemplateDownload() {
+      const csv = await httpclient.downloadTemplate()
+      if (csv) {
+        const anchor = document.createElement('a')
+        anchor.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv)
+        anchor.target = '_blank'
+        anchor.download = 'template.csv'
+        anchor.click()
+      }
+    },
+
+    selectCSVFile(event: any) {
+      this.file = event.target.files[0]
+    },
+
+    async uploadCSVFile() {
+      if (this.file) {
+        this.uploading = true
+        const formData = new FormData()
+        formData.append('file', this.file)
+        try {
+          const response = await httpclient.uploadCSVRecords(formData)
+          console.log(response?.payload)
+        } catch (error) {
+          console.error(error)
+        }
+        this.uploading = false
+      }
     }
   },
   computed: {
+    disableSubmitButton(): boolean {
+      return this.file == null
+    },
     stationID(): number {
       const stationID = this.$route.query.station_id
       return stationID ? parseInt(stationID.toString()) : 0
@@ -201,33 +266,5 @@ onMounted(async () => {
   requesting.value = false
 })
 
-const handleTemplateDownload = async () => {
-  const csv = await httpclient.downloadTemplate()
-  if (csv) {
-    const anchor = document.createElement('a')
-    anchor.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv)
-    anchor.target = '_blank'
-    anchor.download = 'template.csv'
-    anchor.click()
-  }
-}
 
-const selectCSVFile = (event: any) => {
-  file.value = event.target.files[0]
-}
-
-const uploadCSVFile = async () => {
-  if (file.value) {
-    uploading.value = true
-    const formData = new FormData()
-    formData.append('file', file.value)
-    try {
-      const response = await httpclient.uploadCSVRecords(formData)
-      console.log(response?.payload)
-    } catch (error) {
-      console.error(error)
-    }
-    uploading.value = false
-  }
-}
 </script> -->
