@@ -47,6 +47,18 @@ export interface DataRecord extends Base {
   time?: Date
 }
 
+export const getPositionName = (position: string): string => {
+  switch (position) {
+    case 'up':
+      return '板外点'
+    case 'middle':
+      return '板间点'
+    case 'down':
+      return '板下点'
+  }
+  return ''
+}
+
 class HttpClient {
   public baseUrl: string = (function (): string {
     if (import.meta.env.VITE_API_ENDPOINT) return import.meta.env.VITE_API_ENDPOINT
@@ -190,8 +202,10 @@ class HttpClient {
 
   // sensors
 
-  public async getSensors(stationID: number): Promise<Response<Sensor[]> | null> {
-    const resp = await this.get<Sensor[]>(`/sensors?station_id=${stationID}`)
+  public async getSensors(stationID?: number): Promise<Response<Sensor[]> | null> {
+    const resp = await this.get<Sensor[]>(
+      stationID ? `/sensors?station_id=${stationID}` : '/sensors'
+    )
     return resp
   }
 

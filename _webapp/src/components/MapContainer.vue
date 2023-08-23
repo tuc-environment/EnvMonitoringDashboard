@@ -9,7 +9,6 @@ import httpclient, { type Station } from '@/httpclient'
 import iconMarker from '@/assets/img/marker.png'
 import iconMarkerSelected from '@/assets/img/marker-selected.png'
 
-const requesting = ref(false)
 var map: any | undefined
 var aMap: any | undefined
 var currentMarkerInfoPopup: any | undefined
@@ -49,21 +48,15 @@ const initMap = async () => {
       doubleClickZoom: false,
       keyboardEnable: false
     })
-    await loadStations()
     map.on('click', clickMapHandler)
+    await addStationMarks()
   } catch (err: any) {
     console.log('[map] load map with error: ', err.toString())
   }
 }
 
-const loadStations = async () => {
-  requesting.value = true
-  const resp = await httpclient.getStations()
-  if (resp?.code == 200) {
-    stations.allStations = resp.payload
-  } else {
-  }
-  requesting.value = false
+const setStations = async (updatedStations: Station[]) => {
+  stations.allStations = updatedStations
   await addStationMarks()
 }
 
@@ -195,6 +188,10 @@ const markerIconSelected = () => {
   })
   return icon
 }
+
+defineExpose({
+  setStations
+})
 </script>
 
 <style scoped>

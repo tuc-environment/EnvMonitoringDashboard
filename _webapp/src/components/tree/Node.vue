@@ -1,0 +1,68 @@
+<template>
+  <div class="tree-menu text-white">
+    <div :style="indent" :class="labelClasses + ' label-wrapper'" @click="toggleCollapse">
+      {{ node?.label }}
+      <div v-if="hasChildren" class="bi" :class="iconClasses"></div>
+    </div>
+    <div v-if="hasChildren && showChildren">
+      <Node v-for="child in $props.node?.children" :node="child" :depth="$props.depth + 1"></Node>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { type Tree } from './Tree'
+import { ref, type PropType, computed } from 'vue'
+import Node from './Node.vue'
+
+const props = defineProps({
+  node: Object as PropType<Tree>,
+  depth: {
+    type: Number,
+    required: true
+  }
+})
+
+const showChildren = ref(false)
+const hasChildren = computed((): boolean => {
+  return props.node?.children != undefined && props.node.children.length > 0
+})
+const iconClasses = computed(() => {
+  return {
+    'bi-plus-circle': !showChildren.value,
+    'bi-dash-circle': showChildren.value
+  }
+})
+
+const labelClasses = computed(() => {
+  return { 'has-children': hasChildren }
+})
+const indent = computed(() => {
+  return {
+    transform: `translate(${props.depth * 50}px)`
+  }
+})
+
+const toggleCollapse = () => {
+  showChildren.value = !showChildren.value
+}
+</script>
+
+<style scoped>
+.tree-menu {
+  overflow: hidden;
+
+  .label-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+
+    .has-children {
+      cursor: pointer;
+    }
+  }
+}
+</style>

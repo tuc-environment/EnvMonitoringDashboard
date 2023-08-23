@@ -1,6 +1,8 @@
 <template>
   <div class="dashboardContainer">
-    <div class="leftPanel column"></div>
+    <div class="leftPanel column">
+      <TreeChart ref="treeChat" />
+    </div>
     <div class="centerSpace"></div>
     <div class="rightPanel column">
       <LineChart
@@ -15,9 +17,14 @@
 
 <script setup lang="ts">
 import LineChart from '@/components/LineChart.vue'
+import TreeChart from '@/components/tree/Tree.vue'
+import { type Tree } from '@/components/tree/Tree'
 import httpclient, { type Station, type Sensor, type DataRecord } from '@/httpclient'
 import { ref, type PropType } from 'vue'
 
+const treeChat = ref<InstanceType<typeof TreeChart> | null>(null)
+
+const stations = ref<Station[] | undefined>(undefined)
 const selectedStation = ref<Station | undefined>(undefined)
 const relatedSensors = ref<Sensor[] | undefined>(undefined)
 const relatedRecords = ref<DataRecord[] | undefined>(undefined)
@@ -47,8 +54,14 @@ const selectStation = async (station: Station | undefined) => {
   }
 }
 
+const setStations = (updatedStations: Station[]) => {
+  stations.value = updatedStations
+  treeChat.value?.setStations(updatedStations)
+}
+
 defineExpose({
-  selectStation
+  selectStation,
+  setStations
 })
 </script>
 

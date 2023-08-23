@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import './assets/main.css'
+import 'vue3-tree-vue/dist/style.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
