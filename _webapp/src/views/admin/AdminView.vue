@@ -8,7 +8,6 @@ import SidebarLayout from '@/layouts/SidebarLayout.vue'
 import AccountView from '@/views/admin/AccountView.vue'
 import StationView from '@/views/admin/management/StationView.vue'
 import SensorView from '@/views/admin/management/SensorView.vue'
-import RecordView from '@/views/admin/management/RecordView.vue'
 
 export default {
   components: {
@@ -39,12 +38,6 @@ export default {
               name: 'Sensors',
               icon: 'bi-camera-video',
               component: SensorView,
-              hidden: true
-            },
-            {
-              name: 'Records',
-              icon: 'bi-activity',
-              component: RecordView,
               hidden: true
             }
           ]
