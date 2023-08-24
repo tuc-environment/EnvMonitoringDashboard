@@ -1,6 +1,6 @@
 <template>
   <div class="tree-menu text-white">
-    <div :style="indent" :class="labelClasses + ' label-wrapper'" @click="toggleCollapse">
+    <div :style="indent" :class="labelClasses + ' label-wrapper'" @click="clickNode">
       {{ node?.label }}
       <div v-if="hasChildren" class="bi" :class="iconClasses"></div>
     </div>
@@ -14,6 +14,10 @@
 import { type Tree } from './Tree'
 import { ref, type PropType, computed } from 'vue'
 import Node from './Node.vue'
+import { useDashboardStore } from '@/stores/dashboard'
+import type { Sensor } from '@/httpclient'
+
+const dashboardStore = useDashboardStore()
 
 const props = defineProps({
   node: Object as PropType<Tree>,
@@ -43,8 +47,16 @@ const indent = computed(() => {
   }
 })
 
-const toggleCollapse = () => {
-  showChildren.value = !showChildren.value
+const clickNode = () => {
+  if (hasChildren.value) {
+    console.log('select node')
+    showChildren.value = !showChildren.value
+  } else {
+    console.log('select leaf')
+    const sensor = props.node?.sensor
+    const station = props.node?.station
+    dashboardStore.setTreeNodeSelected(sensor ?? undefined, station ?? undefined)
+  }
 }
 </script>
 

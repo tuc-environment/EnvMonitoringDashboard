@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Station } from '@/httpclient'
+import type { SensorPosition, Station } from '@/httpclient'
 import Node from './Node.vue'
 import { type Tree } from './Tree'
 import { reactive, ref, onMounted } from 'vue'
@@ -26,21 +26,110 @@ const loadSensors = async () => {
   const sensors = sensorsRes?.payload ?? []
   var result: Tree[] = []
   for (const station of stations.value) {
-    var stationNode: Tree = {
-      label: station.name ?? '',
-      children: []
-    }
-
     const sensorsInStation = sensors.filter((sensor) => sensor.station_id == station.id)
-    const positions = [...new Set(sensorsInStation.map((sensor) => sensor.position))]
+    const positions = [
+      ...new Set(
+        sensorsInStation
+          .filter((sensor) => sensor.position != undefined && sensor.position != null)
+          .map((sensor) => sensor.position)
+      )
+    ] as Array<SensorPosition>
     var positionNodes: Tree[] = []
     for (const position of positions) {
+      const sensorsInPosition = sensorsInStation.filter((sensor) => sensor.position == position)
+      const groups = [
+        ...new Set(
+          sensorsInPosition
+            .filter((sensor) => sensor.group != undefined && sensor.group.trim() != '')
+            .map((sensor) => sensor.group)
+        )
+      ]
+
+      var groupNodes: Tree[] = []
+
+      for (const group of groups) {
+        const sensorsInGroup = sensorsInPosition.filter((sensor) => sensor.group == group)
+        const tags = [
+          ...new Set(
+            sensorsInGroup
+              .filter((sensor) => sensor.tag != undefined && sensor.tag.trim() != '')
+              .map((sensor) => sensor.tag)
+          )
+        ]
+        var tagNodes: Tree[] = []
+
+        for (const tag of tags) {
+          const sensorsWithTag = sensorsInGroup.filter((sensor) => sensor.tag == tag)
+          const sensorNodes = sensorsWithTag.map((sensor): Tree => {
+            return {
+              label: sensor.name ?? '',
+              children: [],
+              sensor: sensor,
+              station: station
+            }
+          })
+          tagNodes.push({
+            label: tag,
+            children: sensorNodes
+          } as Tree)
+        }
+
+        const noTagSensors = sensorsInGroup.filter(
+          (sensor) => sensor.tag == undefined || sensor.tag.trim() == ''
+        )
+        for (const noTagSensor of noTagSensors) {
+          tagNodes.push({
+            label: noTagSensor.name,
+            children: [],
+            sensor: noTagSensor,
+            station: station
+          } as Tree)
+        }
+
+        const groupNode: Tree = {
+          label: group ?? '',
+          children: tagNodes,
+          sensor: null,
+          station: station
+        }
+        groupNodes.push(groupNode)
+      }
+
+      const noGroupSensors = sensorsInPosition.filter(
+        (sensor) => sensor.group == undefined || sensor.group.trim() == ''
+      )
+      for (const noGroupSensor of noGroupSensors) {
+        groupNodes.push({
+          label: noGroupSensor.name,
+          children: [],
+          sensor: noGroupSensor,
+          station: station
+        } as Tree)
+      }
+
+      const positionNode: Tree = {
+        label: getPositionName(position),
+        children: groupNodes,
+        sensor: null,
+        station: station
+      }
+      positionNodes.push(positionNode)
+    }
+    const noPositionSensors = sensorsInStation.filter((sensor) => sensor.position == undefined)
+    for (const noPositionSensor of noPositionSensors) {
       positionNodes.push({
-        label: getPositionName(position ?? ''),
-        children: []
+        label: noPositionSensor.name,
+        children: [],
+        sensor: noPositionSensor,
+        station: station
       } as Tree)
     }
-    stationNode.children = positionNodes
+    const stationNode: Tree = {
+      label: station.name ?? '',
+      children: positionNodes,
+      sensor: null,
+      station: station
+    }
     result.push(stationNode)
   }
   nodes.value = result
@@ -52,14 +141,10 @@ defineExpose({
 </script>
 
 <style scoped>
-.tree-list ul {
-  padding-left: 16px;
-  margin: 6px;
-}
-
 .tree {
   pointer-events: initial;
-  min-height: 300px;
+  overflow: auto;
+  height: 60%;
   padding: 8px;
 }
 </style>

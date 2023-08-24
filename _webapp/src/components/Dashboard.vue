@@ -1,7 +1,15 @@
 <template>
   <div class="dashboardContainer">
     <div class="leftPanel column">
-      <TreeChart ref="treeChat" />
+      <TreeChart ref="treeChart" />
+      <LineChart
+        class="treeSelectedChart"
+        :station="dashboardStore.$state.treeStationSelected"
+        :sensors="
+          dashboardStore.$state.treeSensorSelected ? [dashboardStore.$state.treeSensorSelected] : []
+        "
+        :records="dashboardStore.$state.treeSensorRecordsLoaded"
+      />
     </div>
     <div class="centerSpace"></div>
     <div class="rightPanel column">
@@ -18,11 +26,12 @@
 <script setup lang="ts">
 import LineChart from '@/components/LineChart.vue'
 import TreeChart from '@/components/tree/Tree.vue'
-import { type Tree } from '@/components/tree/Tree'
 import httpclient, { type Station, type Sensor, type DataRecord } from '@/httpclient'
-import { ref, type PropType } from 'vue'
+import { ref, type PropType, onMounted } from 'vue'
+import { useDashboardStore } from '@/stores/dashboard'
 
-const treeChat = ref<InstanceType<typeof TreeChart> | null>(null)
+const dashboardStore = useDashboardStore()
+const treeChart = ref<InstanceType<typeof TreeChart> | null>(null)
 
 const stations = ref<Station[] | undefined>(undefined)
 const selectedStation = ref<Station | undefined>(undefined)
@@ -56,7 +65,7 @@ const selectStation = async (station: Station | undefined) => {
 
 const setStations = (updatedStations: Station[]) => {
   stations.value = updatedStations
-  treeChat.value?.setStations(updatedStations)
+  treeChart.value?.setStations(updatedStations)
 }
 
 defineExpose({
