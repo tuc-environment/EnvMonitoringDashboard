@@ -41,7 +41,7 @@ const chartOptions = computed(() => {
   const dates: Date[] = getDatesFromRecords(props.records)
   return {
     theme: {
-      palette: 'palette3'
+      palette: 'palette2'
     },
     chart: {
       foreColor: '#d3d3d3'
@@ -66,22 +66,22 @@ const series = computed(() => {
   if (sensors.length > 0 && records.length > 0) {
     for (var sensor of sensors) {
       const relatedRecords = records.filter(
-        (record) => record.sensor_id && sensor.id && record.sensor_id == sensor.id && record.time
+        (record) => record.sensor_id && sensor.id && record.sensor_id == sensor.id && record.time && record.value
       )
-      var data: (Date | number)[][] = []
-      for (var record of relatedRecords) {
-        if (record.time && record.value) {
-          data.push([record.time, record.value])
+      if (relatedRecords.length > 1) {
+        var data: (Date | number)[][] = []
+        for (var record of relatedRecords) {
+          data.push([record.time!, record.value!])
         }
+        result.push({
+          name: getSensorDisplayText(sensor),
+          data: data
+        })
       }
-      result.push({
-        name: getSensorDisplayText(sensor),
-        data: data
-      })
-      console.log('[line-chart] series: ', result)
     }
   }
-  return result.slice(0, 2)
+  console.log('[line-chart] series: ', result)
+  return result.slice(0, 4)
 })
 
 const getMinDate = (dates: Date[]): Date => new Date(Math.min(...dates.map(Number)))
