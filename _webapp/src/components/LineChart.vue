@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper row border border-light">
+  <div class="wrapper row">
     <div v-if="noData" class="h3 text-white text-center align-self-center col">
       <div class="h3 text-white">{{ $props.title }}</div>
       <div class="h5 text-white">{{ $props.noDataText }}</div>
@@ -66,7 +66,12 @@ const series = computed(() => {
   if (sensors.length > 0 && records.length > 0) {
     for (var sensor of sensors) {
       const relatedRecords = records.filter(
-        (record) => record.sensor_id && sensor.id && record.sensor_id == sensor.id && record.time && record.value
+        (record) =>
+          record.sensor_id &&
+          sensor.id &&
+          record.sensor_id == sensor.id &&
+          record.time &&
+          record.value
       )
       if (relatedRecords.length > 1) {
         var data: (Date | number)[][] = []
@@ -93,9 +98,37 @@ const getDatesFromRecords = (records?: DataRecord[]): Date[] => {
 
 <style scoped>
 .wrapper {
+  position: relative;
+  padding-top: 20px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
   pointer-events: initial;
   min-height: 300px;
-  padding: 8px;
+  border: none;
+  margin: 3px;
+}
+
+.wrapper::before,
+.wrapper::after {
+  position: absolute;
+  width: 80px;
+  height: 60px;
+  content: '';
+}
+
+.wrapper::before {
+  left: 0;
+  top: 0;
+  border-left: 1px solid lightgray;
+  border-top: 1px solid lightgray;
+}
+
+.wrapper::after {
+  right: 0;
+  bottom: 0;
+  border-right: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
 }
 
 .chart {
