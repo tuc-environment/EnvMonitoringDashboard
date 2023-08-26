@@ -1,23 +1,35 @@
 <template>
   <div class="dashboardContainer">
-    <div class="leftPanel column">
+    <div class="leftPanel d-flex flex-column justify-content-between">
       <TreeChart ref="treeChart" />
       <LineChart
-        class="treeSelectedChart"
         :station="dashboardStore.$state.treeStationSelected"
         :sensors="
           dashboardStore.$state.treeSensorSelected ? [dashboardStore.$state.treeSensorSelected] : []
         "
         :records="dashboardStore.$state.treeSensorRecordsLoaded"
+        title="数据对比"
+        default-text="请选择数据项"
+        no-data-text="暂无数据"
       />
     </div>
     <div class="centerSpace"></div>
-    <div class="rightPanel column">
+    <div class="rightPanel d-flex flex-column justify-content-between">
       <LineChart
-        class="chart"
         :station="selectedStation"
         :sensors="relatedSensors"
         :records="relatedRecords"
+        title="空气参数"
+        default-text="请选择站点"
+        no-data-text="暂无数据"
+      />
+      <LineChart
+        :station="selectedStation"
+        :sensors="relatedSensors"
+        :records="relatedRecords"
+        title="土壤参数"
+        default-text="请选择站点"
+        no-data-text="暂无数据"
       />
     </div>
   </div>
@@ -89,7 +101,6 @@ defineExpose({
 }
 
 .leftPanel {
-  width: 200px;
   min-width: 200px;
   height: 100%;
   flex: 1;
@@ -101,7 +112,6 @@ defineExpose({
 }
 
 .rightPanel {
-  width: 200px;
   min-width: 200px;
   height: 100%;
   flex: 1;

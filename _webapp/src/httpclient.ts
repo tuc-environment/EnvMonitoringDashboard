@@ -59,6 +59,26 @@ export const getPositionName = (position: string): string => {
   return ''
 }
 
+export const getSensorDisplayText = (sensor: Sensor, stationName?: string): string => {
+  var displayText = ''
+  if (stationName) {
+    displayText += `${stationName}: `
+  }
+  if (sensor.position) {
+    displayText += `${getPositionName(sensor.position)}-`
+  }
+  if (sensor.group) {
+    displayText += `${sensor.group}-`
+  }
+  if (sensor.name) {
+    displayText += sensor.name
+  }
+  if (sensor.tag) {
+    displayText += `(${sensor.tag})`
+  }
+  return displayText
+}
+
 class HttpClient {
   public baseUrl: string = (function (): string {
     if (import.meta.env.VITE_API_ENDPOINT) return import.meta.env.VITE_API_ENDPOINT

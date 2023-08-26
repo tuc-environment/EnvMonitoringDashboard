@@ -1,6 +1,6 @@
 <template>
-  <div class="tree-menu text-white">
-    <div :style="indent" :class="labelClasses + ' label-wrapper'" @click="clickNode">
+  <div class="node-wrapper">
+    <div :style="indent" :class="labelClasses" @click="clickNode">
       {{ node?.label }}
       <div v-if="hasChildren" class="bi" :class="iconClasses"></div>
     </div>
@@ -39,7 +39,11 @@ const iconClasses = computed(() => {
 })
 
 const labelClasses = computed(() => {
-  return { 'has-children': hasChildren }
+  return {
+    'has-children': hasChildren.value,
+    'label-wrapper': true,
+    'leaf-node': !hasChildren.value
+  }
 })
 const indent = computed(() => {
   return {
@@ -61,20 +65,25 @@ const clickNode = () => {
 </script>
 
 <style scoped>
-.tree-menu {
+.node-wrapper {
   overflow: hidden;
+}
 
-  .label-wrapper {
-    display: flex;
-    flex-direction: row;
-    gap: 8px;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ccc;
+.label-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
 
-    .has-children {
-      cursor: pointer;
-    }
-  }
+.has-children {
+  cursor: pointer;
+  color: lightblue;
+}
+
+.leaf-node {
+  color: white;
 }
 </style>
