@@ -21,6 +21,10 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const treeSensorRecordsLoaded = ref<DataRecord[]>([])
   const addTreeNodeSelected = (sensor: Sensor, station: Station) => {
     var sensors = treeSensorsSelected.value
+    const selectedSensorIds = sensors.map((sensor) => sensor.id)
+    if (selectedSensorIds.includes(sensor.id)) {
+      return
+    }
     sensors.push(sensor)
     treeSensorsSelected.value = sensors
     var stations = treeStationsSelected.value

@@ -1,6 +1,7 @@
 <template>
   <div>
     <div :style="indent" :class="labelClasses" @click="clickNode">
+      <i v-if="selected || hasChildrenSelected" class="bi bi-check2-square"></i>
       {{ node?.label }}
       <div v-if="hasChildren" class="bi" :class="iconClasses"></div>
     </div>
@@ -11,13 +12,31 @@
 </template>
 
 <script setup lang="ts">
-import { type Tree } from './Tree'
+import { type Tree, traverseChildren } from './Tree'
 import { ref, type PropType, computed } from 'vue'
 import Node from './Node.vue'
 import { useDashboardStore } from '@/stores/dashboard'
 import type { Sensor } from '@/httpclient'
 
 const dashboardStore = useDashboardStore()
+
+const selected = computed(
+  () =>
+    props.node?.sensor &&
+    dashboardStore.$state.treeSensorsSelected
+      .map((sensor) => sensor.id)
+      .includes(props.node.sensor.id)
+)
+const hasChildrenSelected = computed(() => {
+  const childrenSensorIds = traverseChildren(props.node).map((sensor) => sensor.id)
+  const selectedSensorIds = dashboardStore.$state.treeSensorsSelected.map((sensor) => sensor.id)
+  for (const childSensorId of childrenSensorIds) {
+    if (selectedSensorIds.includes(childSensorId)) {
+      return true
+    }
+  }
+  return false
+})
 
 const props = defineProps({
   node: Object as PropType<Tree>,
@@ -31,6 +50,7 @@ const showChildren = ref(false)
 const hasChildren = computed((): boolean => {
   return props.node?.children != undefined && props.node.children.length > 0
 })
+
 const iconClasses = computed(() => {
   return {
     'bi-plus-circle': !showChildren.value,
@@ -60,7 +80,13 @@ const clickNode = () => {
     const sensor = props.node?.sensor
     const station = props.node?.station
     if (sensor && station) {
-      dashboardStore.addTreeNodeSelected(sensor, station)
+      if (selected.value) {
+        dashboardStore.removeTreeNodeSelected(sensor)
+        console.log('[tree-node] deselect leaf: ', JSON.stringify(sensor))
+      } else {
+        dashboardStore.addTreeNodeSelected(sensor, station)
+        console.log('[tree-node] select leaf: ', JSON.stringify(sensor))
+      }
     }
   }
 }
