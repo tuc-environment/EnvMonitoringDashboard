@@ -125,6 +125,7 @@ const getDatesFromRecords = (records?: DataRecord[]): Date[] => {
 }
 
 .wrapper::after {
+  margin-right: 4px;
   right: 0;
   bottom: 0;
   border-right: 1px solid lightgray;
