@@ -1,5 +1,5 @@
 <template>
-  <div class="node-wrapper">
+  <div>
     <div :style="indent" :class="labelClasses" @click="clickNode">
       {{ node?.label }}
       <div v-if="hasChildren" class="bi" :class="iconClasses"></div>
@@ -59,16 +59,14 @@ const clickNode = () => {
     console.log('select leaf')
     const sensor = props.node?.sensor
     const station = props.node?.station
-    dashboardStore.setTreeNodeSelected(sensor ?? undefined, station ?? undefined)
+    if (sensor && station) {
+      dashboardStore.addTreeNodeSelected(sensor, station)
+    }
   }
 }
 </script>
 
 <style scoped>
-.node-wrapper {
-  overflow: hidden;
-}
-
 .label-wrapper {
   display: flex;
   flex-direction: row;
@@ -76,6 +74,8 @@ const clickNode = () => {
   padding-bottom: 10px;
   margin-bottom: 10px;
   border-bottom: 1px solid #ccc;
+  font-size: 14px;
+  overflow: hidden;
 }
 
 .has-children {

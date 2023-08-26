@@ -4,7 +4,7 @@
       <div class="h3 text-white">{{ $props.title }}</div>
       <div class="h5 text-white">{{ $props.noDataText }}</div>
     </div>
-    <div v-else-if="noStationSelected" class="h3 text-white text-center align-self-center col">
+    <div v-else-if="showDefaultText" class="h3 text-white text-center align-self-center col">
       <div class="h3 text-white">{{ $props.title }}</div>
       <div class="h5 text-white">{{ $props.defaultText }}</div>
     </div>
@@ -16,17 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, type PropType } from 'vue'
-import {
-  getPositionName,
-  type DataRecord,
-  type Sensor,
-  type Station,
-  getSensorDisplayText
-} from '@/httpclient'
+import { computed, type PropType } from 'vue'
+import { type DataRecord, type Sensor, getSensorDisplayText } from '@/httpclient'
 
 const props = defineProps({
-  station: Object as PropType<Station>,
   records: Array as PropType<DataRecord[]>,
   sensors: Array as PropType<Sensor[]>,
   title: String,
@@ -34,8 +27,10 @@ const props = defineProps({
   noDataText: String
 })
 
-const noData = computed(() => props.station && (!props.records || props.records?.length == 0))
-const noStationSelected = computed(() => !props.station)
+const noData = computed(
+  () => props.sensors?.length == 0 && (!props.records || props.records?.length == 0)
+)
+const showDefaultText = computed(() => props.sensors?.length == 0)
 
 const chartOptions = computed(() => {
   const dates: Date[] = getDatesFromRecords(props.records)
@@ -104,9 +99,10 @@ const getDatesFromRecords = (records?: DataRecord[]): Date[] => {
   padding-left: 8px;
   padding-right: 8px;
   pointer-events: initial;
-  min-height: 300px;
   border: none;
+  width: 100%;
   margin: 3px;
+  min-height: 300px;
 }
 
 .wrapper::before,

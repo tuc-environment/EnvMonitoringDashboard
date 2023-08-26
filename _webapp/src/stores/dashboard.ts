@@ -1,22 +1,52 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import httpclient, { type Station, type Sensor, type DataRecord } from '@/httpclient'
+import httpclient, {
+  type Station,
+  type Sensor,
+  type DataRecord,
+  getSensorDisplayText
+} from '@/httpclient'
+import { type TagData } from '@/components/tags/TagData'
 export const useDashboardStore = defineStore('dashboard', () => {
-  const treeSensorSelected = ref<Sensor | undefined>(undefined)
-  const treeStationSelected = ref<Station | undefined>(undefined)
+  const treeSensorsSelected = ref<Sensor[]>([])
+  const treeSensorSelectedTags = computed<TagData[]>((): TagData[] =>
+    treeSensorsSelected.value.map((sensor: Sensor): TagData => {
+      const stationName = treeStationsSelected.value.find(
+        (station) => station.id == sensor.station_id
+      )?.name
+      return { title: getSensorDisplayText(sensor, stationName), data: sensor }
+    })
+  )
+  const treeStationsSelected = ref<Station[]>([])
   const treeSensorRecordsLoaded = ref<DataRecord[]>([])
-  const setTreeNodeSelected = (sensor: Sensor | undefined, station: Station | undefined) => {
-    treeSensorSelected.value = sensor
-    treeStationSelected.value = station
-    treeSensorRecordsLoaded.value = []
+  const addTreeNodeSelected = (sensor: Sensor, station: Station) => {
+    var sensors = treeSensorsSelected.value
+    sensors.push(sensor)
+    treeSensorsSelected.value = sensors
+    var stations = treeStationsSelected.value
+    stations.push(station)
+    treeStationsSelected.value = stations
     loadRecordsForSelectedTreeSensor()
   }
 
+  const removeTreeNodeSelected = (sensor: Sensor) => {
+    const sensors = treeSensorsSelected.value
+    const stations = treeStationsSelected.value
+    const records = treeSensorRecordsLoaded.value
+    const updatedSensors = sensors.filter((s) => s.id != sensor.id)
+    const stationIds = [...new Set(updatedSensors.map((sensor) => sensor.station_id))]
+    const updatedStations = stations.filter((station) => stationIds.includes(station.id))
+    const updatedRecords = records.filter((record) => record.sensor_id != sensor.id)
+    treeSensorsSelected.value = updatedSensors
+    treeStationsSelected.value = updatedStations
+    treeSensorRecordsLoaded.value = updatedRecords
+  }
+
   const loadRecordsForSelectedTreeSensor = async () => {
-    const sensor = treeSensorSelected.value
-    if (sensor) {
+    const sensors = treeSensorsSelected.value
+    if (sensors.length > 0) {
       try {
-        const result = await httpclient.getRecords([sensor.id])
+        const result = await httpclient.getRecords(sensors.map((sensor) => sensor.id))
         treeSensorRecordsLoaded.value = result?.payload ?? []
       } catch (e) {
         console.log('[dashboard-store]', e)
@@ -24,5 +54,12 @@ export const useDashboardStore = defineStore('dashboard', () => {
     }
   }
 
-  return { treeSensorSelected, treeStationSelected, treeSensorRecordsLoaded, setTreeNodeSelected }
+  return {
+    treeSensorsSelected,
+    treeStationsSelected,
+    treeSensorRecordsLoaded,
+    treeSensorSelectedTags,
+    addTreeNodeSelected,
+    removeTreeNodeSelected
+  }
 })

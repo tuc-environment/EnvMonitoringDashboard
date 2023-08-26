@@ -8,7 +8,7 @@
 import type { SensorPosition, Station } from '@/httpclient'
 import Node from './Node.vue'
 import { type Tree } from './Tree'
-import { reactive, ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import httpclient, { getPositionName } from '@/httpclient'
 
 const nodes = ref<Tree[]>([])
@@ -144,8 +144,10 @@ defineExpose({
 .tree {
   pointer-events: initial;
   overflow-y: scroll;
-  height: 50%;
+  overflow-x: hidden;
   padding: 8px;
+  max-height: 50%;
+  position: relative;
 }
 
 ::-webkit-scrollbar {

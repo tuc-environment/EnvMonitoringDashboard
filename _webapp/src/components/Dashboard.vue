@@ -1,12 +1,11 @@
 <template>
   <div class="dashboardContainer">
     <div class="leftPanel d-flex flex-column justify-content-between">
+      <tag-group :tags="dashboardStore.treeSensorSelectedTags" @on-tag-selected="onSelectTag" />
       <TreeChart ref="treeChart" />
+      <div class="space"></div>
       <LineChart
-        :station="dashboardStore.$state.treeStationSelected"
-        :sensors="
-          dashboardStore.$state.treeSensorSelected ? [dashboardStore.$state.treeSensorSelected] : []
-        "
+        :sensors="dashboardStore.$state.treeSensorsSelected"
         :records="dashboardStore.$state.treeSensorRecordsLoaded"
         title="数据对比"
         default-text="请选择数据项"
@@ -16,7 +15,6 @@
     <div class="centerSpace"></div>
     <div class="rightPanel d-flex flex-column justify-content-between">
       <LineChart
-        :station="selectedStation"
         :sensors="airRelatedSensors"
         :records="airRelatedRecords"
         title="空气参数"
@@ -24,7 +22,6 @@
         no-data-text="暂无数据"
       />
       <LineChart
-        :station="selectedStation"
         :sensors="soilRelatedSensors"
         :records="soilRelatedRecords"
         title="土壤参数"
@@ -42,6 +39,8 @@ import httpclient, { type Station, type Sensor, type DataRecord } from '@/httpcl
 import { ref, type PropType, onMounted } from 'vue'
 import { useDashboardStore } from '@/stores/dashboard'
 import { airOptionNames, soilOptionNames } from '@/utils/constants'
+import TagGroup from '@/components/tags/TagsGroup.vue'
+import { type TagData } from './tags/TagData'
 
 const dashboardStore = useDashboardStore()
 const treeChart = ref<InstanceType<typeof TreeChart> | null>(null)
@@ -96,6 +95,13 @@ const setStations = (updatedStations: Station[]) => {
   treeChart.value?.setStations(updatedStations)
 }
 
+const onSelectTag = (tag: TagData) => {
+  const sensor = tag.data as Sensor
+  if (sensor) {
+    dashboardStore.removeTreeNodeSelected(sensor)
+  }
+}
+
 defineExpose({
   selectStation,
   setStations
@@ -120,6 +126,7 @@ defineExpose({
   min-width: 200px;
   height: 100%;
   flex: 1;
+  overflow: hidden;
 }
 
 .centerSpace {
@@ -131,5 +138,9 @@ defineExpose({
   min-width: 200px;
   height: 100%;
   flex: 1;
+}
+
+.space {
+  flex-grow: 999;
 }
 </style>
