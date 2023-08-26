@@ -54,7 +54,7 @@
         <div class="form-check" v-for="sensor in allSensors" :key="sensor.id">
           <input class="form-check-input" type="checkbox" />
           <label class="form-check-label" for="flexCheckDefault">
-            {{ sensor.name }} ({{ sensor.position }})
+            {{ sensor.name }} ({{ positionName(sensor.position) }})
           </label>
         </div>
       </div>
@@ -85,7 +85,13 @@
 </template>
 
 <script lang="ts">
-import httpclient, { type Station, type Sensor, type DataRecord } from '@/httpclient'
+import httpclient, {
+  type Station,
+  type Sensor,
+  type DataRecord,
+  getPositionName,
+  SensorPosition
+} from '@/httpclient'
 
 export default {
   async created() {
@@ -119,6 +125,9 @@ export default {
     }
   },
   methods: {
+    positionName(position: SensorPosition): string {
+      return getPositionName(position)
+    },
     gotoStationsView() {
       this.$router.push({ query: { view: 'Stations' } })
     },
@@ -173,6 +182,7 @@ export default {
 .tableFixHead {
   overflow: auto;
 }
+
 .tableFixHead thead th {
   position: sticky;
   top: 0;
