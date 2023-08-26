@@ -1,13 +1,17 @@
 <template>
   <div class="wrapper row">
-    <div v-if="noData" class="h3 text-white text-center align-self-center col">
-      <div class="h3 text-white">{{ $props.title }}</div>
-      <div class="h5 text-white">{{ $props.noDataText }}</div>
+    <div v-if="$props.loading" class="d-flex align-items-center justify-content-center">
+      <div class="spinner-border text-light" role="status"></div>
     </div>
     <div v-else-if="showDefaultText" class="h3 text-white text-center align-self-center col">
       <div class="h3 text-white">{{ $props.title }}</div>
       <div class="h5 text-white">{{ $props.defaultText }}</div>
     </div>
+    <div v-else-if="noData" class="h3 text-white text-center align-self-center col">
+      <div class="h3 text-white">{{ $props.title }}</div>
+      <div class="h5 text-white">{{ $props.noDataText }}</div>
+    </div>
+
     <div v-else class="col">
       <div class="h3 text-white">{{ $props.title }}</div>
       <apexchart width="100%" height="100%" type="line" :options="chartOptions" :series="series" />
@@ -23,14 +27,14 @@ const props = defineProps({
   records: Array as PropType<DataRecord[]>,
   sensors: Array as PropType<Sensor[]>,
   title: String,
+  showDefaultText: Boolean,
   defaultText: String,
-  noDataText: String
+  noDataText: String,
+  loading: Boolean
 })
 
-const noData = computed(
-  () => props.sensors?.length == 0 && (!props.records || props.records?.length == 0)
-)
-const showDefaultText = computed(() => props.sensors?.length == 0)
+const noData = computed(() => !props.records || props.records?.length == 0)
+const showDefaultText = computed(() => props.showDefaultText)
 
 const chartOptions = computed(() => {
   const dates: Date[] = getDatesFromRecords(props.records)

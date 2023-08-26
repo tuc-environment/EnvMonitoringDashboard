@@ -17,6 +17,8 @@
       <LineChart
         :sensors="airRelatedSensors"
         :records="airRelatedRecords"
+        :show-default-text="!selectedStation"
+        :loading="loadingDataForStation"
         title="空气参数"
         default-text="请选择站点"
         no-data-text="暂无数据"
@@ -24,6 +26,8 @@
       <LineChart
         :sensors="soilRelatedSensors"
         :records="soilRelatedRecords"
+        :show-default-text="!selectedStation"
+        :loading="loadingDataForStation"
         title="土壤参数"
         default-text="请选择站点"
         no-data-text="暂无数据"
@@ -45,6 +49,7 @@ import { type TagData } from './tags/TagData'
 const dashboardStore = useDashboardStore()
 const treeChart = ref<InstanceType<typeof TreeChart> | null>(null)
 
+const loadingDataForStation = ref(false)
 const stations = ref<Station[] | undefined>(undefined)
 const selectedStation = ref<Station | undefined>(undefined)
 const airRelatedSensors = ref<Sensor[] | undefined>(undefined)
@@ -57,6 +62,7 @@ const selectStation = async (station: Station | undefined) => {
   if (selectedStation.value?.id && selectedStation.value?.id == station?.id) {
     return
   }
+  loadingDataForStation.value = true
   selectedStation.value = station
   airRelatedSensors.value = []
   airRelatedRecords.value = []
@@ -88,6 +94,7 @@ const selectStation = async (station: Station | undefined) => {
       console.log('[dashboard] get records count: ', records.length)
     }
   }
+  loadingDataForStation.value = false
 }
 
 const setStations = (updatedStations: Station[]) => {
