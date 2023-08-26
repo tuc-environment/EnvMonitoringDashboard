@@ -4,15 +4,18 @@
 
 <script setup lang="ts">
 import AMapLoader from '@amap/amap-jsapi-loader'
-import { computed, reactive, ref, onMounted, nextTick } from 'vue'
+import { computed, reactive, ref, onMounted, nextTick, createApp } from 'vue'
 import httpclient, { type Station } from '@/httpclient'
 import iconMarker from '@/assets/img/marker.png'
 import iconMarkerSelected from '@/assets/img/marker-selected.png'
 import iconPredictionMarker from '@/assets/img/prediction_marker.png'
+import MapPredictionPopup from '@/components/map/MapPredictionPopup.vue'
 
+const mapCenter = [104, 35]
 var map: any | undefined
 var aMap: any | undefined
 var currentMarkerInfoPopup: any | undefined
+var currentPredictionPopup: any | undefined
 var markerSelected: any | undefined
 var predictionMarker: any | undefined
 const container = ref()
@@ -40,7 +43,7 @@ const initMap = async () => {
     })
     map = new aMap.Map('container', {
       zoom: 4.1,
-      center: [104, 35],
+      center: mapCenter,
       pitch: 0,
       viewMode: '2D',
       mapStyle: 'amap://styles/grey',
@@ -50,6 +53,7 @@ const initMap = async () => {
       doubleClickZoom: false,
       keyboardEnable: false
     })
+    aMap.plugin('AMap.moveAnimation', function () {})
     map.on('click', clickMapHandler)
     await addStationMarks()
   } catch (err: any) {
@@ -122,26 +126,37 @@ const addStationPopup = (station: Station, position: any) => {
 }
 
 const addPredictionPopup = (lng: number, lat: number) => {
-  const dom: string = `
-        <div class="markerPopupContainer">
-            <div class="popLabelRow"> 
-                <b>Latitude</b> 
-                <span class="popLabelValue">${lat}</span>
-            </div>
-            <div class="popLabelRow"> 
-                <b>Longitude</b> 
-                <span class="popLabelValue">${lng}</span>
-            </div>
-        </div>
-    `
+  const dom = document.createElement('div')
+  const app = createApp({
+    components: {
+      MapPredictionPopup
+    },
+    template: `<MapPredictionPopup :lng="lng" :lat="lat" @on-position-changed="onPositionChanged"/>`,
+    data: () => {
+      return {
+        lng,
+        lat
+      }
+    },
+    methods: {
+      onPositionChanged(lng: number, lat: number) {
+        console.log(`[map] on prediction marker changed lat: ${lat}, lng: ${lng}`)
+        if (predictionMarker) {
+          const updatedPosition = new aMap.LngLat(lng, lat)
+          predictionMarker.setPosition(updatedPosition)
+          currentPredictionPopup.open(map, updatedPosition)
+        }
+      }
+    }
+  })
+  app.mount(dom)
 
-  // 创建 infoWindow 实例
-  currentMarkerInfoPopup = new aMap.InfoWindow({
+  currentPredictionPopup = new aMap.InfoWindow({
     content: dom,
     anchor: 'bottom-center',
     offset: new aMap.Pixel(0, -60)
   })
-  currentMarkerInfoPopup.open(map, new aMap.LngLat(lng, lat))
+  currentPredictionPopup.open(map, new aMap.LngLat(lng, lat))
 }
 
 const addStationPrediction = (lng: number, lat: number) => {
@@ -217,6 +232,10 @@ const removePredictionMarker = () => {
     map.remove(predictionMarker)
     predictionMarker = undefined
   }
+  if (currentPredictionPopup) {
+    currentPredictionPopup.close()
+  }
+  map.setCenter(mapCenter)
 }
 
 const markerLabel = (title: string) => {

@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import MapContainer from '@/components/MapContainer.vue'
+import MapContainer from '@/components/map/MapContainer.vue'
 import Dashboard from '@/components/Dashboard.vue'
 import httpclient, { type Station } from '@/httpclient'
 import { onMounted, ref } from 'vue'
