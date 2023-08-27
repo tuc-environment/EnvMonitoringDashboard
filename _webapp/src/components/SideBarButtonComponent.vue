@@ -19,7 +19,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .sidebar-button {
   cursor: pointer;
   font-size: 1.05rem;
@@ -27,10 +27,10 @@ export default {
 }
 
 .sidebar-button:hover {
-  color: #0051ffc7;
+  color: $tux-highlight;
 }
 
 .sidebar-button-selected {
-  color: var(--bs-primary);
+  color: $tux-highlight;
 }
 </style>
