@@ -21,11 +21,12 @@
 
 <script setup lang="ts">
 import { computed, type PropType } from 'vue'
-import { type DataRecord, type Sensor, getSensorDisplayText } from '@/httpclient'
+import { type DataRecord, type Sensor, getSensorDisplayText, type Station } from '@/httpclient'
 
 const props = defineProps({
   records: Array as PropType<DataRecord[]>,
   sensors: Array as PropType<Sensor[]>,
+  stations: Array as PropType<Station[]>,
   title: String,
   showDefaultText: Boolean,
   defaultText: String,
@@ -60,6 +61,7 @@ const chartOptions = computed(() => {
 
 const series = computed(() => {
   var result = []
+  const stations = props.stations ?? []
   const sensors = props.sensors ?? []
   const records = props.records ?? []
   if (sensors.length > 0 && records.length > 0) {
@@ -77,8 +79,12 @@ const series = computed(() => {
         for (var record of relatedRecords) {
           data.push([record.time!, record.value!])
         }
+        const station = stations.find((station) => station.id == sensor.station_id)
+        const displayText = station
+          ? getSensorDisplayText(sensor, station.name)
+          : getSensorDisplayText(sensor)
         result.push({
-          name: getSensorDisplayText(sensor),
+          name: displayText,
           data: data
         })
       }

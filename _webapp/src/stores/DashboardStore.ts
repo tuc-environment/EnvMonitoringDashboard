@@ -19,6 +19,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
   )
   const treeStationsSelected = ref<Station[]>([])
   const treeSensorRecordsLoaded = ref<DataRecord[]>([])
+  const treeRecordsLoading = ref(false)
   const addTreeNodeSelected = (sensor: Sensor, station: Station) => {
     var sensors = treeSensorsSelected.value
     const selectedSensorIds = sensors.map((sensor) => sensor.id)
@@ -47,6 +48,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
   }
 
   const loadRecordsForSelectedTreeSensor = async () => {
+    treeRecordsLoading.value = true
     const sensors = treeSensorsSelected.value
     if (sensors.length > 0) {
       try {
@@ -56,9 +58,11 @@ export const useDashboardStore = defineStore('dashboard', () => {
         console.log('[dashboard-store]', e)
       }
     }
+    treeRecordsLoading.value = false
   }
 
   return {
+    treeRecordsLoading,
     treeSensorsSelected,
     treeStationsSelected,
     treeSensorRecordsLoaded,

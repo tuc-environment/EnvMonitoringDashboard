@@ -5,8 +5,10 @@
       <TreeChart ref="treeChart" />
       <div class="space"></div>
       <LineChart
+        :stations="dashboardStore.$state.treeStationsSelected"
         :sensors="dashboardStore.$state.treeSensorsSelected"
         :records="dashboardStore.$state.treeSensorRecordsLoaded"
+        :loading="dashboardStore.$state.treeRecordsLoading"
         title="数据对比"
         default-text="请选择数据项"
         no-data-text="暂无数据"
@@ -19,7 +21,7 @@
         :records="airRelatedRecords"
         :show-default-text="!selectedStation"
         :loading="loadingDataForStation"
-        title="空气参数"
+        :title="selectedStation ? `${selectedStation.name} - 空气参数` : '空气参数'"
         default-text="请选择站点"
         no-data-text="暂无数据"
       />
@@ -28,7 +30,7 @@
         :records="soilRelatedRecords"
         :show-default-text="!selectedStation"
         :loading="loadingDataForStation"
-        title="土壤参数"
+        :title="selectedStation ? `${selectedStation.name} - 土壤参数` : '土壤参数'"
         default-text="请选择站点"
         no-data-text="暂无数据"
       />
