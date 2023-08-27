@@ -78,6 +78,16 @@
             <div class="col-md-6">
               <div class="h4 mb-0">时间</div>
               <label class="text-secondary small mb-3">选择时间范围</label>
+
+              <div class="my-2">
+                <div>开始时间</div>
+                <Datepicker v-model="startDate" style="cursor: pointer" />
+              </div>
+
+              <div class="my-2">
+                <div>结束时间</div>
+                <Datepicker v-model="endDate" style="cursor: pointer" />
+              </div>
             </div>
           </div>
         </div>
@@ -123,6 +133,7 @@
 </template>
 
 <script lang="ts">
+import Datepicker from 'vue3-datepicker'
 import httpclient, {
   type Station,
   type Sensor,
@@ -131,8 +142,12 @@ import httpclient, {
 } from '@/httpclient'
 
 export default {
+  components: {
+    Datepicker
+  },
   async created() {
     this.loading = true
+    this.startDate.setDate(this.startDate.getDate() - 1)
     this.station = (await httpclient.getStations())?.payload
       ?.filter((station) => station.id == this.stationID)
       .at(0)
@@ -150,6 +165,8 @@ export default {
   data() {
     return {
       loading: true,
+      startDate: new Date(),
+      endDate: new Date(),
       station: undefined as Station | undefined,
       allSensors: [] as Sensor[],
       selectedSensorIDs: [] as number[],
@@ -212,8 +229,8 @@ export default {
       this.loading = true
       const resp = await httpclient.getRecords(
         this.selectedSensorIDs,
-        new Date('2023-04-02T14:00:00+08:00'),
-        new Date('2023-04-02T14:30:00+08:00'),
+        this.startDate,
+        this.endDate,
         0,
         100
       )
