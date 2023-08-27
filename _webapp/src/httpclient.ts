@@ -47,14 +47,16 @@ export interface DataRecord extends Base {
   time?: Date
 }
 
-export const getPositionName = (position: string): string => {
-  switch (position) {
-    case 'up':
-      return '板外点'
-    case 'middle':
-      return '板间点'
-    case 'down':
-      return '板下点'
+export const getPositionName = (position: SensorPosition | undefined): string => {
+  if (position) {
+    switch (position) {
+      case SensorPosition.up:
+        return '板外点'
+      case SensorPosition.middle:
+        return '板间点'
+      case SensorPosition.down:
+        return '板下点'
+    }
   }
   return ''
 }

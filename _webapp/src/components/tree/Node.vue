@@ -15,7 +15,7 @@
 import { type Tree, traverseChildren } from './Tree'
 import { ref, type PropType, computed } from 'vue'
 import Node from './Node.vue'
-import { useDashboardStore } from '@/stores/dashboard'
+import { useDashboardStore } from '@/stores/DashboardStore'
 import type { Sensor } from '@/httpclient'
 
 const dashboardStore = useDashboardStore()

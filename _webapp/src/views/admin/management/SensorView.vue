@@ -125,7 +125,7 @@ export default {
     }
   },
   methods: {
-    positionName(position: SensorPosition): string {
+    positionName(position: SensorPosition | undefined): string {
       return getPositionName(position)
     },
     gotoStationsView() {
