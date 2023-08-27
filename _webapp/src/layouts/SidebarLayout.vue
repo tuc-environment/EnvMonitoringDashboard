@@ -130,7 +130,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .navbar {
   position: fixed;
   top: 0;
@@ -145,7 +145,7 @@ export default {
 .sidebar {
   width: 100%;
   border-right: 1px solid #e0e0e0;
-  background-color: #e9f2f8;
+  background-color: $tux-sidebar-bg;
   min-width: 300px;
 }
 
