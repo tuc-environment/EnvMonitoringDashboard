@@ -41,9 +41,9 @@
   </nav>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 nav {
-  background-color: rgba(39, 50, 131, 0.8);
+  background-color: $nav-background;
 }
 
 .admin {
