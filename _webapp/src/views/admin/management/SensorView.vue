@@ -3,8 +3,18 @@
     <div class="col-md-4 my-2">
       <div class="card h-100">
         <div class="card-body">
-          <h4>站点信息</h4>
-          <table class="table">
+          <div class="d-flex align-items-center">
+            <div class="h4 my-0 me-2">站点信息</div>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-primary"
+              @click="gotoStationsView()"
+            >
+              查看所有站点
+            </button>
+          </div>
+
+          <table class="table my-3">
             <tr>
               <td width="20%">名称:</td>
               <td>{{ station?.name }}</td>
@@ -23,19 +33,12 @@
             </tr>
           </table>
 
-          <button type="button" class="btn btn-sm btn-outline-primary" @click="gotoStationsView()">
-            查看所有站点
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4 my-2">
-      <div class="card h-100">
-        <div class="card-body">
-          <h4>上传数据</h4>
-          <button class="btn btn-sm btn-outline-primary my-2" @click="handleTemplateDownload">
-            下载数据模版
-          </button>
+          <div class="d-flex align-items-center">
+            <h4 class="my-0 me-2">上传数据</h4>
+            <button class="btn btn-sm btn-outline-primary my-2" @click="handleTemplateDownload">
+              下载数据模版
+            </button>
+          </div>
 
           <div class="input-group my-2">
             <input type="file" class="form-control" @change="selectCSVFile" />
@@ -51,22 +54,30 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4 my-2">
+    <div class="col-md-8 my-2">
       <div class="card h-100">
         <div class="card-body">
-          <div class="h4 mb-0">传感器列表</div>
-          <label class="text-secondary small mb-3">选择查看相应的传感器</label>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="h4 mb-0">传感器列表</div>
+              <label class="text-secondary small mb-3">选择查看相应的传感器</label>
 
-          <div style="height: 150px; overflow-y: auto">
-            <div class="form-check" v-for="sensor in allSensors" :key="sensor.id">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                @change="onChangeSensor($event, sensor.id)"
-              />
-              <label class="form-check-label">
-                {{ sensor.id }}. {{ sensor.name }} ({{ positionName(sensor.position) }})
-              </label>
+              <div style="height: 170px; overflow-y: auto">
+                <div class="form-check" v-for="sensor in allSensors" :key="sensor.id">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    @change="onChangeSensor($event, sensor.id)"
+                  />
+                  <label class="form-check-label">
+                    {{ sensor.id }}. {{ sensor.name }} ({{ positionName(sensor.position) }})
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="h4 mb-0">时间</div>
+              <label class="text-secondary small mb-3">选择时间范围</label>
             </div>
           </div>
         </div>
