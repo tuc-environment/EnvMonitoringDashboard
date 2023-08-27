@@ -9,6 +9,7 @@
         :sensors="dashboardStore.$state.treeSensorsSelected"
         :records="dashboardStore.$state.treeSensorRecordsLoaded"
         :loading="dashboardStore.$state.treeRecordsLoading"
+        :maxLines="10"
         title="数据对比"
         default-text="请选择数据项"
         no-data-text="暂无数据"

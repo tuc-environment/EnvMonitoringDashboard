@@ -31,7 +31,11 @@ const props = defineProps({
   showDefaultText: Boolean,
   defaultText: String,
   noDataText: String,
-  loading: Boolean
+  loading: Boolean,
+  maxLines: {
+    type: Number,
+    default: 4
+  }
 })
 
 const noData = computed(() => !props.records || props.records?.length == 0)
@@ -91,7 +95,11 @@ const series = computed(() => {
     }
   }
   console.log('[line-chart] series: ', result)
-  return result.slice(0, 4)
+  if (result.length > props.maxLines) {
+    return result.slice(0, props.maxLines)
+  } else {
+    return result
+  }
 })
 
 const getMinDate = (dates: Date[]): Date => new Date(Math.min(...dates.map(Number)))
