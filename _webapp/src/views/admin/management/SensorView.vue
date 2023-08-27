@@ -65,7 +65,7 @@
                 @change="onChangeSensor($event, sensor.id)"
               />
               <label class="form-check-label">
-                {{ sensor.id }}. {{ sensor.name }} ({{ sensor.position }})
+                {{ sensor.id }}. {{ sensor.name }} ({{ positionName(sensor.position) }})
               </label>
             </div>
           </div>
@@ -74,14 +74,24 @@
     </div>
   </div>
 
-  <div class="row">
+  <div v-if="loading" class="mx-auto mt-5 text-center">
+    <div class="spinner-border mx-auto" role="status">
+      <span class="sr-only"></span>
+    </div>
+  </div>
+
+  <div v-else-if="allDataRecords.length == 0" class="mx-auto mt-5 text-center">
+    <label>无法查询到数据</label>
+  </div>
+
+  <div v-else class="row">
     <div class="col-md-12">
       <table class="table table-bordered align-middle">
         <thead class="table-dark">
           <tr>
             <th scope="col" width="30%">时间</th>
             <th scope="col" v-for="s in selectedSensors" :key="s.id">
-              {{ s.id }}. {{ s.name }} ({{ s.position }})
+              {{ s.id }}. {{ s.name }} ({{ positionName(s.position) }})
             </th>
             <th scope="col" width="20%">操作</th>
           </tr>
@@ -102,10 +112,16 @@
 </template>
 
 <script lang="ts">
-import httpclient, { type Station, type Sensor } from '@/httpclient'
+import httpclient, {
+  type Station,
+  type Sensor,
+  SensorPosition,
+  getPositionName
+} from '@/httpclient'
 
 export default {
   async created() {
+    this.loading = true
     this.station = (await httpclient.getStations())?.payload
       ?.filter((station) => station.id == this.stationID)
       .at(0)
@@ -118,9 +134,11 @@ export default {
     this.allSensors = resps[1]?.payload.sort((a, b) => a.id - b.id) || []
     this.selectedSensorIDs = []
     await this.updateSensorRecords()
+    this.loading = false
   },
   data() {
     return {
+      loading: true,
       station: undefined as Station | undefined,
       allSensors: [] as Sensor[],
       selectedSensorIDs: [] as number[],
@@ -180,6 +198,7 @@ export default {
       })
     },
     async updateSensorRecords() {
+      this.loading = true
       const resp = await httpclient.getRecords(
         this.selectedSensorIDs,
         new Date('2023-04-02T14:00:00+08:00'),
@@ -207,6 +226,7 @@ export default {
         t,
         ...this.selectedSensors.map((s) => recordsByTime[t][s.id])
       ])
+      this.loading = false
     }
   },
   computed: {
