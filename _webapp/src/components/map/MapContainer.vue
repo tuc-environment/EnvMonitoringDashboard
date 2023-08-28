@@ -1,11 +1,11 @@
 <template>
-  <div id="container" class="container-fluid" ref="container"></div>
+  <div id="container" class="w-100 h-100" ref="container"></div>
 </template>
 
 <script setup lang="ts">
 import AMapLoader from '@amap/amap-jsapi-loader'
-import { computed, reactive, ref, onMounted, nextTick, createApp } from 'vue'
-import httpclient, { type Station } from '@/httpclient'
+import { reactive, ref, onMounted, createApp } from 'vue'
+import { type Station } from '@/httpclient'
 import iconMarker from '@/assets/img/marker.png'
 import iconMarkerSelected from '@/assets/img/marker-selected.png'
 import iconPredictionMarker from '@/assets/img/prediction_marker.png'
@@ -129,6 +129,7 @@ const addPredictionPopup = (lng: number, lat: number) => {
   const dom = document.createElement('div')
   const app = createApp({
     components: {
+      // eslint-disable-next-line vue/no-unused-components
       MapPredictionPopup
     },
     template: `<MapPredictionPopup :lng="lng" :lat="lat" @on-position-changed="onPositionChanged"/>`,
@@ -288,16 +289,6 @@ defineExpose({
   setStations
 })
 </script>
-
-<style scoped>
-#container {
-  left: 0px;
-  right: 0px;
-  padding: 0px;
-  margin: 0px;
-  height: calc(100vh);
-}
-</style>
 
 <style>
 .amap-marker-label {
