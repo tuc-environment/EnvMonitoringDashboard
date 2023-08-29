@@ -62,7 +62,7 @@ export const getPositionName = (position: SensorPosition | undefined): string =>
 }
 
 export const getSensorDisplayText = (sensor: Sensor, stationName?: string): string => {
-  var displayText = ''
+  let displayText = ''
   if (stationName) {
     displayText += `${stationName}: `
   }
