@@ -1,8 +1,24 @@
 <template>
-  <div class="my-body">
+  <div
+    style="
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background-color: rgb(17, 18, 23);
+      z-index: -100;
+    "
+  ></div>
+
+  <div style="background-color: rgb(17, 18, 23)">
     <div
-      class="my-navbar d-flex text-light p-2 align-items-center"
-      style="background-color: rgb(24, 27, 31); height: 48px"
+      class="d-flex text-light p-2 align-items-center fixed-top"
+      style="
+        background-color: rgb(24, 27, 31);
+        height: 48px;
+        border-bottom: 1px solid rgba(204, 204, 220, 0.12);
+      "
     >
       <div>
         <img class="logo rounded me-2" src="/logo.png" style="height: 28px" />
@@ -14,34 +30,60 @@
       </div>
     </div>
 
-    <div class="p-3 text-light">
+    <div
+      class="p-3 text-light"
+      style="
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50px;
+        bottom: 0;
+        background-color: rgb(17, 18, 23);
+        z-index: 1000;
+        overflow-y: auto;
+      "
+    >
       <div class="row">
-        <div class="col-md-3 h-100 my-2">
+        <div class="col-md-6 col-lg-4 col-xl-2 h-100 my-1">
           <DashboardCardComponent title="站点数量">
-            <div class="text-danger" style="font-size: 5rem">5</div>
+            <div class="text-danger" style="font-size: 4rem">5</div>
           </DashboardCardComponent>
         </div>
-        <div class="col-md-3 h-100 my-2">
+        <div class="col-md-6 col-lg-4 col-xl-2 h-100 my-1">
           <DashboardCardComponent title="传感器数量">
-            <div class="text-danger" style="font-size: 5rem">189</div>
+            <div class="text-danger" style="font-size: 4rem">189</div>
           </DashboardCardComponent>
         </div>
-        <div class="col-md-3 h-100 my-2">
+        <div class="col-md-6 col-lg-4 col-xl-2 h-100 my-1">
           <DashboardCardComponent title="今日报警数量">
-            <div class="text-danger" style="font-size: 5rem">822</div>
+            <div class="text-danger" style="font-size: 4rem">822</div>
           </DashboardCardComponent>
         </div>
-        <div class="col-md-3 h-100 my-2">
+        <div class="col-md-6 col-lg-4 col-xl-2 h-100 my-1">
           <DashboardCardComponent title="今日更新数量">
-            <div class="text-danger" style="font-size: 5rem">1822</div>
+            <div class="text-danger" style="font-size: 4rem">1822</div>
           </DashboardCardComponent>
         </div>
-
-        <div class="col-md-6 h-100 my-2">
-          <DashboardCardComponent title="选择传感器">选择传感器</DashboardCardComponent>
+        <div class="col-md-6 col-lg-4 col-xl-2 h-100 my-1">
+          <DashboardCardComponent title="今日更新数量">
+            <div class="text-danger" style="font-size: 4rem">1822</div>
+          </DashboardCardComponent>
         </div>
-        <div class="col-md-6 h-100 my-2">
-          <DashboardCardComponent title="传感器数据">
+        <div class="col-md-6 col-lg-4 col-xl-2 h-100 my-2">
+          <DashboardCardComponent title="今日更新数量">
+            <div class="text-danger" style="font-size: 4rem">1822</div>
+          </DashboardCardComponent>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-6 col-xl-3 h-100 my-1">
+          <DashboardCardComponent title="选择传感器" class="info-card"
+            >选择传感器</DashboardCardComponent
+          >
+        </div>
+        <div class="col-lg-6 col-xl-3 h-100 my-1">
+          <DashboardCardComponent title="传感器数据" class="info-card">
             <LineChart
               :sensors="airRelatedSensors"
               :records="airRelatedRecords"
@@ -53,8 +95,8 @@
             />
           </DashboardCardComponent>
         </div>
-        <div class="col-md-12 h-100 my-2">
-          <DashboardCardComponent title="传感器地理位置">
+        <div class="col-lg-12 col-xl-6 h-100 my-1">
+          <DashboardCardComponent title="传感器地理位置" class="info-card">
             <MapContainer />
           </DashboardCardComponent>
         </div>
@@ -113,11 +155,14 @@ export default {
 </script>
 
 <style scoped>
-.my-body {
-  background-color: rgb(17, 18, 23);
+.info-card {
+  height: 960px;
 }
 
-.my-navbar {
-  border-bottom: 1px solid rgba(204, 204, 220, 0.12);
+@media (max-width: 1199.98px) {
+  .info-card {
+    height: 400px;
+    min-height: 400px;
+  }
 }
 </style>

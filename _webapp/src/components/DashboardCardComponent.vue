@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-card h-100 w-100 p-2 d-flex flex-column">
+  <div class="dashboard-card p-2 d-flex flex-column">
     <div>
       <b>{{ title }}</b>
     </div>
