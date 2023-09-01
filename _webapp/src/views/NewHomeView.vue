@@ -31,7 +31,7 @@
     </div>
 
     <div
-      class="p-3 text-light"
+      class="p-3 text-light d-flex flex-column"
       style="
         position: absolute;
         left: 0;
@@ -94,9 +94,9 @@
         </div>
       </div>
 
-      <div class="row align-items-stretch">
+      <div class="row align-items-stretch flex-grow-1">
         <div class="col-lg-12 col-xl-8 my-2">
-          <DashboardCardComponent title="传感器地理位置" class="info-card">
+          <DashboardCardComponent title="站点位置" class="info-card">
             <map-container ref="mapContainer" @did-select-station="selectStationHandler" />
           </DashboardCardComponent>
         </div>
@@ -141,47 +141,8 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-lg-6 col-xl-3 h-100 my-1">
-          <DashboardCardComponent title="选择传感器" class="info-card">
-            <tag-group
-              :tags="dashboardStore.treeSensorSelectedTags"
-              @on-tag-selected="onSelectTag"
-            />
-            <tree-chart ref="treeChart" />
-          </DashboardCardComponent>
-        </div>
-        <div class="col-lg-6 col-xl-3 h-100 my-1">
-          <DashboardCardComponent title="传感器数据" class="info-card">
-            <line-chart
-              :stations="dashboardStore.$state.treeStationsSelected"
-              :sensors="dashboardStore.$state.treeSensorsSelected"
-              :records="dashboardStore.$state.treeSensorRecordsLoaded"
-              :loading="dashboardStore.$state.treeRecordsLoading"
-              :maxLines="10"
-              title="数据对比"
-              default-text="请选择数据项"
-              no-data-text="暂无数据"
-            />
-          </DashboardCardComponent>
-        </div>
-      </div>
     </div>
   </div>
-  <!-- <div class="vh-100 w-100 p-2 text-light" style="background-color: rgb(0.1, 0.1, 0.1)">
-    <div class="d-flex flex-column h-100 w-100">
-      <h3>环境监测系统 - 天津商业大学</h3>
-      <div class="mt-2 h-100 w-100 flex-grow-1">
-        <div class="d-flex h-100 w-100">
-          <div class="left-panel me-2 p-2 rounded bg-dark">Style 1</div>
-          <div class="flex-grow-1 p-2 rounded bg-dark">
-            <MapContainer />
-          </div>
-          <div class="right-panel ms-2 p-2 rounded bg-dark">Style 3</div>
-        </div>
-      </div>
-    </div>
-  </div> -->
 </template>
 
 <script setup lang="ts">
@@ -189,11 +150,9 @@ import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
 import LineChart from '@/components/LineChart.vue'
 import TreeChart from '@/components/tree/Tree.vue'
 import MapContainer from '@/components/map/MapContainer.vue'
-import { type Sensor, type Station } from '@/httpclient'
+import { type Station } from '@/httpclient'
 import { useDashboardStore } from '@/stores/DashboardStore'
-import TagGroup from '@/components/tags/TagsGroup.vue'
 import { ref } from 'vue'
-import type { TagData } from '@/components/tags/TagData'
 import { formatDisplayNumber } from '@/utils/utils'
 
 const treeChart = ref<InstanceType<typeof TreeChart> | null>(null)
@@ -209,13 +168,6 @@ dashboardStore.$subscribe((_, state) => {
   }
 })
 
-const onSelectTag = (tag: TagData) => {
-  const sensor = tag.data as Sensor
-  if (sensor) {
-    dashboardStore.removeTreeNodeSelected(sensor)
-  }
-}
-
 const selectStationHandler = (station: Station | undefined) => {
   dashboardStore.setMapSelectedStation(station)
 }
@@ -223,16 +175,3 @@ const selectStationHandler = (station: Station | undefined) => {
 dashboardStore.loadStations()
 dashboardStore.loadSensors()
 </script>
-
-<!-- <style scoped>
-.info-card {
-  height: 960px;
-}
-
-@media (max-width: 1199.98px) {
-  .info-card {
-    height: 400px;
-    min-height: 400px;
-  }
-}
-</style> -->

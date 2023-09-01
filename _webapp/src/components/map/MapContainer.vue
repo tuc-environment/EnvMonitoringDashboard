@@ -1,5 +1,5 @@
 <template>
-  <div id="container" class="mapContainer h-100" ref="container"></div>
+  <div id="container" class="h-100 w-100" style="min-height: 320px" ref="container"></div>
 </template>
 
 <script setup lang="ts">
@@ -320,9 +320,5 @@ defineExpose({
 
 .popLabelRow {
   display: flex;
-}
-
-.mapContainer {
-  aspect-ratio: 16/9;
 }
 </style>
