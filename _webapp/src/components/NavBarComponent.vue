@@ -44,7 +44,7 @@
           </li>
         </ul>
         <form class="form-inline">
-          <a class="btn btn-outline-danger my-sm-0" type="button" href="/login"> 登入管理后台 </a>
+          <a class="btn btn-outline-warning my-sm-0" type="button" href="/login"> 登入管理后台 </a>
         </form>
       </div>
     </div>
