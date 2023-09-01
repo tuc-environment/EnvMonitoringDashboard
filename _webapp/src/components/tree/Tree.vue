@@ -146,11 +146,8 @@ defineExpose({
   overflow-y: scroll;
   overflow-x: hidden;
   padding: 8px;
-  max-height: 50%;
-  position: relative;
-  /* teamp */
-  width: 300px;
-  height: 300px;
+  width: 100%;
+  height: 100%;
 }
 
 ::-webkit-scrollbar {

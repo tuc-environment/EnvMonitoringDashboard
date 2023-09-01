@@ -2,7 +2,7 @@
   <DashboardLayout>
     <div class="p-2 w-100">
       <div class="row">
-        <div class="col-lg-6 col-xl-6 h-100 my-1">
+        <div class="col-lg-5 col-xl-5 h-100 my-1">
           <DashboardCardComponent title="选择传感器" class="info-card">
             <tag-group
               :tags="dashboardStore.treeSensorSelectedTags"
@@ -11,7 +11,7 @@
             <tree-chart ref="treeChart" />
           </DashboardCardComponent>
         </div>
-        <div class="col-lg-6 col-xl-6 h-100 my-1">
+        <div class="col-lg-7 col-xl-7 h-100 my-1">
           <DashboardCardComponent title="传感器数据" class="info-card">
             <line-chart
               :stations="dashboardStore.$state.treeStationsSelected"
