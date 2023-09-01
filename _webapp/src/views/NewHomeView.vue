@@ -152,6 +152,7 @@ const selectStationHandler = (station: Station | undefined) => {
 const onPredictionMarkerConfirmed = (lng: number, lat: number) => {
   lngVal.value = lng
   latVal.value = lat
+  console.log(lng, lat)
   showPredictionModal.value = true
 }
 
