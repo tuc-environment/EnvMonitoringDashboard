@@ -122,31 +122,4 @@ const getDatesFromRecords = (records?: DataRecord[]): Date[] => {
   margin: 3px;
   min-height: 300px;
 }
-
-.wrapper::before,
-.wrapper::after {
-  position: absolute;
-  width: 80px;
-  height: 60px;
-  content: '';
-}
-
-.wrapper::before {
-  left: 0;
-  top: 0;
-  border-left: 1px solid lightgray;
-  border-top: 1px solid lightgray;
-}
-
-.wrapper::after {
-  margin-right: 4px;
-  right: 0;
-  bottom: 0;
-  border-right: 1px solid lightgray;
-  border-bottom: 1px solid lightgray;
-}
-
-.chart {
-  position: relative;
-}
 </style>
