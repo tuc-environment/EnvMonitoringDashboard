@@ -1,5 +1,5 @@
 <template>
-  <div id="container" class="mapContainer" ref="container"></div>
+  <div id="container" class="mapContainer w-100" ref="container"></div>
 </template>
 
 <script setup lang="ts">
@@ -323,8 +323,6 @@ defineExpose({
 }
 
 .mapContainer {
-  position: relative;
-  width: 500px;
-  height: 500px;
+  aspect-ratio: 16/9;
 }
 </style>

@@ -97,10 +97,6 @@
               default-text="请选择站点"
               no-data-text="暂无数据"
             />
-          </DashboardCardComponent>
-        </div>
-        <div class="col-lg-6 col-xl-3 h-100 my-1">
-          <DashboardCardComponent title="土壤参数" class="info-card">
             <line-chart
               :sensors="dashboardStore.$state.soilRelatedSensors"
               :records="dashboardStore.$state.soilRelatedRecords"
@@ -115,6 +111,9 @@
               no-data-text="暂无数据"
             />
           </DashboardCardComponent>
+        </div>
+        <div class="col-lg-6 col-xl-3 h-100 my-1">
+          <DashboardCardComponent title="土壤参数" class="info-card"> </DashboardCardComponent>
         </div>
       </div>
       <div class="row">
@@ -198,7 +197,7 @@ const selectStationHandler = (station: Station | undefined) => {
 dashboardStore.loadStations()
 </script>
 
-<style scoped>
+<!-- <style scoped>
 .info-card {
   height: 960px;
 }
@@ -209,4 +208,4 @@ dashboardStore.loadStations()
     min-height: 400px;
   }
 }
-</style>
+</style> -->

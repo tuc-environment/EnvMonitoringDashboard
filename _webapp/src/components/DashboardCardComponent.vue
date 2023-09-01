@@ -3,7 +3,7 @@
     <div>
       <b>{{ title }}</b>
     </div>
-    <div class="mx-auto text-center flex-grow-1 d-flex flex-column justify-content-center">
+    <div class="my-2 w-100 text-center flex-grow-1 d-flex flex-column justify-content-center">
       <slot />
     </div>
   </div>
