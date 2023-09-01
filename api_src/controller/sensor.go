@@ -35,7 +35,9 @@ func (api *SensorAPI) GetSensors(g *gin.Context) {
 	log := api.logger.Sugar()
 	defer log.Sync()
 	c := WrapContext(g)
-	var stationId uint
+	var stationId *uint
+	var offset *int
+	var limit *int
 	q := c.Request.URL.Query()
 	if q.Has("station_id") {
 		str := q.Get("station_id")
@@ -44,9 +46,19 @@ func (api *SensorAPI) GetSensors(g *gin.Context) {
 			c.BadRequest(errors.New("invalid station_id"))
 			return
 		}
-		stationId = uint(num)
+		*stationId = uint(num)
 	}
-	sensors, err, count := api.sensorService.Get(stationId)
+	if q.Has("offset") {
+		str := q.Get("offset")
+		offsetV, _ := strconv.Atoi(str)
+		offset = &offsetV
+	}
+	if q.Has("limit") {
+		str := q.Get("limit")
+		limitV, _ := strconv.Atoi(str)
+		limit = &limitV
+	}
+	sensors, err, count := api.sensorService.Get(stationId, offset, limit)
 	if err != nil {
 		c.BadRequest(err)
 	} else {

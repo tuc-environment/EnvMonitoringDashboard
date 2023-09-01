@@ -52,7 +52,7 @@ func NewSensorService(c *config.Config, db *store.DBClient, logger *logger.Logge
 	return &SensorService{c, db, logger}
 }
 
-func (s *SensorService) Get(stationId uint) (*[]Sensor, error, *int64) {
+func (s *SensorService) Get(stationId *uint, limit *int, offset *int) (*[]Sensor, error, *int64) {
 	log := s.logger.Sugar()
 	defer log.Sync()
 	log.Infoln("get sensors for station id: ", stationId)
@@ -60,7 +60,7 @@ func (s *SensorService) Get(stationId uint) (*[]Sensor, error, *int64) {
 	var err error
 	var count int64
 	query := s.db.Model(&Sensor{})
-	if stationId == 0 {
+	if stationId == nil {
 		query = query.Where("deleted_at IS NULL")
 	} else {
 		query = query.Where("station_id = ? and deleted_at IS NULL", stationId)
@@ -69,6 +69,12 @@ func (s *SensorService) Get(stationId uint) (*[]Sensor, error, *int64) {
 	if err != nil {
 		log.Errorln("get sensors with error: ", err)
 		return nil, err, nil
+	}
+	if offset != nil {
+		query = query.Offset(*offset)
+	}
+	if limit != nil {
+		query = query.Limit(*limit)
 	}
 	err = query.Find(&sensors).Error
 	if err != nil {

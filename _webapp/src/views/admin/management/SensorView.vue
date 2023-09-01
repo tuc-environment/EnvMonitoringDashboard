@@ -5,11 +5,7 @@
         <div class="card-body">
           <div class="d-flex align-items-center">
             <div class="h4 my-0 me-2">站点信息</div>
-            <button
-              type="button"
-              class="btn btn-sm btn-outline-primary"
-              @click="gotoStationsView()"
-            >
+            <button type="button" class="btn btn-sm btn-outline-primary" @click="gotoStationsView()">
               查看所有站点
             </button>
           </div>
@@ -42,12 +38,7 @@
 
           <div class="input-group my-2">
             <input type="file" class="form-control" @change="selectCSVFile" />
-            <button
-              class="btn btn-outline-primary"
-              type="button"
-              :disabled="disableSubmitButton"
-              @click="uploadCSVFile"
-            >
+            <button class="btn btn-outline-primary" type="button" :disabled="disableSubmitButton" @click="uploadCSVFile">
               Submit
             </button>
           </div>
@@ -64,11 +55,7 @@
 
               <div style="height: 170px; overflow-y: auto">
                 <div class="form-check" v-for="sensor in allSensors" :key="sensor.id">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    @change="onChangeSensor($event, sensor.id)"
-                  />
+                  <input class="form-check-input" type="checkbox" @change="onChangeSensor($event, sensor.id)" />
                   <label class="form-check-label">
                     {{ sensor.id }}. {{ sensor.name }} ({{ positionName(sensor.position) }})
                   </label>
@@ -154,7 +141,7 @@ export default {
 
     const resps = await Promise.all([
       httpclient.getStations(),
-      httpclient.getSensors(this.stationID)
+      httpclient.getSensors({ stationID: this.stationID })
     ])
     this.station = resps[0]?.payload.filter((station) => station.id == this.stationID).at(0)
     this.allSensors = resps[1]?.payload.sort((a, b) => a.id - b.id) || []
@@ -228,11 +215,13 @@ export default {
     async updateSensorRecords() {
       this.loading = true
       const resp = await httpclient.getRecords(
-        this.selectedSensorIDs,
-        this.startDate,
-        this.endDate,
-        0,
-        100
+        {
+          sensorIDs: this.selectedSensorIDs,
+          startTime: this.startDate,
+          endTime: this.endDate,
+          offset: 0,
+          limit: 100,
+        }
       )
 
       const records = resp?.payload || []

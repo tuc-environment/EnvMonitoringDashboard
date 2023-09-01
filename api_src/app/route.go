@@ -4,6 +4,7 @@ import (
 	"EnvMonitoringDashboard/api_src/config"
 	"EnvMonitoringDashboard/api_src/controller"
 	"EnvMonitoringDashboard/api_src/logger"
+	"EnvMonitoringDashboard/api_src/utils"
 	"io/fs"
 	"time"
 
@@ -37,7 +38,7 @@ func NewEngine(
 		AllowAllOrigins:  true,
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"},
 		AllowHeaders:     []string{"Content-Type", "Content-Length", "Authorization", "Origin", "User-Agent", "X-API-Key"},
-		ExposeHeaders:    []string{"Content-Type", "Content-Length", "Authorization", "Origin", "User-Agent", "X-API-Key"},
+		ExposeHeaders:    []string{"Content-Type", "Content-Length", "Authorization", "Origin", "User-Agent", "X-API-Key", utils.XTotalCount},
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))

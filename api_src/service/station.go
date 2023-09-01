@@ -34,7 +34,7 @@ func NewStationService(c *config.Config, db *store.DBClient, logger *logger.Logg
 	return &StationService{c, db, logger}
 }
 
-func (s *StationService) GetStations() (*[]Station, error, *int64) {
+func (s *StationService) GetStations(offset *int, limit *int) (*[]Station, error, *int64) {
 	log := s.logger.Sugar()
 	defer log.Sync()
 	log.Infoln("get stations")

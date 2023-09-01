@@ -34,7 +34,20 @@ func (api *StationAPI) GetStations(g *gin.Context) {
 	log := api.logger.Sugar()
 	defer log.Sync()
 	c := WrapContext(g)
-	stations, err, count := api.stationService.GetStations()
+	q := c.Request.URL.Query()
+	var offset *int
+	var limit *int
+	if q.Has("offset") {
+		str := q.Get("offset")
+		offsetV, _ := strconv.Atoi(str)
+		offset = &offsetV
+	}
+	if q.Has("limit") {
+		str := q.Get("limit")
+		limitV, _ := strconv.Atoi(str)
+		limit = &limitV
+	}
+	stations, err, count := api.stationService.GetStations(offset, limit)
 	if err != nil {
 		c.BadRequest(err)
 		return

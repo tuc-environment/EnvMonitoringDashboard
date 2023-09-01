@@ -1,11 +1,11 @@
 import axios from 'axios'
 
-const HEADER_KEY_TOTAL_COUNT = 'X-Total-Count'
+const HEADER_KEY_TOTAL_COUNT = 'x-total-count'
 interface Response<T> {
   code: number
   error: string
   payload: T
-  total: number
+  total: number | undefined
   status: string
 }
 
@@ -125,9 +125,11 @@ class HttpClient {
     url = this.absoluteUrl(url)
     try {
       const resp = await axios.get<Response<T>>(url, { headers: this._headers() })
+      const count = resp.headers[HEADER_KEY_TOTAL_COUNT]
+      console.log(JSON.stringify(resp.headers))
       return {
         ...resp.data,
-        total: resp.headers[HEADER_KEY_TOTAL_COUNT]
+        total: count ? parseInt(count) : undefined
       }
     } catch (err: any) {
       return err?.response.data
@@ -217,8 +219,15 @@ class HttpClient {
 
   // stations
 
-  public async getStations(): Promise<Response<Station[]> | null> {
-    const resp = await this.get<Station[]>('/stations')
+  public async getStations(params?: { offset?: number, limit?: number }): Promise<Response<Station[]> | null> {
+    const ret = []
+    if (params?.offset) {
+      ret.push(`offset=${params.offset}`)
+    }
+    if (params?.limit) {
+      ret.push(`limit=${params.limit}`)
+    }
+    const resp = await this.get<Station[]>(`/stations?${ret.join('&')}`)
     return resp
   }
 
@@ -229,10 +238,18 @@ class HttpClient {
 
   // sensors
 
-  public async getSensors(stationID?: number): Promise<Response<Sensor[]> | null> {
-    const resp = await this.get<Sensor[]>(
-      stationID ? `/sensors?station_id=${stationID}` : '/sensors'
-    )
+  public async getSensors(params?: { stationID?: number, offset?: number, limit?: number }): Promise<Response<Sensor[]> | null> {
+    const ret = []
+    if (params?.offset) {
+      ret.push(`offset=${params.offset}`)
+    }
+    if (params?.limit) {
+      ret.push(`limit=${params.limit}`)
+    }
+    if (params?.stationID) {
+      ret.push(`station_id=${params.stationID}`)
+    }
+    const resp = await this.get<Sensor[]>(`/sensors?${ret.join('&')}`)
     return resp
   }
 
@@ -255,28 +272,30 @@ class HttpClient {
   }
 
   public async getRecords(
-    sensorIDs?: number[],
-    startTime?: Date,
-    endTime?: Date,
-    offset?: number,
-    limit?: number
+    params?: {
+      sensorIDs?: number[],
+      startTime?: Date,
+      endTime?: Date,
+      offset?: number,
+      limit?: number
+    }
   ): Promise<Response<DataRecord[]> | null> {
     const ret = []
-    if (sensorIDs) {
-      const str = sensorIDs.map((sensorID) => sensorID.toString()).join(',')
+    if (params?.sensorIDs) {
+      const str = params?.sensorIDs.map((sensorID) => sensorID.toString()).join(',')
       ret.push('sensor_ids=' + encodeURIComponent(str))
     }
-    if (startTime) {
-      ret.push('start_time=' + encodeURIComponent(startTime.toISOString()))
+    if (params?.startTime) {
+      ret.push('start_time=' + encodeURIComponent(params.startTime.toISOString()))
     }
-    if (endTime) {
-      ret.push('end_time=' + encodeURIComponent(endTime.toISOString()))
+    if (params?.endTime) {
+      ret.push('end_time=' + encodeURIComponent(params.endTime.toISOString()))
     }
-    if (offset != undefined) {
-      ret.push(`offset=${offset}`)
+    if (params?.offset) {
+      ret.push(`offset=${params.offset}`)
     }
-    if (limit != undefined) {
-      ret.push(`limit=${limit}`)
+    if (params?.limit) {
+      ret.push(`limit=${params.limit}`)
     }
     const resp = await this.get<DataRecord[]>(`/records?${ret.join('&')}`)
     return resp

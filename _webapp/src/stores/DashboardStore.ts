@@ -29,10 +29,6 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const loadingStations = ref(false)
   const selectedStation = ref<Station | undefined>(undefined)
 
-  // sensors
-  const sensors = ref<Sensor[]>([])
-  const loadingSensors = ref(false)
-
   // selected station data
   const loadingDataForStation = ref(false)
   const airRelatedSensors = ref<Sensor[] | undefined>(undefined)
@@ -41,6 +37,11 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const soilRelatedRecords = ref<DataRecord[] | undefined>(undefined)
 
   // counts
+
+  const totalStations = ref<number | undefined>(undefined)
+  const totalSensors = ref<number | undefined>(undefined)
+  const totalRecords = ref<number | undefined>(undefined)
+  const totalRecordsToday = ref<number | undefined>(undefined)
 
   // tree related actions
   const addTreeNodeSelected = (sensor: Sensor, station: Station) => {
@@ -75,7 +76,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
     const sensors = treeSensorsSelected.value
     if (sensors.length > 0) {
       try {
-        const result = await httpclient.getRecords(sensors.map((sensor) => sensor.id))
+        const result = await httpclient.getRecords({ sensorIDs: sensors.map((sensor) => sensor.id), })
         treeSensorRecordsLoaded.value = result?.payload ?? []
       } catch (e) {
         console.log('[dashboard-store]', e)
@@ -90,18 +91,19 @@ export const useDashboardStore = defineStore('dashboard', () => {
     loadingStations.value = true
     try {
       const result = await httpclient.getStations()
+      totalStations.value = result?.total
       stations.value = result?.payload ?? []
-    } catch (_) {}
+    } catch (_) { }
     loadingStations.value = false
   }
 
-  const loadSensors = async () => {
-    loadingSensors.value = true
+  const loadTotalCounts = async () => {
     try {
-      const result = await httpclient.getSensors()
-      sensors.value = result?.payload ?? []
-    } catch (_) {}
-    loadingSensors.value = false
+      const sensorRes = await httpclient.getSensors({ limit: 0, })
+      totalSensors.value = sensorRes?.total
+      const recordRes = await httpclient.getRecords({ limit: 0, })
+      totalRecords.value = recordRes?.total
+    } catch (_) { }
   }
 
   const setMapSelectedStation = async (station: Station | undefined) => {
@@ -121,20 +123,20 @@ export const useDashboardStore = defineStore('dashboard', () => {
     soilRelatedRecords.value = []
     const stationId = station?.id
     if (stationId) {
-      const sensorsRes = await httpclient.getSensors(stationId)
+      const sensorsRes = await httpclient.getSensors({ stationID: stationId })
       const sensors = sensorsRes?.payload ?? []
       if (sensors.length > 0) {
         const airSensorIds = sensors
           ? (sensors
-              .filter((sensor) => sensor.id && sensor.name && airOptionNames.includes(sensor.name))
-              .map((sensor) => sensor.id) as number[])
+            .filter((sensor) => sensor.id && sensor.name && airOptionNames.includes(sensor.name))
+            .map((sensor) => sensor.id) as number[])
           : []
         const soilSensorIds = sensors
           ? (sensors
-              .filter((sensor) => sensor.id && sensor.name && soilOptionNames.includes(sensor.name))
-              .map((sensor) => sensor.id) as number[])
+            .filter((sensor) => sensor.id && sensor.name && soilOptionNames.includes(sensor.name))
+            .map((sensor) => sensor.id) as number[])
           : []
-        const recordsRes = await httpclient.getRecords(airSensorIds.concat(soilSensorIds))
+        const recordsRes = await httpclient.getRecords({ sensorIDs: airSensorIds.concat(soilSensorIds) })
         const records = recordsRes?.payload ?? []
         airRelatedSensors.value = sensors.filter((sensor) => airSensorIds.includes(sensor.id))
         soilRelatedSensors.value = sensors.filter((sensor) => soilSensorIds.includes(sensor.id))
@@ -158,15 +160,17 @@ export const useDashboardStore = defineStore('dashboard', () => {
     treeSensorSelectedTags,
     loadingStations,
     stations,
-    loadingSensors,
-    sensors,
     loadingDataForStation,
     selectedStation,
     airRelatedSensors,
     airRelatedRecords,
     soilRelatedSensors,
     soilRelatedRecords,
-    loadSensors,
+    totalRecords,
+    totalSensors,
+    totalStations,
+    totalRecordsToday,
+    loadTotalCounts,
     addTreeNodeSelected,
     removeTreeNodeSelected,
     loadStations,
