@@ -43,87 +43,86 @@
         overflow-y: auto;
       "
     >
-      <div class="row">
-        <div class="col-md-6 col-lg-4 col-xl-2 h-100 my-1">
+      <div class="row align-items-stretch">
+        <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="站点数量">
             <div class="text-danger" style="font-size: 4rem">5</div>
           </DashboardCardComponent>
         </div>
-        <div class="col-md-6 col-lg-4 col-xl-2 h-100 my-1">
+        <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="传感器数量">
             <div class="text-danger" style="font-size: 4rem">189</div>
           </DashboardCardComponent>
         </div>
-        <div class="col-md-6 col-lg-4 col-xl-2 h-100 my-1">
+        <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="今日报警数量">
             <div class="text-danger" style="font-size: 4rem">822</div>
           </DashboardCardComponent>
         </div>
-        <div class="col-md-6 col-lg-4 col-xl-2 h-100 my-1">
+        <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="今日更新数量">
             <div class="text-danger" style="font-size: 4rem">1822</div>
           </DashboardCardComponent>
         </div>
-        <div class="col-md-6 col-lg-4 col-xl-2 h-100 my-1">
+        <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="今日更新数量">
             <div class="text-danger" style="font-size: 4rem">1822</div>
           </DashboardCardComponent>
         </div>
-        <div class="col-md-6 col-lg-4 col-xl-2 h-100 my-2">
+        <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="今日更新数量">
             <div class="text-danger" style="font-size: 4rem">1822</div>
           </DashboardCardComponent>
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-lg-12 col-xl-8 h-100 my-1">
+      <div class="row align-items-stretch">
+        <div class="col-lg-12 col-xl-8 my-2">
           <DashboardCardComponent title="传感器地理位置" class="info-card">
             <map-container ref="mapContainer" @did-select-station="selectStationHandler" />
           </DashboardCardComponent>
         </div>
-        <div class="col-lg-12 col-xl-4 h-100 my-1">
-          <div class="mb-2">
-            <DashboardCardComponent
-              :title="
-                dashboardStore.$state.selectedStation
-                  ? `${dashboardStore.$state.selectedStation.name} - 空气参数`
-                  : '空气参数'
-              "
-              class="info-card"
-            >
-              <line-chart
-                :sensors="dashboardStore.$state.airRelatedSensors"
-                :records="dashboardStore.$state.airRelatedRecords"
-                :show-default-text="!dashboardStore.$state.selectedStation"
-                :loading="dashboardStore.$state.loadingDataForStation"
-                default-text="请选择站点"
-                no-data-text="暂无数据"
-              />
-            </DashboardCardComponent>
+        <div class="col-lg-12 col-xl-4 my-2">
+          <div class="h-100 d-flex flex-column justify-content-between">
+            <div class="mb-2">
+              <DashboardCardComponent
+                :title="
+                  dashboardStore.$state.selectedStation
+                    ? `${dashboardStore.$state.selectedStation.name} - 空气参数`
+                    : '空气参数'
+                "
+                class="info-card"
+              >
+                <line-chart
+                  :sensors="dashboardStore.$state.airRelatedSensors"
+                  :records="dashboardStore.$state.airRelatedRecords"
+                  :show-default-text="!dashboardStore.$state.selectedStation"
+                  :loading="dashboardStore.$state.loadingDataForStation"
+                  default-text="请选择站点"
+                  no-data-text="暂无数据"
+                />
+              </DashboardCardComponent>
+            </div>
+            <div>
+              <DashboardCardComponent
+                :title="
+                  dashboardStore.$state.selectedStation
+                    ? `${dashboardStore.$state.selectedStation.name} - 土壤参数`
+                    : '土壤参数'
+                "
+                class="info-card"
+              >
+                <line-chart
+                  :sensors="dashboardStore.$state.soilRelatedSensors"
+                  :records="dashboardStore.$state.soilRelatedRecords"
+                  :show-default-text="!dashboardStore.$state.selectedStation"
+                  :loading="dashboardStore.$state.loadingDataForStation"
+                  default-text="请选择站点"
+                  no-data-text="暂无数据"
+                />
+              </DashboardCardComponent>
+            </div>
           </div>
-          <div class="mt-2">
-            <DashboardCardComponent
-              :title="
-                dashboardStore.$state.selectedStation
-                  ? `${dashboardStore.$state.selectedStation.name} - 土壤参数`
-                  : '土壤参数'
-              "
-              class="info-card"
-            >
-              <line-chart
-                :sensors="dashboardStore.$state.soilRelatedSensors"
-                :records="dashboardStore.$state.soilRelatedRecords"
-                :show-default-text="!dashboardStore.$state.selectedStation"
-                :loading="dashboardStore.$state.loadingDataForStation"
-                default-text="请选择站点"
-                no-data-text="暂无数据"
-              />
-            </DashboardCardComponent>
-          </div>
-        </div>
-        <div class="col-lg-6 col-xl-3 h-100 my-1">
-          <DashboardCardComponent title="土壤参数" class="info-card"> </DashboardCardComponent>
         </div>
       </div>
       <div class="row">

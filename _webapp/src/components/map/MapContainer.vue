@@ -1,5 +1,5 @@
 <template>
-  <div id="container" class="mapContainer w-100" ref="container"></div>
+  <div id="container" class="mapContainer h-100" ref="container"></div>
 </template>
 
 <script setup lang="ts">
