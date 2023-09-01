@@ -1,6 +1,6 @@
 <template>
   <DashboardLayout>
-    <div class="w-100">
+    <div class="p-2 w-100">
       <div class="row">
         <div class="col-lg-6 col-xl-6 h-100 my-1">
           <DashboardCardComponent title="选择传感器" class="info-card">

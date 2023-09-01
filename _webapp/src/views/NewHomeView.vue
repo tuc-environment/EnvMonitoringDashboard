@@ -1,6 +1,6 @@
 <template>
   <DashboardLayout>
-    <div class="d-flex flex-column w-100">
+    <div class="p-2 d-flex flex-column w-100 h-100">
       <div class="row align-items-stretch">
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="站点数量">

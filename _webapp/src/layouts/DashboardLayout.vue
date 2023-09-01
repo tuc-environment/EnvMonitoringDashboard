@@ -15,7 +15,7 @@
     <NavBarComponent class="navbar" />
 
     <div class="content d-flex text-light">
-      <div class="main flex-grow-1 p-3 d-flex w-100">
+      <div class="main flex-grow-1 w-100 h-100">
         <slot />
       </div>
     </div>
