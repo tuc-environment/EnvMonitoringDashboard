@@ -77,40 +77,50 @@
       </div>
 
       <div class="row">
-        <div class="col-lg-12 col-xl-6 h-100 my-1">
+        <div class="col-lg-12 col-xl-8 h-100 my-1">
           <DashboardCardComponent title="传感器地理位置" class="info-card">
             <map-container ref="mapContainer" @did-select-station="selectStationHandler" />
           </DashboardCardComponent>
         </div>
-        <div class="col-lg-6 col-xl-3 h-100 my-1">
-          <DashboardCardComponent title="大气参数" class="info-card">
-            <line-chart
-              :sensors="dashboardStore.$state.airRelatedSensors"
-              :records="dashboardStore.$state.airRelatedRecords"
-              :show-default-text="!dashboardStore.$state.selectedStation"
-              :loading="dashboardStore.$state.loadingDataForStation"
+        <div class="col-lg-12 col-xl-4 h-100 my-1">
+          <div class="mb-2">
+            <DashboardCardComponent
               :title="
                 dashboardStore.$state.selectedStation
                   ? `${dashboardStore.$state.selectedStation.name} - 空气参数`
                   : '空气参数'
               "
-              default-text="请选择站点"
-              no-data-text="暂无数据"
-            />
-            <line-chart
-              :sensors="dashboardStore.$state.soilRelatedSensors"
-              :records="dashboardStore.$state.soilRelatedRecords"
-              :show-default-text="!dashboardStore.$state.selectedStation"
-              :loading="dashboardStore.$state.loadingDataForStation"
+              class="info-card"
+            >
+              <line-chart
+                :sensors="dashboardStore.$state.airRelatedSensors"
+                :records="dashboardStore.$state.airRelatedRecords"
+                :show-default-text="!dashboardStore.$state.selectedStation"
+                :loading="dashboardStore.$state.loadingDataForStation"
+                default-text="请选择站点"
+                no-data-text="暂无数据"
+              />
+            </DashboardCardComponent>
+          </div>
+          <div class="mt-2">
+            <DashboardCardComponent
               :title="
                 dashboardStore.$state.selectedStation
                   ? `${dashboardStore.$state.selectedStation.name} - 土壤参数`
                   : '土壤参数'
               "
-              default-text="请选择站点"
-              no-data-text="暂无数据"
-            />
-          </DashboardCardComponent>
+              class="info-card"
+            >
+              <line-chart
+                :sensors="dashboardStore.$state.soilRelatedSensors"
+                :records="dashboardStore.$state.soilRelatedRecords"
+                :show-default-text="!dashboardStore.$state.selectedStation"
+                :loading="dashboardStore.$state.loadingDataForStation"
+                default-text="请选择站点"
+                no-data-text="暂无数据"
+              />
+            </DashboardCardComponent>
+          </div>
         </div>
         <div class="col-lg-6 col-xl-3 h-100 my-1">
           <DashboardCardComponent title="土壤参数" class="info-card"> </DashboardCardComponent>

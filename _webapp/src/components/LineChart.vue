@@ -4,16 +4,13 @@
       <div class="spinner-border text-light" role="status"></div>
     </div>
     <div v-else-if="showDefaultText" class="h3 text-white text-center align-self-center col">
-      <div class="h3 text-white">{{ $props.title }}</div>
       <div class="h5 text-white">{{ $props.defaultText }}</div>
     </div>
     <div v-else-if="noData" class="h3 text-white text-center align-self-center col">
-      <div class="h3 text-white">{{ $props.title }}</div>
       <div class="h5 text-white">{{ $props.noDataText }}</div>
     </div>
 
     <div v-else class="col">
-      <div class="h3 text-white">{{ $props.title }}</div>
       <apexchart width="100%" height="100%" type="line" :options="chartOptions" :series="series" />
     </div>
   </div>
@@ -27,7 +24,6 @@ const props = defineProps({
   records: Array as PropType<DataRecord[]>,
   sensors: Array as PropType<Sensor[]>,
   stations: Array as PropType<Station[]>,
-  title: String,
   showDefaultText: Boolean,
   defaultText: String,
   noDataText: String,
