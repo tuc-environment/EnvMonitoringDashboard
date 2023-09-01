@@ -97,8 +97,16 @@
             </div>
 
             <div style="text-align: center" class="mb-2">
-              <button type="button" class="btn btn-success" @click="$emit('close')">
-                开始预测
+              <button type="button" class="btn btn-success" :disabled="loading" @click="onConfirm">
+                <div v-if="loading">
+                  <span
+                    class="spinner-grow spinner-grow-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Loading...
+                </div>
+                <div v-if="!loading">开始预测</div>
               </button>
             </div>
           </div>
@@ -109,12 +117,28 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import LabelInputComponent from './LabelInputComponent.vue'
 
-defineProps({
+const props = defineProps({
   title: { type: String, default: 'Modal Title' },
-  visible: { type: Boolean, default: false }
+  visible: { type: Boolean, default: false },
+  lat: Number,
+  lng: Number
 })
+
+const latVal = ref<number | undefined>(undefined)
+const lngVal = ref<number | undefined>(undefined)
+const loading = ref(false)
+
+onMounted(() => {
+  latVal.value = props.lat
+  lngVal.value = props.lng
+})
+
+const onConfirm = () => {
+  loading.value = true
+}
 </script>
 
 <style scoped>

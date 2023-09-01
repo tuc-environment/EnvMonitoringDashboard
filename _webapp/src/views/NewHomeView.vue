@@ -26,9 +26,6 @@
       <div>环境监测系统 - 天津商业大学</div>
       <div class="flex-grow-1"></div>
       <div>
-        <button class="btn btn-primary btn-sm me-2" @click="showPredictionModal = true">
-          显示预测Modal
-        </button>
         <a href="/login" class="text-light">Sign in</a>
       </div>
     </div>
@@ -100,7 +97,11 @@
       <div class="row align-items-stretch flex-grow-1">
         <div class="col-lg-12 col-xl-8 my-2">
           <DashboardCardComponent title="站点位置" class="info-card">
-            <map-container ref="mapContainer" @did-select-station="selectStationHandler" />
+            <map-container
+              ref="mapContainer"
+              @did-select-station="selectStationHandler"
+              @on-confirm-prediction-marker="onPredictionMarkerConfirmed"
+            />
           </DashboardCardComponent>
         </div>
         <div class="col-lg-12 col-xl-4 my-2">
@@ -150,7 +151,9 @@
   <ModalComponent
     title="预测站点信息"
     :visible="showPredictionModal"
-    @close="showPredictionModal = false"
+    :lat="latVal"
+    :lng="lngVal"
+    @close="onModalClosed"
   />
 </template>
 
@@ -171,6 +174,10 @@ const dashboardStore = useDashboardStore()
 const stations = ref<Station[]>([])
 const mapContainer = ref<InstanceType<typeof MapContainer> | null>(null)
 
+// predict marker
+const lngVal = ref<number | undefined>(undefined)
+const latVal = ref<number | undefined>(undefined)
+
 dashboardStore.$subscribe((_, state) => {
   if (stations.value.length != state.stations.length) {
     stations.value = state.stations
@@ -181,6 +188,17 @@ dashboardStore.$subscribe((_, state) => {
 
 const selectStationHandler = (station: Station | undefined) => {
   dashboardStore.setMapSelectedStation(station)
+}
+
+const onPredictionMarkerConfirmed = (lng: number, lat: number) => {
+  lngVal.value = lng
+  latVal.value = lat
+  showPredictionModal.value = true
+}
+
+const onModalClosed = () => {
+  showPredictionModal.value = false
+  mapContainer.value?.closePredictionMarker()
 }
 
 dashboardStore.loadStations()

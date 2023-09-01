@@ -28,6 +28,7 @@ var markers: any[]
 
 const emit = defineEmits<{
   (e: 'didSelectStation', station: Station | undefined): void
+  (e: 'onConfirmPredictionMarker', lng: number, lat: number): void
 }>()
 
 onMounted(async () => {
@@ -61,6 +62,12 @@ const initMap = async () => {
 const setStations = async (updatedStations: Station[]) => {
   stations.allStations = updatedStations
   await addStationMarks()
+}
+
+const closePredictionMarker = () => {
+  if (currentPredictionPopup) {
+    currentPredictionPopup.close()
+  }
 }
 
 // add map elements
@@ -130,7 +137,7 @@ const addPredictionPopup = (lng: number, lat: number) => {
       // eslint-disable-next-line vue/no-unused-components
       MapPredictionPopup
     },
-    template: `<MapPredictionPopup :lng="lng" :lat="lat" @on-position-changed="onPositionChanged"/>`,
+    template: `<MapPredictionPopup :lng="lng" :lat="lat" @on-position-changed="onPositionChanged" @on-confirm="onConfirm" />`,
     data: () => {
       return {
         lng,
@@ -145,6 +152,9 @@ const addPredictionPopup = (lng: number, lat: number) => {
           predictionMarker.setPosition(updatedPosition)
           currentPredictionPopup.open(map, updatedPosition)
         }
+      },
+      onConfirm(lng: number, lat: number) {
+        emit('onConfirmPredictionMarker', lng, lat)
       }
     }
   })
@@ -284,7 +294,8 @@ const predictionMarkerLabel = () => {
 }
 
 defineExpose({
-  setStations
+  setStations,
+  closePredictionMarker
 })
 </script>
 

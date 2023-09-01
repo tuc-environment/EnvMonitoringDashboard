@@ -23,7 +23,7 @@
           />
         </div>
       </div>
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label for="temp">空气温度</label>
         <input type="number" class="form-control" id="temp" placeholder="℃" v-model="tempVal" />
       </div>
@@ -96,8 +96,7 @@
           placeholder="µS/m"
           v-model="soilElectricalConductivityVal"
         />
-      </div>
-
+      </div> -->
       <button
         type="submit"
         class="btn btn-primary submit-btn"
@@ -120,6 +119,7 @@ const props = defineProps({
   lat: Number,
   lng: Number
 })
+
 const latVal = ref(0)
 const lngVal = ref(0)
 const tempVal = ref<number | undefined>(undefined)
@@ -148,6 +148,7 @@ onMounted(() => {
 
 const emit = defineEmits<{
   (e: 'onPositionChanged', lng: number, lat: number): void
+  (e: 'onConfirm', lat: number, lng: number): void
 }>()
 
 const onPositionChanged = () => {
@@ -158,26 +159,7 @@ const onSubmit = () => {
   loading.value = true
   const temp = tempVal.value
   const humidity = humidityVal.value
-  const barometricPressure = barometricPressureVal.value
-  const soilTempShallow = soilTempShallowVal.value
-  const soilTempDeep = soilTempDeepVal.value
-  const soilWaterContentShallow = soilWaterContentShallowVal.value
-  const soilWaterContentDeep = soilWaterContentDeepVal.value
-  const soilElectricalConductivity = soilElectricalConductivityVal.value
-  console.log(
-    `[map-predict-popup] predict with 
-        latitude: ${latVal.value}
-        longitude: ${lngVal.value}
-        temp: ${temp},
-        humidity: ${humidity}, 
-        barometricPressure: ${barometricPressure}, 
-        soilTempShallow: ${soilTempShallow}, 
-        soilTempDeep: ${soilTempDeep}, 
-        soilTempDeep: ${soilTempDeep}, 
-        soilWaterContentShallow: ${soilWaterContentShallow}, 
-        soilWaterContentDeep: ${soilWaterContentDeep}, 
-        soilElectricalConductivity: ${soilElectricalConductivity}.`
-  )
+  emit('onConfirm', latVal.value, lngVal.value)
 }
 </script>
 
