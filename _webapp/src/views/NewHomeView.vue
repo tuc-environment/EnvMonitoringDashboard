@@ -26,6 +26,9 @@
       <div>环境监测系统 - 天津商业大学</div>
       <div class="flex-grow-1"></div>
       <div>
+        <button class="btn btn-primary btn-sm me-2" @click="showPredictionModal = true">
+          显示预测Modal
+        </button>
         <a href="/login" class="text-light">Sign in</a>
       </div>
     </div>
@@ -50,7 +53,7 @@
               v-if="dashboardStore.$state.loadingStations"
               class="spinner-border text-light align-self-center"
             ></div>
-            <div v-else class="text-danger" style="font-size: 4rem">
+            <div v-else class="text-danger" style="font-size: 4vmax">
               {{ formatDisplayNumber(dashboardStore.$state.stations.length ?? 0) }}
             </div>
           </DashboardCardComponent>
@@ -61,7 +64,7 @@
               v-if="dashboardStore.$state.loadingSensors"
               class="spinner-border text-light align-self-center"
             ></div>
-            <div v-else class="text-danger" style="font-size: 4rem">
+            <div v-else class="text-danger" style="font-size: 4vmax">
               {{ formatDisplayNumber(dashboardStore.$state.sensors.length ?? 0) }}
             </div>
           </DashboardCardComponent>
@@ -72,24 +75,24 @@
               v-if="dashboardStore.$state.loadingSensors"
               class="spinner-border text-light align-self-center"
             ></div>
-            <div v-else class="text-danger" style="font-size: 4rem">
+            <div v-else class="text-danger" style="font-size: 4vmax">
               {{ formatDisplayNumber(1100000000) }}
             </div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="今日更新数量">
-            <div class="text-danger" style="font-size: 4rem">1822</div>
+            <div class="text-danger" style="font-size: 4vmax">1822</div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="今日更新数量">
-            <div class="text-danger" style="font-size: 4rem">1822</div>
+            <div class="text-danger" style="font-size: 4vmax">1822</div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="今日更新数量">
-            <div class="text-danger" style="font-size: 4rem">1822</div>
+            <div class="text-danger" style="font-size: 4vmax">1822</div>
           </DashboardCardComponent>
         </div>
       </div>
@@ -143,10 +146,17 @@
       </div>
     </div>
   </div>
+
+  <ModalComponent
+    title="预测站点信息"
+    :visible="showPredictionModal"
+    @close="showPredictionModal = false"
+  />
 </template>
 
 <script setup lang="ts">
 import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
+import ModalComponent from '@/components/ModalComponent.vue'
 import LineChart from '@/components/LineChart.vue'
 import TreeChart from '@/components/tree/Tree.vue'
 import MapContainer from '@/components/map/MapContainer.vue'
@@ -155,6 +165,7 @@ import { useDashboardStore } from '@/stores/DashboardStore'
 import { ref } from 'vue'
 import { formatDisplayNumber } from '@/utils/utils'
 
+const showPredictionModal = ref(false)
 const treeChart = ref<InstanceType<typeof TreeChart> | null>(null)
 const dashboardStore = useDashboardStore()
 const stations = ref<Station[]>([])
