@@ -282,6 +282,8 @@ class HttpClient {
     sensorIDs?: number[]
     startTime?: Date
     endTime?: Date
+    beforeCreatedAt?: Date
+    afterCreatedAt?: Date
     offset?: number
     limit?: number
   }): Promise<Response<DataRecord[]> | null> {
@@ -295,6 +297,12 @@ class HttpClient {
     }
     if (params?.endTime) {
       ret.push('end_time=' + encodeURIComponent(params.endTime.toISOString()))
+    }
+    if (params?.beforeCreatedAt) {
+      ret.push('before_created_at=' + encodeURIComponent(params.beforeCreatedAt.toISOString()))
+    }
+    if (params?.afterCreatedAt) {
+      ret.push('after_created_at=' + encodeURIComponent(params.afterCreatedAt.toISOString()))
     }
     if (params?.offset) {
       ret.push(`offset=${params.offset}`)

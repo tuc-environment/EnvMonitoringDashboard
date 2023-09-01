@@ -41,7 +41,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const totalStations = ref<number | undefined>(undefined)
   const totalSensors = ref<number | undefined>(undefined)
   const totalRecords = ref<number | undefined>(undefined)
-  const totalRecordsToday = ref<number | undefined>(undefined)
+  const totalCreatedToday = ref<number | undefined>(undefined)
 
   // tree related actions
   const addTreeNodeSelected = (sensor: Sensor, station: Station) => {
@@ -105,6 +105,15 @@ export const useDashboardStore = defineStore('dashboard', () => {
       totalSensors.value = sensorRes?.total
       const recordRes = await httpclient.getRecords({ limit: 0 })
       totalRecords.value = recordRes?.total
+      const now = new Date()
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDay(), 0, 0)
+      const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDay(), 23, 59)
+      const todayRes = await httpclient.getRecords({
+        limit: 0,
+        afterCreatedAt: todayStart,
+        beforeCreatedAt: todayEnd
+      })
+      totalCreatedToday.value = todayRes?.total
     } catch (_) {}
   }
 
@@ -173,7 +182,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
     totalRecords,
     totalSensors,
     totalStations,
-    totalRecordsToday,
+    totalCreatedToday,
     loadTotalCounts,
     addTreeNodeSelected,
     removeTreeNodeSelected,
