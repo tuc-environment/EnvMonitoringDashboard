@@ -1,18 +1,6 @@
 <template>
   <DashboardLayout>
-    <div
-      class="p-3 text-light d-flex flex-column"
-      style="
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 50px;
-        bottom: 0;
-        background-color: rgb(17, 18, 23);
-        z-index: 1000;
-        overflow-y: auto;
-      "
-    >
+    <div class="d-flex flex-column w-100">
       <div class="row align-items-stretch">
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="站点数量">

@@ -18,7 +18,7 @@ const router = createRouter({
     },
     {
       path: '/',
-      name: 'homw',
+      name: 'home',
       component: NewHomeViewVue
     },
     {

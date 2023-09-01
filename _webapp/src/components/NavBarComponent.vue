@@ -18,7 +18,7 @@
         <span style="font-size: 1.1rem" class="m-2">环境监测系统 API</span>
       </a>
 
-      <!-- <button
+      <button
         class="navbar-toggler"
         type="button"
         data-bs-toggle="collapse"
@@ -31,12 +31,22 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="me-auto"></div>
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="#">Contact Us</a>
+            <a class="nav-link" href="/">主页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/cross-station">数据对比</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">联系我们</a>
           </li>
         </ul>
-      </div> -->
+        <form class="form-inline">
+          <a class="btn btn-outline-danger my-sm-0" type="button" href="/login"> 登入管理后台 </a>
+        </form>
+      </div>
     </div>
   </nav>
 </template>
