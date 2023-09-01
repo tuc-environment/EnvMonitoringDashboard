@@ -4,11 +4,23 @@
       <div class="form-group row">
         <div class="form-group col-md-6">
           <label for="latitude">纬度</label>
-          <input type="number" class="form-control" id="latitude" placeholder="°" v-model="latVal" />
+          <input
+            type="number"
+            class="form-control"
+            id="latitude"
+            placeholder="°"
+            v-model="latVal"
+          />
         </div>
         <div class="form-group col-md-6">
           <label for="longtitude">经度</label>
-          <input type="number" class="form-control" id="longtitude" placeholder="° " v-model="lngVal" />
+          <input
+            type="number"
+            class="form-control"
+            id="longtitude"
+            placeholder="° "
+            v-model="lngVal"
+          />
         </div>
       </div>
       <!-- <div class="form-group">
@@ -85,7 +97,12 @@
           v-model="soilElectricalConductivityVal"
         />
       </div> -->
-      <button type="submit" class="btn btn-primary submit-btn" :disabled="loading" @click="onSubmit">
+      <button
+        type="submit"
+        class="btn btn-primary submit-btn"
+        :disabled="loading"
+        @click="onSubmit"
+      >
         <div v-if="loading">
           <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
           Loading...

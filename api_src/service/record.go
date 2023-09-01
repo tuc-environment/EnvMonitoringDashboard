@@ -32,11 +32,17 @@ func NewRecordService(c *config.Config, db *store.DBClient, logger *logger.Logge
 	return &RecordService{c, db, logger}
 }
 
-func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endTime *time.Time, offset *int, limit *int) (*[]Record, error, *int64) {
+func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endTime *time.Time, afterCreatedAt *time.Time, beforeCreatedAt *time.Time, offset *int, limit *int) (*[]Record, error, *int64) {
 	log := s.logger.Sugar()
 	defer log.Sync()
 	var records *[]Record
 	query := s.db.DB.Model(&Record{})
+	if afterCreatedAt != nil {
+		query = query.Where("created_at >= ?", *afterCreatedAt)
+	}
+	if beforeCreatedAt != nil {
+		query = query.Where("created_at < ?", *beforeCreatedAt)
+	}
 	if startTime != nil {
 		query = query.Where("time >= ?", *startTime)
 	}

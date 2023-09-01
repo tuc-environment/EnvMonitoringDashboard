@@ -146,6 +146,8 @@ func (api *RecordAPI) GetRecords(g *gin.Context) {
 	var sensorIds *[]uint
 	var startTime *time.Time
 	var endTime *time.Time
+	var afterCreatedAt *time.Time
+	var beforeCreatedAt *time.Time
 	var offset *int
 	var limit *int
 	q := c.Request.URL.Query()
@@ -158,6 +160,16 @@ func (api *RecordAPI) GetRecords(g *gin.Context) {
 		str := q.Get("end_time")
 		endTimeV, _ := time.Parse(time.RFC3339, str)
 		endTime = &endTimeV
+	}
+	if q.Has("after_created_at") {
+		str := q.Get("after_created_at")
+		afterCreatedAtV, _ := time.Parse(time.RFC3339, str)
+		afterCreatedAt = &afterCreatedAtV
+	}
+	if q.Has("before_created_at") {
+		str := q.Get("before_created_at")
+		beforeCreatedAtV, _ := time.Parse(time.RFC3339, str)
+		beforeCreatedAt = &beforeCreatedAtV
 	}
 	if q.Has("sensor_ids") {
 		str := q.Get("sensor_ids")
@@ -186,7 +198,7 @@ func (api *RecordAPI) GetRecords(g *gin.Context) {
 		limit = &limitV
 	}
 
-	records, err, count := api.recordService.GetRecords(sensorIds, startTime, endTime, offset, limit)
+	records, err, count := api.recordService.GetRecords(sensorIds, startTime, endTime, afterCreatedAt, beforeCreatedAt, offset, limit)
 	if err != nil {
 		c.BadRequest(err)
 	} else {

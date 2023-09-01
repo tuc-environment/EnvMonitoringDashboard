@@ -46,7 +46,8 @@ func (api *SensorAPI) GetSensors(g *gin.Context) {
 			c.BadRequest(errors.New("invalid station_id"))
 			return
 		}
-		*stationId = uint(num)
+		unitV := uint(num)
+		stationId = &unitV
 	}
 	if q.Has("offset") {
 		str := q.Get("offset")

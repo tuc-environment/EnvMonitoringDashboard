@@ -1,7 +1,5 @@
 <template>
-  <DashboardLayout>
-    About
-  </DashboardLayout>
+  <DashboardLayout> About </DashboardLayout>
 </template>
 
 <script setup lang="ts">
