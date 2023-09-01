@@ -101,5 +101,5 @@ const onSelectTag = (tag: TagData) => {
 }
 
 dashboardStore.loadStations()
-dashboardStore.loadSensors()
+// dashboardStore.loadSensors()
 </script>
