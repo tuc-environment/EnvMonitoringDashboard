@@ -40,7 +40,7 @@
             <a class="nav-link" href="/cross-station">数据对比</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">联系我们</a>
+            <a class="nav-link" href="/contact-us">联系我们</a>
           </li>
         </ul>
         <form class="form-inline">
