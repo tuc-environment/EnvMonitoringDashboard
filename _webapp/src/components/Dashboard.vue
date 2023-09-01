@@ -1,7 +1,7 @@
 <template>
   <div class="dashboardContainer">
     <div class="leftPanel d-flex flex-column justify-content-between">
-      <tag-group :tags="dashboardStore.treeSensorSelectedTags" @on-tag-selected="onSelectTag" />
+      <!-- <tag-group :tags="dashboardStore.treeSensorSelectedTags" @on-tag-selected="onSelectTag" /> -->
       <TreeChart ref="treeChart" />
       <div class="space"></div>
       <LineChart
@@ -102,7 +102,7 @@ const selectStation = async (station: Station | undefined) => {
 
 const setStations = (updatedStations: Station[]) => {
   stations.value = updatedStations
-  treeChart.value?.setStations(updatedStations)
+  // treeChart.value?.setStations(updatedStations)
 }
 
 const onSelectTag = (tag: TagData) => {

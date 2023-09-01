@@ -1,5 +1,5 @@
 <template>
-  <div id="container" class="w-100 h-100" ref="container"></div>
+  <div id="container" class="mapContainer" ref="container"></div>
 </template>
 
 <script setup lang="ts">
@@ -69,6 +69,7 @@ const setStations = async (updatedStations: Station[]) => {
 // add map elements
 
 const addStationMarks = async () => {
+  if (!aMap) return
   const icon = markerIcon()
   markers = stations.allStations.flatMap((station: Station) => {
     console.log('[map] add marker for station: ', JSON.stringify(station))
@@ -297,10 +298,12 @@ defineExpose({
   padding: 4px;
   background-color: white;
   border-radius: 8px;
+  color: black;
 }
 
 .amap-info-content {
   border-radius: 8px;
+  color: black;
 }
 
 .markerPopupContainer {
@@ -317,5 +320,11 @@ defineExpose({
 
 .popLabelRow {
   display: flex;
+}
+
+.mapContainer {
+  position: relative;
+  width: 500px;
+  height: 500px;
 }
 </style>

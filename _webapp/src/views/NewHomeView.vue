@@ -77,27 +77,68 @@
       </div>
 
       <div class="row">
-        <div class="col-lg-6 col-xl-3 h-100 my-1">
-          <DashboardCardComponent title="选择传感器" class="info-card"
-            >选择传感器</DashboardCardComponent
-          >
+        <div class="col-lg-12 col-xl-6 h-100 my-1">
+          <DashboardCardComponent title="传感器地理位置" class="info-card">
+            <map-container ref="mapContainer" @did-select-station="selectStationHandler" />
+          </DashboardCardComponent>
         </div>
         <div class="col-lg-6 col-xl-3 h-100 my-1">
-          <DashboardCardComponent title="传感器数据" class="info-card">
-            <LineChart
-              :sensors="airRelatedSensors"
-              :records="airRelatedRecords"
-              :show-default-text="!selectedStation"
-              :loading="false"
-              :title="selectedStation ? `${selectedStation.name} - 空气参数` : '空气参数'"
+          <DashboardCardComponent title="大气参数" class="info-card">
+            <line-chart
+              :sensors="dashboardStore.$state.airRelatedSensors"
+              :records="dashboardStore.$state.airRelatedRecords"
+              :show-default-text="!dashboardStore.$state.selectedStation"
+              :loading="dashboardStore.$state.loadingDataForStation"
+              :title="
+                dashboardStore.$state.selectedStation
+                  ? `${dashboardStore.$state.selectedStation.name} - 空气参数`
+                  : '空气参数'
+              "
               default-text="请选择站点"
               no-data-text="暂无数据"
             />
           </DashboardCardComponent>
         </div>
-        <div class="col-lg-12 col-xl-6 h-100 my-1">
-          <DashboardCardComponent title="传感器地理位置" class="info-card">
-            <MapContainer />
+        <div class="col-lg-6 col-xl-3 h-100 my-1">
+          <DashboardCardComponent title="土壤参数" class="info-card">
+            <line-chart
+              :sensors="dashboardStore.$state.soilRelatedSensors"
+              :records="dashboardStore.$state.soilRelatedRecords"
+              :show-default-text="!dashboardStore.$state.selectedStation"
+              :loading="dashboardStore.$state.loadingDataForStation"
+              :title="
+                dashboardStore.$state.selectedStation
+                  ? `${dashboardStore.$state.selectedStation.name} - 土壤参数`
+                  : '土壤参数'
+              "
+              default-text="请选择站点"
+              no-data-text="暂无数据"
+            />
+          </DashboardCardComponent>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6 col-xl-3 h-100 my-1">
+          <DashboardCardComponent title="选择传感器" class="info-card">
+            <tag-group
+              :tags="dashboardStore.treeSensorSelectedTags"
+              @on-tag-selected="onSelectTag"
+            />
+            <tree-chart ref="treeChart" />
+          </DashboardCardComponent>
+        </div>
+        <div class="col-lg-6 col-xl-3 h-100 my-1">
+          <DashboardCardComponent title="传感器数据" class="info-card">
+            <line-chart
+              :stations="dashboardStore.$state.treeStationsSelected"
+              :sensors="dashboardStore.$state.treeSensorsSelected"
+              :records="dashboardStore.$state.treeSensorRecordsLoaded"
+              :loading="dashboardStore.$state.treeRecordsLoading"
+              :maxLines="10"
+              title="数据对比"
+              default-text="请选择数据项"
+              no-data-text="暂无数据"
+            />
           </DashboardCardComponent>
         </div>
       </div>
@@ -119,39 +160,42 @@
   </div> -->
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
 import LineChart from '@/components/LineChart.vue'
+import TreeChart from '@/components/tree/Tree.vue'
 import MapContainer from '@/components/map/MapContainer.vue'
-import { SensorPosition, type DataRecord, type Sensor, type Station } from '@/httpclient'
+import { type Sensor, type Station } from '@/httpclient'
+import { useDashboardStore } from '@/stores/DashboardStore'
+import TagGroup from '@/components/tags/TagsGroup.vue'
+import { ref } from 'vue'
+import type { TagData } from '@/components/tags/TagData'
 
-export default {
-  components: {
-    DashboardCardComponent,
-    LineChart,
-    MapContainer
-  },
-  created() {
-    this.airRelatedSensors = [
-      {
-        id: 1,
-        station_id: 1,
-        position: SensorPosition.up,
-        tag: 'test',
-        name: '空气',
-        group: '1',
-        unit: 'C'
-      }
-    ]
-  },
-  data() {
-    return {
-      airRelatedSensors: [] as Sensor[],
-      airRelatedRecords: [] as DataRecord[],
-      selectedStation: null as Station | null
-    }
+const treeChart = ref<InstanceType<typeof TreeChart> | null>(null)
+const dashboardStore = useDashboardStore()
+const stations = ref<Station[]>([])
+const mapContainer = ref<InstanceType<typeof MapContainer> | null>(null)
+
+dashboardStore.$subscribe((_, state) => {
+  if (stations.value.length != state.stations.length) {
+    stations.value = state.stations
+    treeChart.value?.setStations(stations.value)
+    mapContainer.value?.setStations(stations.value)
+  }
+})
+
+const onSelectTag = (tag: TagData) => {
+  const sensor = tag.data as Sensor
+  if (sensor) {
+    dashboardStore.removeTreeNodeSelected(sensor)
   }
 }
+
+const selectStationHandler = (station: Station | undefined) => {
+  dashboardStore.setMapSelectedStation(station)
+}
+
+dashboardStore.loadStations()
 </script>
 
 <style scoped>
