@@ -7,6 +7,7 @@ import httpclient from '@/httpclient'
 
 import AdminView from '@/views/admin/AdminView.vue'
 import CrossStationView from '@/views/CrossStationView.vue'
+import ContactUsView from '@/views/ContactUsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,8 +24,13 @@ const router = createRouter({
     },
     {
       path: '/cross-station',
-      name: 'cross-station-tab',
+      name: 'cross-station',
       component: CrossStationView
+    },
+    {
+      path: '/contact-us',
+      name: 'contact-us',
+      component: ContactUsView
     },
     {
       path: '/login',
