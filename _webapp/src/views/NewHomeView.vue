@@ -8,7 +8,7 @@
               v-if="dashboardStore.$state.totalStations == undefined"
               class="spinner-border text-light align-self-center"
             ></div>
-            <div v-else class="text-danger" style="font-size: 4rem">
+            <div v-else class="text-warning" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalStations ?? 0) }}
             </div>
           </DashboardCardComponent>
@@ -19,7 +19,7 @@
               v-if="dashboardStore.$state.totalSensors == undefined"
               class="spinner-border text-light align-self-center"
             ></div>
-            <div v-else class="text-danger" style="font-size: 4rem">
+            <div v-else class="text-warning" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalSensors ?? 0) }}
             </div>
           </DashboardCardComponent>
@@ -30,24 +30,24 @@
               v-if="dashboardStore.$state.totalRecords == undefined"
               class="spinner-border text-light align-self-center"
             ></div>
-            <div v-else class="text-danger" style="font-size: 4rem">
+            <div v-else class="text-warning" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalRecords ?? 0) }}
             </div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="今日更新数量">
-            <div class="text-danger" style="font-size: 4vmax">1822</div>
+            <div class="text-warning" style="font-size: 4vmax">1822</div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="今日更新数量">
-            <div class="text-danger" style="font-size: 4vmax">1822</div>
+            <div class="text-warning" style="font-size: 4vmax">1822</div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="今日更新数量">
-            <div class="text-danger" style="font-size: 4vmax">1822</div>
+            <div class="text-warning" style="font-size: 4vmax">1822</div>
           </DashboardCardComponent>
         </div>
       </div>
