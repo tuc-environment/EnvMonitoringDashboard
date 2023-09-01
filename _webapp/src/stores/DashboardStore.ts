@@ -76,7 +76,9 @@ export const useDashboardStore = defineStore('dashboard', () => {
     const sensors = treeSensorsSelected.value
     if (sensors.length > 0) {
       try {
-        const result = await httpclient.getRecords({ sensorIDs: sensors.map((sensor) => sensor.id), })
+        const result = await httpclient.getRecords({
+          sensorIDs: sensors.map((sensor) => sensor.id)
+        })
         treeSensorRecordsLoaded.value = result?.payload ?? []
       } catch (e) {
         console.log('[dashboard-store]', e)
@@ -93,17 +95,17 @@ export const useDashboardStore = defineStore('dashboard', () => {
       const result = await httpclient.getStations()
       totalStations.value = result?.total
       stations.value = result?.payload ?? []
-    } catch (_) { }
+    } catch (_) {}
     loadingStations.value = false
   }
 
   const loadTotalCounts = async () => {
     try {
-      const sensorRes = await httpclient.getSensors({ limit: 0, })
+      const sensorRes = await httpclient.getSensors({ limit: 0 })
       totalSensors.value = sensorRes?.total
-      const recordRes = await httpclient.getRecords({ limit: 0, })
+      const recordRes = await httpclient.getRecords({ limit: 0 })
       totalRecords.value = recordRes?.total
-    } catch (_) { }
+    } catch (_) {}
   }
 
   const setMapSelectedStation = async (station: Station | undefined) => {
@@ -128,15 +130,17 @@ export const useDashboardStore = defineStore('dashboard', () => {
       if (sensors.length > 0) {
         const airSensorIds = sensors
           ? (sensors
-            .filter((sensor) => sensor.id && sensor.name && airOptionNames.includes(sensor.name))
-            .map((sensor) => sensor.id) as number[])
+              .filter((sensor) => sensor.id && sensor.name && airOptionNames.includes(sensor.name))
+              .map((sensor) => sensor.id) as number[])
           : []
         const soilSensorIds = sensors
           ? (sensors
-            .filter((sensor) => sensor.id && sensor.name && soilOptionNames.includes(sensor.name))
-            .map((sensor) => sensor.id) as number[])
+              .filter((sensor) => sensor.id && sensor.name && soilOptionNames.includes(sensor.name))
+              .map((sensor) => sensor.id) as number[])
           : []
-        const recordsRes = await httpclient.getRecords({ sensorIDs: airSensorIds.concat(soilSensorIds) })
+        const recordsRes = await httpclient.getRecords({
+          sensorIDs: airSensorIds.concat(soilSensorIds)
+        })
         const records = recordsRes?.payload ?? []
         airRelatedSensors.value = sensors.filter((sensor) => airSensorIds.includes(sensor.id))
         soilRelatedSensors.value = sensors.filter((sensor) => soilSensorIds.includes(sensor.id))

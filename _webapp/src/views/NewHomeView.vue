@@ -1,5 +1,6 @@
 <template>
-  <div style="
+  <div
+    style="
       position: absolute;
       left: 0;
       right: 0;
@@ -7,14 +8,18 @@
       bottom: 0;
       background-color: rgb(17, 18, 23);
       z-index: -100;
-    "></div>
+    "
+  ></div>
 
   <div style="background-color: rgb(17, 18, 23)">
-    <div class="d-flex text-light p-2 align-items-center fixed-top" style="
+    <div
+      class="d-flex text-light p-2 align-items-center fixed-top"
+      style="
         background-color: rgb(24, 27, 31);
         height: 48px;
         border-bottom: 1px solid rgba(204, 204, 220, 0.12);
-      ">
+      "
+    >
       <div>
         <img class="logo rounded me-2" src="/logo.png" style="height: 28px" />
       </div>
@@ -28,7 +33,9 @@
       </div>
     </div>
 
-    <div class="p-3 text-light d-flex flex-column" style="
+    <div
+      class="p-3 text-light d-flex flex-column"
+      style="
         position: absolute;
         left: 0;
         right: 0;
@@ -37,12 +44,15 @@
         background-color: rgb(17, 18, 23);
         z-index: 1000;
         overflow-y: auto;
-      ">
+      "
+    >
       <div class="row align-items-stretch">
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="站点数量">
-            <div v-if="dashboardStore.$state.totalStations == undefined"
-              class="spinner-border text-light align-self-center"></div>
+            <div
+              v-if="dashboardStore.$state.totalStations == undefined"
+              class="spinner-border text-light align-self-center"
+            ></div>
             <div v-else class="text-danger" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalStations ?? 0) }}
             </div>
@@ -50,8 +60,10 @@
         </div>
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="传感器数量">
-            <div v-if="dashboardStore.$state.totalSensors == undefined"
-              class="spinner-border text-light align-self-center"></div>
+            <div
+              v-if="dashboardStore.$state.totalSensors == undefined"
+              class="spinner-border text-light align-self-center"
+            ></div>
             <div v-else class="text-danger" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalSensors ?? 0) }}
             </div>
@@ -59,8 +71,10 @@
         </div>
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="数据总量">
-            <div v-if="dashboardStore.$state.totalRecords == undefined"
-              class="spinner-border text-light align-self-center"></div>
+            <div
+              v-if="dashboardStore.$state.totalRecords == undefined"
+              class="spinner-border text-light align-self-center"
+            ></div>
             <div v-else class="text-danger" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalRecords ?? 0) }}
             </div>
@@ -92,27 +106,39 @@
         <div class="col-lg-12 col-xl-4 my-2">
           <div class="h-100 d-flex flex-column justify-content-between">
             <div class="mb-2" style="flex: 1">
-              <DashboardCardComponent :title="dashboardStore.$state.selectedStation
-                  ? `${dashboardStore.$state.selectedStation.name} - 空气参数`
-                  : '空气参数'
-                ">
-                <line-chart :sensors="dashboardStore.$state.airRelatedSensors"
+              <DashboardCardComponent
+                :title="
+                  dashboardStore.$state.selectedStation
+                    ? `${dashboardStore.$state.selectedStation.name} - 空气参数`
+                    : '空气参数'
+                "
+              >
+                <line-chart
+                  :sensors="dashboardStore.$state.airRelatedSensors"
                   :records="dashboardStore.$state.airRelatedRecords"
                   :show-default-text="!dashboardStore.$state.selectedStation"
-                  :loading="dashboardStore.$state.loadingDataForStation" default-text="点击地图选择站点查看数据"
-                  no-data-text="暂无数据" />
+                  :loading="dashboardStore.$state.loadingDataForStation"
+                  default-text="点击地图选择站点查看数据"
+                  no-data-text="暂无数据"
+                />
               </DashboardCardComponent>
             </div>
             <div style="flex: 1">
-              <DashboardCardComponent :title="dashboardStore.$state.selectedStation
-                  ? `${dashboardStore.$state.selectedStation.name} - 土壤参数`
-                  : '土壤参数'
-                ">
-                <line-chart :sensors="dashboardStore.$state.soilRelatedSensors"
+              <DashboardCardComponent
+                :title="
+                  dashboardStore.$state.selectedStation
+                    ? `${dashboardStore.$state.selectedStation.name} - 土壤参数`
+                    : '土壤参数'
+                "
+              >
+                <line-chart
+                  :sensors="dashboardStore.$state.soilRelatedSensors"
                   :records="dashboardStore.$state.soilRelatedRecords"
                   :show-default-text="!dashboardStore.$state.selectedStation"
-                  :loading="dashboardStore.$state.loadingDataForStation" default-text="点击地图选择站点查看数据"
-                  no-data-text="暂无数据" />
+                  :loading="dashboardStore.$state.loadingDataForStation"
+                  default-text="点击地图选择站点查看数据"
+                  no-data-text="暂无数据"
+                />
               </DashboardCardComponent>
             </div>
           </div>
@@ -121,7 +147,11 @@
     </div>
   </div>
 
-  <ModalComponent title="预测站点信息" :visible="showPredictionModal" @close="showPredictionModal = false" />
+  <ModalComponent
+    title="预测站点信息"
+    :visible="showPredictionModal"
+    @close="showPredictionModal = false"
+  />
 </template>
 
 <script setup lang="ts">

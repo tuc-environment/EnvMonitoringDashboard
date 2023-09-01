@@ -4,19 +4,37 @@
       <!-- <tag-group :tags="dashboardStore.treeSensorSelectedTags" @on-tag-selected="onSelectTag" /> -->
       <TreeChart ref="treeChart" />
       <div class="space"></div>
-      <LineChart :stations="dashboardStore.$state.treeStationsSelected"
-        :sensors="dashboardStore.$state.treeSensorsSelected" :records="dashboardStore.$state.treeSensorRecordsLoaded"
-        :loading="dashboardStore.$state.treeRecordsLoading" :maxLines="10" title="数据对比" default-text="请选择数据项"
-        no-data-text="暂无数据" />
+      <LineChart
+        :stations="dashboardStore.$state.treeStationsSelected"
+        :sensors="dashboardStore.$state.treeSensorsSelected"
+        :records="dashboardStore.$state.treeSensorRecordsLoaded"
+        :loading="dashboardStore.$state.treeRecordsLoading"
+        :maxLines="10"
+        title="数据对比"
+        default-text="请选择数据项"
+        no-data-text="暂无数据"
+      />
     </div>
     <div class="centerSpace"></div>
     <div class="rightPanel d-flex flex-column justify-content-between">
-      <LineChart :sensors="airRelatedSensors" :records="airRelatedRecords" :show-default-text="!selectedStation"
-        :loading="loadingDataForStation" :title="selectedStation ? `${selectedStation.name} - 空气参数` : '空气参数'"
-        default-text="请选择站点" no-data-text="暂无数据" />
-      <LineChart :sensors="soilRelatedSensors" :records="soilRelatedRecords" :show-default-text="!selectedStation"
-        :loading="loadingDataForStation" :title="selectedStation ? `${selectedStation.name} - 土壤参数` : '土壤参数'"
-        default-text="请选择站点" no-data-text="暂无数据" />
+      <LineChart
+        :sensors="airRelatedSensors"
+        :records="airRelatedRecords"
+        :show-default-text="!selectedStation"
+        :loading="loadingDataForStation"
+        :title="selectedStation ? `${selectedStation.name} - 空气参数` : '空气参数'"
+        default-text="请选择站点"
+        no-data-text="暂无数据"
+      />
+      <LineChart
+        :sensors="soilRelatedSensors"
+        :records="soilRelatedRecords"
+        :show-default-text="!selectedStation"
+        :loading="loadingDataForStation"
+        :title="selectedStation ? `${selectedStation.name} - 土壤参数` : '土壤参数'"
+        default-text="请选择站点"
+        no-data-text="暂无数据"
+      />
     </div>
   </div>
 </template>
@@ -60,15 +78,17 @@ const selectStation = async (station: Station | undefined) => {
     if (sensors.length > 0) {
       const airSensorIds = sensors
         ? (sensors
-          .filter((sensor) => sensor.id && sensor.name && airOptionNames.includes(sensor.name))
-          .map((sensor) => sensor.id) as number[])
+            .filter((sensor) => sensor.id && sensor.name && airOptionNames.includes(sensor.name))
+            .map((sensor) => sensor.id) as number[])
         : []
       const soilSensorIds = sensors
         ? (sensors
-          .filter((sensor) => sensor.id && sensor.name && soilOptionNames.includes(sensor.name))
-          .map((sensor) => sensor.id) as number[])
+            .filter((sensor) => sensor.id && sensor.name && soilOptionNames.includes(sensor.name))
+            .map((sensor) => sensor.id) as number[])
         : []
-      const recordsRes = await httpclient.getRecords({ sensorIDs: airSensorIds.concat(soilSensorIds) })
+      const recordsRes = await httpclient.getRecords({
+        sensorIDs: airSensorIds.concat(soilSensorIds)
+      })
       const records = recordsRes?.payload ?? []
       airRelatedSensors.value = sensors.filter((sensor) => airSensorIds.includes(sensor.id))
       soilRelatedSensors.value = sensors.filter((sensor) => soilSensorIds.includes(sensor.id))

@@ -219,7 +219,10 @@ class HttpClient {
 
   // stations
 
-  public async getStations(params?: { offset?: number, limit?: number }): Promise<Response<Station[]> | null> {
+  public async getStations(params?: {
+    offset?: number
+    limit?: number
+  }): Promise<Response<Station[]> | null> {
     const ret = []
     if (params?.offset) {
       ret.push(`offset=${params.offset}`)
@@ -238,7 +241,11 @@ class HttpClient {
 
   // sensors
 
-  public async getSensors(params?: { stationID?: number, offset?: number, limit?: number }): Promise<Response<Sensor[]> | null> {
+  public async getSensors(params?: {
+    stationID?: number
+    offset?: number
+    limit?: number
+  }): Promise<Response<Sensor[]> | null> {
     const ret = []
     if (params?.offset) {
       ret.push(`offset=${params.offset}`)
@@ -271,15 +278,13 @@ class HttpClient {
     return resp
   }
 
-  public async getRecords(
-    params?: {
-      sensorIDs?: number[],
-      startTime?: Date,
-      endTime?: Date,
-      offset?: number,
-      limit?: number
-    }
-  ): Promise<Response<DataRecord[]> | null> {
+  public async getRecords(params?: {
+    sensorIDs?: number[]
+    startTime?: Date
+    endTime?: Date
+    offset?: number
+    limit?: number
+  }): Promise<Response<DataRecord[]> | null> {
     const ret = []
     if (params?.sensorIDs) {
       const str = params?.sensorIDs.map((sensorID) => sensorID.toString()).join(',')

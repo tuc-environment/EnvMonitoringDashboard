@@ -5,7 +5,11 @@
         <div class="card-body">
           <div class="d-flex align-items-center">
             <div class="h4 my-0 me-2">站点信息</div>
-            <button type="button" class="btn btn-sm btn-outline-primary" @click="gotoStationsView()">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-primary"
+              @click="gotoStationsView()"
+            >
               查看所有站点
             </button>
           </div>
@@ -38,7 +42,12 @@
 
           <div class="input-group my-2">
             <input type="file" class="form-control" @change="selectCSVFile" />
-            <button class="btn btn-outline-primary" type="button" :disabled="disableSubmitButton" @click="uploadCSVFile">
+            <button
+              class="btn btn-outline-primary"
+              type="button"
+              :disabled="disableSubmitButton"
+              @click="uploadCSVFile"
+            >
               Submit
             </button>
           </div>
@@ -55,7 +64,11 @@
 
               <div style="height: 170px; overflow-y: auto">
                 <div class="form-check" v-for="sensor in allSensors" :key="sensor.id">
-                  <input class="form-check-input" type="checkbox" @change="onChangeSensor($event, sensor.id)" />
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    @change="onChangeSensor($event, sensor.id)"
+                  />
                   <label class="form-check-label">
                     {{ sensor.id }}. {{ sensor.name }} ({{ positionName(sensor.position) }})
                   </label>
@@ -214,15 +227,13 @@ export default {
     },
     async updateSensorRecords() {
       this.loading = true
-      const resp = await httpclient.getRecords(
-        {
-          sensorIDs: this.selectedSensorIDs,
-          startTime: this.startDate,
-          endTime: this.endDate,
-          offset: 0,
-          limit: 100,
-        }
-      )
+      const resp = await httpclient.getRecords({
+        sensorIDs: this.selectedSensorIDs,
+        startTime: this.startDate,
+        endTime: this.endDate,
+        offset: 0,
+        limit: 100
+      })
 
       const records = resp?.payload || []
       const recordsByTime = records.reduce((acc, record) => {
