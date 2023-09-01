@@ -1,17 +1,17 @@
 <template>
-  <div class="wrapper row">
-    <div v-if="$props.loading" class="d-flex align-items-center justify-content-center">
-      <div class="spinner-border text-light" role="status"></div>
+  <div class="d-flex flex-column justify-content-center" style="min-height: 240px">
+    <div v-if="loading" class="small text-center text-secondary">
+      <div class="spinner-border text-secondary"></div>
     </div>
-    <div v-else-if="showDefaultText" class="h3 text-white text-center align-self-center col">
-      <div class="h5 text-white">{{ $props.defaultText }}</div>
+    <div v-else-if="showDefaultText" class="small text-center text-secondary">
+      {{ defaultText }}
     </div>
-    <div v-else-if="noData" class="h3 text-white text-center align-self-center col">
-      <div class="h5 text-white">{{ $props.noDataText }}</div>
+    <div v-else-if="noData" class="small text-center text-secondary">
+      {{ noDataText }}
     </div>
 
-    <div v-else class="col">
-      <apexchart width="100%" height="100%" type="line" :options="chartOptions" :series="series" />
+    <div v-else class="w-100 h-100">
+      <apexchart height="100%" type="line" :options="chartOptions" :series="series" />
     </div>
   </div>
 </template>
@@ -104,18 +104,3 @@ const getDatesFromRecords = (records?: DataRecord[]): Date[] => {
   return records ? (records.map((record) => record.time).filter((date) => date) as Date[]) : []
 }
 </script>
-
-<style scoped>
-.wrapper {
-  position: relative;
-  padding-top: 20px;
-  padding-bottom: 8px;
-  padding-left: 8px;
-  padding-right: 8px;
-  pointer-events: initial;
-  border: none;
-  width: 100%;
-  margin: 3px;
-  min-height: 300px;
-}
-</style>

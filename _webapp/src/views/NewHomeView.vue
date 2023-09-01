@@ -102,40 +102,38 @@
         </div>
         <div class="col-lg-12 col-xl-4 my-2">
           <div class="h-100 d-flex flex-column justify-content-between">
-            <div class="mb-2">
+            <div class="mb-2" style="flex: 1">
               <DashboardCardComponent
                 :title="
                   dashboardStore.$state.selectedStation
                     ? `${dashboardStore.$state.selectedStation.name} - 空气参数`
                     : '空气参数'
                 "
-                class="info-card"
               >
                 <line-chart
                   :sensors="dashboardStore.$state.airRelatedSensors"
                   :records="dashboardStore.$state.airRelatedRecords"
                   :show-default-text="!dashboardStore.$state.selectedStation"
                   :loading="dashboardStore.$state.loadingDataForStation"
-                  default-text="请选择站点"
+                  default-text="点击地图选择站点查看数据"
                   no-data-text="暂无数据"
                 />
               </DashboardCardComponent>
             </div>
-            <div>
+            <div style="flex: 1">
               <DashboardCardComponent
                 :title="
                   dashboardStore.$state.selectedStation
                     ? `${dashboardStore.$state.selectedStation.name} - 土壤参数`
                     : '土壤参数'
                 "
-                class="info-card"
               >
                 <line-chart
                   :sensors="dashboardStore.$state.soilRelatedSensors"
                   :records="dashboardStore.$state.soilRelatedRecords"
                   :show-default-text="!dashboardStore.$state.selectedStation"
                   :loading="dashboardStore.$state.loadingDataForStation"
-                  default-text="请选择站点"
+                  default-text="点击地图选择站点查看数据"
                   no-data-text="暂无数据"
                 />
               </DashboardCardComponent>
