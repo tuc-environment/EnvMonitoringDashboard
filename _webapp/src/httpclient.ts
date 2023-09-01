@@ -1,9 +1,11 @@
 import axios from 'axios'
 
+const HEADER_KEY_TOTAL_COUNT = 'X-Total-Count'
 interface Response<T> {
   code: number
   error: string
   payload: T
+  total: number
   status: string
 }
 
@@ -123,7 +125,10 @@ class HttpClient {
     url = this.absoluteUrl(url)
     try {
       const resp = await axios.get<Response<T>>(url, { headers: this._headers() })
-      return resp?.data
+      return {
+        ...resp.data,
+        total: resp.headers[HEADER_KEY_TOTAL_COUNT]
+      }
     } catch (err: any) {
       return err?.response.data
     }

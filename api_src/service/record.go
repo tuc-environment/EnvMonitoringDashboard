@@ -32,11 +32,11 @@ func NewRecordService(c *config.Config, db *store.DBClient, logger *logger.Logge
 	return &RecordService{c, db, logger}
 }
 
-func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endTime *time.Time, offset *int, limit *int) (*[]Record, error) {
+func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endTime *time.Time, offset *int, limit *int) (*[]Record, error, *int64) {
 	log := s.logger.Sugar()
 	defer log.Sync()
 	var records *[]Record
-	query := s.db.DB
+	query := s.db.DB.Model(&Record{})
 	if startTime != nil {
 		query = query.Where("time >= ?", *startTime)
 	}
@@ -45,6 +45,11 @@ func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endT
 	}
 	if sensorIds != nil && len(*sensorIds) > 0 {
 		query = query.Where("sensor_id in (?)", *sensorIds)
+	}
+	var count int64
+	errCount := query.Count(&count).Error
+	if errCount != nil {
+		return nil, errCount, nil
 	}
 	if offset != nil {
 		query = query.Offset(*offset)
@@ -55,9 +60,9 @@ func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endT
 	err := query.Statement.Order("time desc").Find(&records).Error
 	if err != nil {
 		log.Errorf("get records with error: %s\n", err.Error())
-		return nil, err
+		return nil, err, nil
 	} else {
-		return records, nil
+		return records, nil, &count
 	}
 }
 

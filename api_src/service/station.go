@@ -34,18 +34,25 @@ func NewStationService(c *config.Config, db *store.DBClient, logger *logger.Logg
 	return &StationService{c, db, logger}
 }
 
-func (s *StationService) GetStations() (*[]Station, error) {
+func (s *StationService) GetStations() (*[]Station, error, *int64) {
 	log := s.logger.Sugar()
 	defer log.Sync()
 	log.Infoln("get stations")
 	var stations []Station
-	err := s.db.Where("deleted_at IS NULL").Find(&stations).Error
+	var count int64
+	query := s.db.Model(&Station{}).Where("deleted_at IS NULL")
+	err := query.Count(&count).Error
 	if err != nil {
 		log.Error(err)
-		return &[]Station{}, err
+		return nil, err, nil
+	}
+	err = query.Find(&stations).Error
+	if err != nil {
+		log.Error(err)
+		return nil, err, nil
 	}
 	log.Infoln("no. of stations %d retrieved", len(stations))
-	return &stations, nil
+	return &stations, nil, &count
 }
 
 func (s *StationService) Upsert(station *Station) (*Station, error) {

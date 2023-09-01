@@ -5,6 +5,7 @@ import (
 	"EnvMonitoringDashboard/api_src/controller/args"
 	"EnvMonitoringDashboard/api_src/logger"
 	"EnvMonitoringDashboard/api_src/service"
+	"EnvMonitoringDashboard/api_src/utils"
 	"errors"
 	"strconv"
 	"strings"
@@ -45,10 +46,11 @@ func (api *SensorAPI) GetSensors(g *gin.Context) {
 		}
 		stationId = uint(num)
 	}
-	sensors, err := api.sensorService.Get(stationId)
+	sensors, err, count := api.sensorService.Get(stationId)
 	if err != nil {
 		c.BadRequest(err)
 	} else {
+		c.Header(utils.XTotalCount, strconv.FormatInt(*count, 10))
 		c.OK(sensors)
 	}
 }

@@ -5,6 +5,8 @@ import (
 	"EnvMonitoringDashboard/api_src/controller/args"
 	"EnvMonitoringDashboard/api_src/logger"
 	"EnvMonitoringDashboard/api_src/service"
+	"EnvMonitoringDashboard/api_src/utils"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -32,11 +34,12 @@ func (api *StationAPI) GetStations(g *gin.Context) {
 	log := api.logger.Sugar()
 	defer log.Sync()
 	c := WrapContext(g)
-	stations, err := api.stationService.GetStations()
+	stations, err, count := api.stationService.GetStations()
 	if err != nil {
 		c.BadRequest(err)
 		return
 	}
+	c.Header(utils.XTotalCount, strconv.FormatInt(*count, 10))
 	c.OK(stations)
 }
 

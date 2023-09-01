@@ -4,6 +4,7 @@ import (
 	"EnvMonitoringDashboard/api_src/config"
 	"EnvMonitoringDashboard/api_src/logger"
 	"EnvMonitoringDashboard/api_src/service"
+	"EnvMonitoringDashboard/api_src/utils"
 	"bytes"
 	"encoding/csv"
 	"errors"
@@ -185,10 +186,11 @@ func (api *RecordAPI) GetRecords(g *gin.Context) {
 		limit = &limitV
 	}
 
-	records, err := api.recordService.GetRecords(sensorIds, startTime, endTime, offset, limit)
+	records, err, count := api.recordService.GetRecords(sensorIds, startTime, endTime, offset, limit)
 	if err != nil {
 		c.BadRequest(err)
 	} else {
+		c.Header(utils.XTotalCount, strconv.FormatInt(*count, 10))
 		c.OK(records)
 	}
 }

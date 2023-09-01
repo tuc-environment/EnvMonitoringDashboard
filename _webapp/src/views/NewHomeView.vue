@@ -46,17 +46,35 @@
       <div class="row align-items-stretch">
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="站点数量">
-            <div class="text-danger" style="font-size: 4rem">5</div>
+            <div
+              v-if="dashboardStore.$state.loadingStations"
+              class="spinner-border text-light align-self-center"
+            ></div>
+            <div v-else class="text-danger" style="font-size: 4rem">
+              {{ formatDisplayNumber(dashboardStore.$state.stations.length ?? 0) }}
+            </div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
           <DashboardCardComponent title="传感器数量">
-            <div class="text-danger" style="font-size: 4rem">189</div>
+            <div
+              v-if="dashboardStore.$state.loadingSensors"
+              class="spinner-border text-light align-self-center"
+            ></div>
+            <div v-else class="text-danger" style="font-size: 4rem">
+              {{ formatDisplayNumber(dashboardStore.$state.sensors.length ?? 0) }}
+            </div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
-          <DashboardCardComponent title="今日报警数量">
-            <div class="text-danger" style="font-size: 4rem">822</div>
+          <DashboardCardComponent title="今日新增数据">
+            <div
+              v-if="dashboardStore.$state.loadingSensors"
+              class="spinner-border text-light align-self-center"
+            ></div>
+            <div v-else class="text-danger" style="font-size: 4rem">
+              {{ formatDisplayNumber(1100000000) }}
+            </div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-4 col-xl-2 mb-2">
@@ -178,6 +196,7 @@ import { useDashboardStore } from '@/stores/DashboardStore'
 import TagGroup from '@/components/tags/TagsGroup.vue'
 import { ref } from 'vue'
 import type { TagData } from '@/components/tags/TagData'
+import { formatDisplayNumber } from '@/utils/utils'
 
 const treeChart = ref<InstanceType<typeof TreeChart> | null>(null)
 const dashboardStore = useDashboardStore()
@@ -204,6 +223,7 @@ const selectStationHandler = (station: Station | undefined) => {
 }
 
 dashboardStore.loadStations()
+dashboardStore.loadSensors()
 </script>
 
 <!-- <style scoped>

@@ -6,6 +6,7 @@ import RegisterView from '@/views/RegisterView.vue'
 import httpclient from '@/httpclient'
 
 import AdminView from '@/views/admin/AdminView.vue'
+import CrossStationView from '@/views/CrossStationView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +20,11 @@ const router = createRouter({
       path: '/new',
       name: 'new-homw',
       component: NewHomeViewVue
+    },
+    {
+      path: '/cross-station',
+      name: 'cross-station-tab',
+      component: CrossStationView
     },
     {
       path: '/login',

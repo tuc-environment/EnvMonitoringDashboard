@@ -29,12 +29,18 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const loadingStations = ref(false)
   const selectedStation = ref<Station | undefined>(undefined)
 
+  // sensors
+  const sensors = ref<Sensor[]>([])
+  const loadingSensors = ref(false)
+
   // selected station data
   const loadingDataForStation = ref(false)
   const airRelatedSensors = ref<Sensor[] | undefined>(undefined)
   const airRelatedRecords = ref<DataRecord[] | undefined>(undefined)
   const soilRelatedSensors = ref<Sensor[] | undefined>(undefined)
   const soilRelatedRecords = ref<DataRecord[] | undefined>(undefined)
+
+  // counts
 
   // tree related actions
   const addTreeNodeSelected = (sensor: Sensor, station: Station) => {
@@ -89,6 +95,15 @@ export const useDashboardStore = defineStore('dashboard', () => {
     loadingStations.value = false
   }
 
+  const loadSensors = async () => {
+    loadingSensors.value = true
+    try {
+      const result = await httpclient.getSensors()
+      sensors.value = result?.payload ?? []
+    } catch (_) {}
+    loadingSensors.value = false
+  }
+
   const setMapSelectedStation = async (station: Station | undefined) => {
     console.log('[dashboard] select station: ', JSON.stringify(station))
     if (
@@ -141,13 +156,17 @@ export const useDashboardStore = defineStore('dashboard', () => {
     treeStationsSelected,
     treeSensorRecordsLoaded,
     treeSensorSelectedTags,
+    loadingStations,
     stations,
+    loadingSensors,
+    sensors,
     loadingDataForStation,
     selectedStation,
     airRelatedSensors,
     airRelatedRecords,
     soilRelatedSensors,
     soilRelatedRecords,
+    loadSensors,
     addTreeNodeSelected,
     removeTreeNodeSelected,
     loadStations,
