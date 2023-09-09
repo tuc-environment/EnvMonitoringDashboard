@@ -8,6 +8,8 @@
           <i v-else class="bi bi-caret-down-fill me-2"></i>
 
           {{ node?.label }}
+
+          <i v-if="hasChildrenSelected" class="ms-2 bi bi-check-circle"></i>
         </div>
       </div>
 
@@ -85,10 +87,8 @@ const clickNode = () => {
     if (sensor && station) {
       if (selected.value) {
         dashboardStore.removeTreeNodeSelected(sensor)
-        console.log('[tree-node] deselect leaf: ', JSON.stringify(sensor))
       } else {
         dashboardStore.addTreeNodeSelected(sensor, station)
-        console.log('[tree-node] select leaf: ', JSON.stringify(sensor))
       }
     }
   }
