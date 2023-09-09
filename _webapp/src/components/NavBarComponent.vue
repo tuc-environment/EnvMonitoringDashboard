@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark" style="z-index: 1000;">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">
         <div
