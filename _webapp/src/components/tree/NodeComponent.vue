@@ -1,17 +1,22 @@
 <template>
-  <div>
+  <div style="text-align: left">
     <div class="d-flex my-2 small node p-2 rounded" @click="clickNode">
-      <div :style="{ width: `${depth * 16}px` }"></div>
-      <!-- <i v-if="selected || hasChildrenSelected" class="bi bi-check2-square"></i> -->
+      <div :style="{ width: `${depth * 20}px` }"></div>
+      <div v-if="hasChildren" class="flex-grow-1">
+        <div>
+          <i v-if="!showChildren" class="bi bi-caret-right-fill me-2"></i>
+          <i v-else class="bi bi-caret-down-fill me-2"></i>
 
-      <div v-if="hasChildren">
-        <i v-if="!showChildren" class="bi bi-caret-right-fill me-2"></i>
-        <i v-else class="bi bi-caret-down-fill me-2"></i>
-
-        {{ node?.label }}
+          {{ node?.label }}
+        </div>
       </div>
-      <div v-else class="form-check">
-        <input class="form-check-input" type="checkbox" />
+
+      <div v-else>
+        <input
+          class="form-check-input me-2"
+          type="checkbox"
+          :checked="isSensorSelected(node?.sensor?.id)"
+        />
         <label class="form-check-label"> {{ node?.label }} </label>
       </div>
     </div>
@@ -41,6 +46,12 @@ const selected = computed(
       .map((sensor) => sensor.id)
       .includes(props.node.sensor.id)
 )
+
+function isSensorSelected(sensorId: number | undefined) {
+  sensorId = sensorId || -1
+  return dashboardStore.$state.treeSensorsSelected.map((sensor) => sensor.id).includes(sensorId)
+}
+
 const hasChildrenSelected = computed(() => {
   const childrenSensorIds = traverseChildren(props.node).map((sensor) => sensor.id)
   const selectedSensorIds = dashboardStore.$state.treeSensorsSelected.map((sensor) => sensor.id)
