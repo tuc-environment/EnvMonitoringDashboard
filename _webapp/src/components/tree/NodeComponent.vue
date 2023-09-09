@@ -1,11 +1,7 @@
 <template>
   <div>
-    <div
-      class="d-flex my-2 small"
-      :style="{ transform: `translate(${depth * 20}px)` }"
-      style="cursor: pointer"
-      @click="clickNode"
-    >
+    <div class="d-flex my-2 small node p-2 rounded" @click="clickNode">
+      <div :style="{ width: `${depth * 16}px` }"></div>
       <!-- <i v-if="selected || hasChildrenSelected" class="bi bi-check2-square"></i> -->
 
       <div v-if="hasChildren">
@@ -71,10 +67,8 @@ const hasChildren = computed((): boolean => {
 
 const clickNode = () => {
   if (hasChildren.value) {
-    console.log('select node')
     showChildren.value = !showChildren.value
   } else {
-    console.log('select leaf')
     const sensor = props.node?.sensor
     const station = props.node?.station
     if (sensor && station) {
@@ -89,3 +83,13 @@ const clickNode = () => {
   }
 }
 </script>
+
+<style>
+.node {
+  cursor: pointer;
+}
+
+.node:hover {
+  background-color: #c3c1c126;
+}
+</style>
