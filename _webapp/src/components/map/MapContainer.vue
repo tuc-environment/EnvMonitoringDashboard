@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import AMapLoader from '@amap/amap-jsapi-loader'
-import { reactive, ref, onMounted, createApp } from 'vue'
+import { reactive, ref, onMounted, createApp, h, render } from 'vue'
 import { type Station } from '@/httpclient'
 import iconMarker from '@/assets/img/marker.png'
 import iconMarkerSelected from '@/assets/img/marker-selected.png'
@@ -131,34 +131,23 @@ const addStationPopup = (station: Station, position: any) => {
 }
 
 const addPredictionPopup = (lng: number, lat: number) => {
-  const dom = document.createElement('div')
-  const app = createApp({
-    components: {
-      // eslint-disable-next-line vue/no-unused-components
-      MapPredictionPopup
-    },
-    template: `<MapPredictionPopup :lng="lng" :lat="lat" @on-position-changed="onPositionChanged" @on-confirm="onConfirm" />`,
-    data: () => {
-      return {
-        lng,
-        lat
+  const node = h(MapPredictionPopup, {
+    lng: lng,
+    lat: lat,
+    onOnPositionChanged: (lng: number, lat: number) => {
+      console.log(`[map] on prediction marker changed lat: ${lat}, lng: ${lng}`)
+      if (predictionMarker) {
+        const updatedPosition = new aMap.LngLat(lng, lat)
+        predictionMarker.setPosition(updatedPosition)
+        currentPredictionPopup.open(map, updatedPosition)
       }
     },
-    methods: {
-      onPositionChanged(lng: number, lat: number) {
-        console.log(`[map] on prediction marker changed lat: ${lat}, lng: ${lng}`)
-        if (predictionMarker) {
-          const updatedPosition = new aMap.LngLat(lng, lat)
-          predictionMarker.setPosition(updatedPosition)
-          currentPredictionPopup.open(map, updatedPosition)
-        }
-      },
-      onConfirm(lng: number, lat: number) {
-        emit('onConfirmPredictionMarker', lng, lat)
-      }
+    onOnConfirm: (lng: number, lat: number) => {
+      emit('onConfirmPredictionMarker', lng, lat)
     }
   })
-  app.mount(dom)
+  const dom = document.createElement('div')
+  render(node, dom)
 
   currentPredictionPopup = new aMap.InfoWindow({
     content: dom,
