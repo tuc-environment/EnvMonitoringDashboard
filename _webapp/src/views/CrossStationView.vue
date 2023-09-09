@@ -8,7 +8,7 @@
               :tags="dashboardStore.treeSensorSelectedTags"
               @on-tag-selected="onSelectTag"
             />
-            <tree-chart ref="treeChart" />
+            <TreeComponent ref="treeChart" />
           </DashboardCardComponent>
         </div>
         <div class="col-lg-7 col-xl-7 my-1" style="min-height: 420px">
@@ -34,14 +34,14 @@
 import DashboardLayout from '@/layouts/DashboardLayout.vue'
 import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
 import LineChart from '@/components/LineChart.vue'
-import TreeChart from '@/components/tree/Tree.vue'
+import TreeComponent from '@/components/tree/TreeComponent.vue'
 import { type Sensor, type Station } from '@/httpclient'
 import { useDashboardStore } from '@/stores/DashboardStore'
 import TagGroup from '@/components/tags/TagsGroup.vue'
 import { ref } from 'vue'
 import type { TagData } from '@/components/tags/TagData'
 
-const treeChart = ref<InstanceType<typeof TreeChart> | null>(null)
+const treeChart = ref<InstanceType<typeof TreeComponent> | null>(null)
 const dashboardStore = useDashboardStore()
 const stations = ref<Station[]>([])
 

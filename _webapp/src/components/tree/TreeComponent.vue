@@ -1,12 +1,12 @@
 <template>
   <div class="tree">
-    <node v-for="node in nodes" :node="node" :depth="0"></node>
+    <NodeComponent v-for="(node, idx) in nodes" :key="idx" :node="node" :depth="0"></NodeComponent>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { SensorPosition, Station } from '@/httpclient'
-import Node from './Node.vue'
+import NodeComponent from './NodeComponent.vue'
 import { type Tree } from './Tree'
 import { ref, onMounted } from 'vue'
 import httpclient, { getPositionName } from '@/httpclient'

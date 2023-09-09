@@ -41,7 +41,7 @@
 
 <script setup lang="ts">
 import LineChart from '@/components/LineChart.vue'
-import TreeChart from '@/components/tree/Tree.vue'
+import TreeChart from '@/components/tree/TreeComponent.vue'
 import httpclient, { type Station, type Sensor, type DataRecord } from '@/httpclient'
 import { ref, type PropType, onMounted } from 'vue'
 import { useDashboardStore } from '@/stores/DashboardStore'

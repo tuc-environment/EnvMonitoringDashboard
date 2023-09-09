@@ -1,5 +1,7 @@
 import type { Sensor, Station } from '@/httpclient'
 
+export interface TreeNode {}
+
 export interface Tree {
   label: string
   children: Tree[]
@@ -15,7 +17,7 @@ export const traverseChildren = (node: Tree | undefined): Sensor[] => {
       return []
     }
   } else {
-    var children: Sensor[] = []
+    let children: Sensor[] = []
     for (const child of node.children) {
       children = children.concat(traverseChildren(child))
     }

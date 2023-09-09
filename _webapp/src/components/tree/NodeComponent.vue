@@ -6,7 +6,12 @@
       <div v-if="hasChildren" class="bi" :class="iconClasses"></div>
     </div>
     <div v-if="hasChildren && showChildren">
-      <Node v-for="child in $props.node?.children" :node="child" :depth="$props.depth + 1"></Node>
+      <NodeComponent
+        v-for="(child, idx) in $props.node?.children"
+        :key="idx"
+        :node="child"
+        :depth="$props.depth + 1"
+      ></NodeComponent>
     </div>
   </div>
 </template>
@@ -14,9 +19,8 @@
 <script setup lang="ts">
 import { type Tree, traverseChildren } from './Tree'
 import { ref, type PropType, computed } from 'vue'
-import Node from './Node.vue'
+import NodeComponent from './NodeComponent.vue'
 import { useDashboardStore } from '@/stores/DashboardStore'
-import type { Sensor } from '@/httpclient'
 
 const dashboardStore = useDashboardStore()
 
