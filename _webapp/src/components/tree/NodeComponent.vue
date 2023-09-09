@@ -1,16 +1,30 @@
 <template>
   <div>
-    <div :style="indent" :class="labelClasses" @click="clickNode">
-      <i v-if="selected || hasChildrenSelected" class="bi bi-check2-square"></i>
-      {{ node?.label }}
-      <div v-if="hasChildren" class="bi" :class="iconClasses"></div>
+    <div
+      class="d-flex my-2 small"
+      :style="{ transform: `translate(${depth * 20}px)` }"
+      style="cursor: pointer"
+      @click="clickNode"
+    >
+      <!-- <i v-if="selected || hasChildrenSelected" class="bi bi-check2-square"></i> -->
+
+      <div v-if="hasChildren">
+        <i v-if="!showChildren" class="bi bi-caret-right-fill me-2"></i>
+        <i v-else class="bi bi-caret-down-fill me-2"></i>
+
+        {{ node?.label }}
+      </div>
+      <div v-else class="form-check">
+        <input class="form-check-input" type="checkbox" />
+        <label class="form-check-label"> {{ node?.label }} </label>
+      </div>
     </div>
     <div v-if="hasChildren && showChildren">
       <NodeComponent
-        v-for="(child, idx) in $props.node?.children"
+        v-for="(child, idx) in node?.children"
         :key="idx"
         :node="child"
-        :depth="$props.depth + 1"
+        :depth="depth + 1"
       ></NodeComponent>
     </div>
   </div>
@@ -55,26 +69,6 @@ const hasChildren = computed((): boolean => {
   return props.node?.children != undefined && props.node.children.length > 0
 })
 
-const iconClasses = computed(() => {
-  return {
-    'bi-plus-circle': !showChildren.value,
-    'bi-dash-circle': showChildren.value
-  }
-})
-
-const labelClasses = computed(() => {
-  return {
-    'has-children': hasChildren.value,
-    'label-wrapper': true,
-    'leaf-node': !hasChildren.value
-  }
-})
-const indent = computed(() => {
-  return {
-    transform: `translate(${props.depth * 50}px)`
-  }
-})
-
 const clickNode = () => {
   if (hasChildren.value) {
     console.log('select node')
@@ -95,25 +89,3 @@ const clickNode = () => {
   }
 }
 </script>
-
-<style scoped>
-.label-wrapper {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #ccc;
-  font-size: 14px;
-  overflow: hidden;
-}
-
-.has-children {
-  cursor: pointer;
-  color: lightblue;
-}
-
-.leaf-node {
-  color: white;
-}
-</style>
