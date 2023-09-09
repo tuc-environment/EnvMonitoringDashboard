@@ -3,12 +3,12 @@
     <div class="p-2 w-100 h-100">
       <div class="row h-100">
         <div class="col-lg-5 col-xl-5 my-1" style="min-height: 380px">
-          <DashboardCardComponent title="选择传感器" class="info-card">
-            <TreeComponent ref="treeChart" />
+          <DashboardCardComponent title="选择传感器" :loading="loading">
+            <TreeComponent ref="treeChart" class="align-self-start" />
           </DashboardCardComponent>
         </div>
         <div class="col-lg-7 col-xl-7 my-1" style="min-height: 420px">
-          <DashboardCardComponent title="传感器数据" class="info-card">
+          <DashboardCardComponent title="传感器数据">
             <line-chart
               :stations="dashboardStore.$state.treeStationsSelected"
               :sensors="dashboardStore.$state.treeSensorsSelected"
@@ -38,6 +38,7 @@ import { ref } from 'vue'
 const treeChart = ref<InstanceType<typeof TreeComponent> | null>(null)
 const dashboardStore = useDashboardStore()
 const stations = ref<Station[]>([])
+let loading = ref(true)
 
 dashboardStore.$subscribe((_, state) => {
   if (stations.value.length != state.stations.length) {
@@ -46,6 +47,7 @@ dashboardStore.$subscribe((_, state) => {
   }
 })
 
-dashboardStore.loadStations()
-// dashboardStore.loadSensors()
+dashboardStore.loadStations().then(() => {
+  loading.value = false
+})
 </script>

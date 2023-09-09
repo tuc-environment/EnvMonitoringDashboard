@@ -4,10 +4,10 @@
       <b>{{ title }}</b>
     </div>
     <div class="my-2 w-100 h-100 text-center flex-grow-1 d-flex flex-column justify-content-center">
-      <div v-if="!loading">
+      <div class="w-100 h-100" :class="{ 'd-none': loading }">
         <slot />
       </div>
-      <div v-else>
+      <div :class="{ 'd-none': !loading }">
         <div class="spinner-border" role="status"></div>
       </div>
     </div>
