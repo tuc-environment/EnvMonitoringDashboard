@@ -156,6 +156,7 @@ defineExpose({
 }
 
 ::-webkit-scrollbar-thumb {
+  display: none;
   border-radius: 4px;
   background-color: rgba(0, 0, 0, 0.5);
   box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);

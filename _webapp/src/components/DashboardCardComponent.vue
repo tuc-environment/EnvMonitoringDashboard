@@ -3,7 +3,10 @@
     <div>
       <b>{{ title }}</b>
     </div>
-    <div class="my-2 w-100 h-100 text-center flex-grow-1 d-flex flex-column justify-content-center">
+    <div
+      class="my-2 w-100 h-100 text-center flex-grow-1 d-flex flex-column justify-content-center"
+      style="overflow: auto"
+    >
       <div class="w-100 h-100" :class="{ 'd-none': loading }">
         <slot />
       </div>

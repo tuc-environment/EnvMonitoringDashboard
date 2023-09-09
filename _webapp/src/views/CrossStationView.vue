@@ -2,12 +2,12 @@
   <DashboardLayout>
     <div class="p-2 w-100 h-100">
       <div class="row h-100">
-        <div class="col-lg-5 col-xl-5 my-1" style="min-height: 380px">
+        <div class="col-lg-5 col-xl-5 mb-2 card-col">
           <DashboardCardComponent title="选择传感器" :loading="loading">
             <TreeComponent ref="treeChart" class="align-self-start" />
           </DashboardCardComponent>
         </div>
-        <div class="col-lg-7 col-xl-7 my-1" style="min-height: 420px">
+        <div class="col-lg-7 col-xl-7 mb-2 card-col" style="min-height: 420px">
           <DashboardCardComponent title="传感器数据">
             <line-chart
               :stations="dashboardStore.$state.treeStationsSelected"
@@ -51,3 +51,16 @@ dashboardStore.loadStations().then(() => {
   loading.value = false
 })
 </script>
+
+<style scoped>
+.card-col {
+  min-height: 420px;
+  height: 420px;
+}
+
+@media (min-width: 992px) {
+  .card-col {
+    height: 100%;
+  }
+}
+</style>
