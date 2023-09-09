@@ -1,12 +1,18 @@
 <template>
-  <div class="d-flex flex-column justify-content-center" style="min-height: 240px">
-    <div v-if="loading" class="small text-center text-secondary">
-      <div class="spinner-border text-secondary"></div>
+  <div class="w-100 h-100" style="min-height: 240px">
+    <div v-if="loading" class="w-100 h-100 text-center d-flex flex-column justify-content-center">
+      <div class="mx-auto spinner-border"></div>
     </div>
-    <div v-else-if="showDefaultText" class="small text-center text-secondary">
+    <div
+      v-else-if="showDefaultText"
+      class="small text-center text-secondary w-100 h-100 d-flex flex-column justify-content-center"
+    >
       {{ defaultText }}
     </div>
-    <div v-else-if="noData" class="small text-center text-secondary">
+    <div
+      v-else-if="noData"
+      class="small text-center text-secondary w-100 h-100 d-flex flex-column justify-content-center"
+    >
       {{ noDataText }}
     </div>
 

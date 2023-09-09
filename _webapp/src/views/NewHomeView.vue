@@ -24,10 +24,7 @@
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-3 col-xl-3 mb-2">
-          <DashboardCardComponent
-            title="今日更新数据量"
-            :loading="!dashboardStore.$state.totalCreatedToday"
-          >
+          <DashboardCardComponent title="今日更新数据量">
             <div class="text-warning" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalCreatedToday ?? 0) }}
             </div>
