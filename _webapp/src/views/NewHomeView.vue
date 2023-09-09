@@ -3,45 +3,32 @@
     <div class="p-2 d-flex flex-column w-100 h-100">
       <div class="row align-items-stretch">
         <div class="col-md-6 col-lg-3 col-xl-3 mb-2">
-          <DashboardCardComponent title="站点数量">
-            <div
-              v-if="dashboardStore.$state.totalStations == undefined"
-              class="spinner-border text-light align-self-center"
-            ></div>
-            <div v-else class="text-warning" style="font-size: 4rem">
+          <DashboardCardComponent title="站点数量" :loading="!dashboardStore.$state.totalStations">
+            <div class="text-warning" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalStations ?? 0) }}
             </div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-3 col-xl-3 mb-2">
-          <DashboardCardComponent title="传感器数量">
-            <div
-              v-if="dashboardStore.$state.totalSensors == undefined"
-              class="spinner-border text-light align-self-center"
-            ></div>
-            <div v-else class="text-warning" style="font-size: 4rem">
+          <DashboardCardComponent title="传感器数量" :loading="!dashboardStore.$state.totalSensors">
+            <div class="text-warning" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalSensors ?? 0) }}
             </div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-3 col-xl-3 mb-2">
-          <DashboardCardComponent title="数据总量">
-            <div
-              v-if="dashboardStore.$state.totalRecords == undefined"
-              class="spinner-border text-light align-self-center"
-            ></div>
-            <div v-else class="text-warning" style="font-size: 4rem">
+          <DashboardCardComponent title="数据总量" :loading="!dashboardStore.$state.totalRecords">
+            <div class="text-warning" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalRecords ?? 0) }}
             </div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-3 col-xl-3 mb-2">
-          <DashboardCardComponent title="今日更新数据量">
-            <div
-              v-if="dashboardStore.$state.totalCreatedToday == undefined"
-              class="spinner-border text-light align-self-center"
-            ></div>
-            <div v-else class="text-warning" style="font-size: 4rem">
+          <DashboardCardComponent
+            title="今日更新数据量"
+            :loading="!dashboardStore.$state.totalCreatedToday"
+          >
+            <div class="text-warning" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalCreatedToday ?? 0) }}
             </div>
           </DashboardCardComponent>

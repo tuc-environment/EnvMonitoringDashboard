@@ -4,7 +4,12 @@
       <b>{{ title }}</b>
     </div>
     <div class="my-2 w-100 h-100 text-center flex-grow-1 d-flex flex-column justify-content-center">
-      <slot />
+      <div v-if="!loading">
+        <slot />
+      </div>
+      <div v-else>
+        <div class="spinner-border" role="status"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -12,7 +17,8 @@
 <script lang="ts">
 export default {
   props: {
-    title: { type: String, default: 'Card Title' }
+    title: { type: String, default: 'Card Title' },
+    loading: { type: Boolean, default: false }
   }
 }
 </script>
