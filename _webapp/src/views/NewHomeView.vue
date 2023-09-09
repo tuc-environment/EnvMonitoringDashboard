@@ -1,29 +1,29 @@
 <template>
   <DashboardLayout>
     <div class="p-2 d-flex flex-column w-100 h-100">
-      <div class="row align-items-stretch">
-        <div class="col-md-6 col-lg-3 col-xl-3 mb-2">
+      <div class="row align-items-stretch mx-1">
+        <div class="col-md-6 col-lg-3 col-xl-3 p-2">
           <DashboardCardComponent title="站点数量" :loading="!dashboardStore.$state.totalStations">
             <div class="text-warning" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalStations ?? 0) }}
             </div>
           </DashboardCardComponent>
         </div>
-        <div class="col-md-6 col-lg-3 col-xl-3 mb-2">
+        <div class="col-md-6 col-lg-3 col-xl-3 p-2">
           <DashboardCardComponent title="传感器数量" :loading="!dashboardStore.$state.totalSensors">
             <div class="text-warning" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalSensors ?? 0) }}
             </div>
           </DashboardCardComponent>
         </div>
-        <div class="col-md-6 col-lg-3 col-xl-3 mb-2">
+        <div class="col-md-6 col-lg-3 col-xl-3 p-2">
           <DashboardCardComponent title="数据总量" :loading="!dashboardStore.$state.totalRecords">
             <div class="text-warning" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalRecords ?? 0) }}
             </div>
           </DashboardCardComponent>
         </div>
-        <div class="col-md-6 col-lg-3 col-xl-3 mb-2">
+        <div class="col-md-6 col-lg-3 col-xl-3 p-2">
           <DashboardCardComponent title="今日更新数据量">
             <div class="text-warning" style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalCreatedToday ?? 0) }}
@@ -32,8 +32,8 @@
         </div>
       </div>
 
-      <div class="row align-items-stretch flex-grow-1">
-        <div class="col-lg-12 col-xl-8 my-2">
+      <div class="row align-items-stretch flex-grow-1 mx-1">
+        <div class="col-lg-12 col-xl-8 p-2">
           <DashboardCardComponent title="站点位置" class="info-card">
             <map-container
               ref="mapContainer"
@@ -42,9 +42,9 @@
             />
           </DashboardCardComponent>
         </div>
-        <div class="col-lg-12 col-xl-4 my-2">
+        <div class="col-lg-12 col-xl-4 p-2">
           <div class="h-100 d-flex flex-column justify-content-between">
-            <div class="mb-2" style="flex: 1">
+            <div class="mb-3" style="flex: 1">
               <DashboardCardComponent
                 :title="
                   dashboardStore.$state.selectedStation
@@ -144,3 +144,10 @@ const onModalClosed = () => {
 dashboardStore.loadStations()
 dashboardStore.loadTotalCounts()
 </script>
+
+<style scoped>
+.row > * {
+  padding-left: 0;
+  padding-right: 0;
+}
+</style>

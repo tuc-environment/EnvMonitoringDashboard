@@ -105,6 +105,18 @@ import NavBarComponent from '@/components/NavBarComponent.vue'
 </script>
 
 <style scoped lang="scss">
+.view {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.content {
+  height: calc(100vh - 56px);
+}
+
 .navbar {
   position: fixed;
   top: 0;
@@ -128,18 +140,6 @@ import NavBarComponent from '@/components/NavBarComponent.vue'
 }
 
 @media (min-width: 768px) {
-  .view {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-
-  .content {
-    height: calc(100vh - 56px);
-  }
-
   .sidebar {
     overflow: auto;
     width: 300px;
