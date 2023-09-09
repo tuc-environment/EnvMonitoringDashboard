@@ -4,10 +4,6 @@
       <div class="row h-100">
         <div class="col-lg-5 col-xl-5 my-1" style="min-height: 380px">
           <DashboardCardComponent title="选择传感器" class="info-card">
-            <tag-group
-              :tags="dashboardStore.treeSensorSelectedTags"
-              @on-tag-selected="onSelectTag"
-            />
             <TreeComponent ref="treeChart" />
           </DashboardCardComponent>
         </div>
@@ -35,11 +31,9 @@ import DashboardLayout from '@/layouts/DashboardLayout.vue'
 import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
 import LineChart from '@/components/LineChart.vue'
 import TreeComponent from '@/components/tree/TreeComponent.vue'
-import { type Sensor, type Station } from '@/httpclient'
+import { type Station } from '@/httpclient'
 import { useDashboardStore } from '@/stores/DashboardStore'
-import TagGroup from '@/components/tags/TagsGroup.vue'
 import { ref } from 'vue'
-import type { TagData } from '@/components/tags/TagData'
 
 const treeChart = ref<InstanceType<typeof TreeComponent> | null>(null)
 const dashboardStore = useDashboardStore()
@@ -51,13 +45,6 @@ dashboardStore.$subscribe((_, state) => {
     treeChart.value?.setStations(stations.value)
   }
 })
-
-const onSelectTag = (tag: TagData) => {
-  const sensor = tag.data as Sensor
-  if (sensor) {
-    dashboardStore.removeTreeNodeSelected(sensor)
-  }
-}
 
 dashboardStore.loadStations()
 // dashboardStore.loadSensors()
