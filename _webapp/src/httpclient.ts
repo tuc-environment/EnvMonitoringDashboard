@@ -234,8 +234,13 @@ class HttpClient {
     return resp
   }
 
-  public async upsertStation(station: Station): Promise<Response<Station> | null> {
-    const resp = await this.post<Station>('/stations')
+  public async upsertStation(params: {
+    name: string
+    lat: number
+    lng: number
+    altitude: number
+  }): Promise<Response<Station> | null> {
+    const resp = await this.post<Station>('/stations', params)
     return resp
   }
 
