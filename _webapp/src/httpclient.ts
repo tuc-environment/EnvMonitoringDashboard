@@ -244,6 +244,11 @@ class HttpClient {
     return resp
   }
 
+  public async deleteStation(stationId: number): Promise<Promise<number>> {
+    const resp = await this.delete<void>(`/stations/${stationId}`)
+    return stationId
+  }
+
   // sensors
 
   public async getSensors(params?: {

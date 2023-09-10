@@ -54,6 +54,7 @@ func NewEngine(
 
 	api.GET("/stations", stationAPI.GetStations)
 	api.POST("/stations", stationAPI.UpsertStations)
+	api.DELETE("/stations/:station_id", stationAPI.DeleteStation)
 
 	api.POST("/records/upload", recordAPI.UploadRecords)
 	api.GET("/records/template", recordAPI.ExportCSVTemplate)

@@ -24,16 +24,29 @@
             <td>{{ station.lng }}</td>
             <td>{{ station.altitude }}</td>
             <td>
-              <button
-                type="button"
-                class="btn btn-outline-success btn-sm mx-2"
-                @click="viewSensorData(station.id)"
-              >
-                查看所有传感器
-              </button>
-              <button type="button" class="btn btn-outline-primary btn-sm mx-2" disabled>
-                编辑
-              </button>
+              <div v-if="operatingStationId == station.id">
+                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                修改中...
+              </div>
+              <div v-else>
+                <button
+                  type="button"
+                  class="btn btn-outline-success btn-sm mx-2"
+                  @click="viewSensorData(station.id)"
+                >
+                  查看所有传感器
+                </button>
+                <button type="button" class="btn btn-outline-primary btn-sm mx-2" disabled>
+                  编辑
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm mx-2"
+                  @click="onDeleteStation(station.id)"
+                >
+                  删除
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -45,6 +58,13 @@
       @did-create-station="onStationCreated"
       @close="onModalClosed"
     />
+    <double-confirm-modal
+      :visible="showDeleteCreationModal"
+      :title="'删除站点 ' + operatingStationId"
+      content="确定删除站点？"
+      @close="onDeleteStationModelClosed"
+      @on-confirm="confirmDeletingStation"
+    />
   </div>
 </template>
 
@@ -52,12 +72,15 @@
 import httpclient, { type Station } from '@/httpclient'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import CreateStationModal from '@/components/CreateStationModal.vue'
+import CreateStationModal from '@/components/modal/CreateStationModal.vue'
+import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
 
 const requesting = ref(false)
 const allStations = ref<Station[]>([])
 const router = useRouter()
 const showStationCreationModal = ref(false)
+const showDeleteCreationModal = ref(false)
+const operatingStationId = ref<number | undefined>(undefined)
 
 const loadStations = async () => {
   requesting.value = true
@@ -69,6 +92,8 @@ const loadStations = async () => {
 const viewSensorData = (stationID: number) => {
   router.push({ query: { view: 'Sensors', station_id: stationID } })
 }
+
+// station creation
 
 const onAddButtonClicked = () => {
   showStationCreationModal.value = true
@@ -82,6 +107,32 @@ const onModalClosed = () => {
 const onStationCreated = async () => {
   await loadStations()
   showStationCreationModal.value = false
+}
+
+// station deletion
+
+const onDeleteStationModelClosed = () => {
+  showDeleteCreationModal.value = false
+  operatingStationId.value = undefined
+}
+
+const onDeleteStation = (stationId: number | undefined) => {
+  if (stationId) {
+    operatingStationId.value = stationId
+    showDeleteCreationModal.value = true
+  }
+}
+
+const confirmDeletingStation = async () => {
+  try {
+    const stationId = operatingStationId.value
+    if (stationId) {
+      await httpclient.deleteStation(stationId)
+      await loadStations()
+      showDeleteCreationModal.value = false
+    }
+  } catch (_) {}
+  operatingStationId.value = undefined
 }
 
 loadStations()

@@ -6,6 +6,7 @@ import (
 	"EnvMonitoringDashboard/api_src/logger"
 	"EnvMonitoringDashboard/api_src/service"
 	"EnvMonitoringDashboard/api_src/utils"
+	"errors"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -85,4 +86,31 @@ func (api *StationAPI) UpsertStations(g *gin.Context) {
 	}
 	api.stationService.Upsert(&station)
 	c.OK(station)
+}
+
+// Delete stations godoc
+//
+//	@Summary		delete stations
+//	@Description	delete stations
+//	@Tags			stations
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	"Return station id"
+//	@Router			/stations/:stationId [delete]
+func (api *StationAPI) DeleteStation(g *gin.Context) {
+	log := api.logger.Sugar()
+	defer log.Sync()
+	c := WrapContext(g)
+	stationId := c.Param("station_id")
+	num, err := strconv.Atoi(stationId)
+	if err != nil {
+		c.BadRequest(errors.New("invalid station_id"))
+		return
+	}
+	err = api.stationService.DeleteStation(uint(num))
+	if err != nil {
+		c.BadRequest(err)
+	} else {
+		c.OK(nil)
+	}
 }

@@ -134,7 +134,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import LabelInputComponent from './LabelInputComponent.vue'
+import LabelInputComponent from '@/components/LabelInputComponent.vue'
 
 const props = defineProps({
   title: { type: String, default: 'Modal Title' },

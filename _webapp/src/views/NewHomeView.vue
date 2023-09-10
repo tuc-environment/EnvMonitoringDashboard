@@ -86,7 +86,7 @@
     </div>
   </DashboardLayout>
 
-  <ModalComponent
+  <PredictionModalComponent
     title="预测站点信息"
     :visible="showPredictionModal"
     :lat="latVal"
@@ -98,7 +98,7 @@
 <script setup lang="ts">
 import DashboardLayout from '@/layouts/DashboardLayout.vue'
 import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
-import ModalComponent from '@/components/ModalComponent.vue'
+import PredictionModalComponent from '@/components/modal/PredictionModalComponent.vue'
 import LineChart from '@/components/LineChart.vue'
 import TreeChart from '@/components/tree/TreeComponent.vue'
 import MapContainer from '@/components/map/MapContainer.vue'
