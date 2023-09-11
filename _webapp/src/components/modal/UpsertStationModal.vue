@@ -68,9 +68,11 @@
                     role="status"
                     aria-hidden="true"
                   ></span>
-                  创建中...
+                  {{ stationVal ? '更新中...' : '创建中...' }}
                 </div>
-                <div v-if="!loading">创建</div>
+                <div v-if="!loading">
+                  {{ stationVal ? '更新' : '创建' }}
+                </div>
               </button>
             </div>
           </div>
@@ -81,9 +83,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, type PropType, onMounted } from 'vue'
 import LabelInputComponent from '@/components/LabelInputComponent.vue'
-import httpclient from '@/httpclient'
+import httpclient, { type Station } from '@/httpclient'
+import { stat } from 'fs'
 
 const props = defineProps({
   title: { type: String, default: 'Modal Title' },
@@ -91,7 +94,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits<{
-  (e: 'didCreateStation'): void
+  (e: 'didUpsertStation'): void
 }>()
 
 const loading = ref(false)
@@ -99,6 +102,7 @@ const nameVal = ref<string | undefined>('')
 const latVal = ref<number | undefined>(undefined)
 const lngVal = ref<number | undefined>(undefined)
 const altitudeVal = ref<number | undefined>(undefined)
+const stationVal = ref<Station | undefined>(undefined)
 
 const onChangeName = (e: any) => {
   nameVal.value = e.target.value
@@ -123,18 +127,20 @@ const onConfirm = async () => {
     const lat = latVal.value
     const lng = lngVal.value
     const altitude = altitudeVal.value
+    const id = stationVal.value?.id
     const validName = name && name.trim().length > 0
     const validLat = lat != undefined && lat > 3 && lat < 54
     const validLng = lng != undefined && lng > 73 && lng < 136
     const validAltitude = altitude != undefined
     if (validName && validLat && validLng && validAltitude) {
-      const result = await httpclient.upsertStation({ name, lat, lng, altitude })
+      const result = await httpclient.upsertStation({ id, name, lat, lng, altitude })
       if (result?.code == 200) {
         nameVal.value = undefined
         latVal.value = undefined
         lngVal.value = undefined
         altitudeVal.value = undefined
-        await emit('didCreateStation')
+        stationVal.value = undefined
+        await emit('didUpsertStation')
       }
     } else {
       alert('输入有误')
@@ -142,6 +148,18 @@ const onConfirm = async () => {
   } catch (_) {}
   loading.value = false
 }
+
+const setStation = (station?: Station) => {
+  stationVal.value = station
+  nameVal.value = station?.name
+  latVal.value = station?.lat
+  lngVal.value = station?.lng
+  altitudeVal.value = station?.altitude
+}
+
+defineExpose({
+  setStation
+})
 </script>
 
 <style scoped>

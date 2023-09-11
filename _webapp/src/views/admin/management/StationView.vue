@@ -36,7 +36,11 @@
                 >
                   查看所有传感器
                 </button>
-                <button type="button" class="btn btn-outline-primary btn-sm mx-2" disabled>
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm mx-2"
+                  @click="showStationUpsertModal(station)"
+                >
                   编辑
                 </button>
                 <button
@@ -52,14 +56,15 @@
         </tbody>
       </table>
     </div>
-    <create-station-modal
-      :visible="showStationCreationModal"
+    <upsert-station-modal
+      ref="upsertStationModal"
+      :visible="isShowingStationUpsertModal"
       title="Create Station"
-      @did-create-station="onStationCreated"
+      @did-upsert-station="onStationUpserted"
       @close="onModalClosed"
     />
     <double-confirm-modal
-      :visible="showDeleteCreationModal"
+      :visible="isShowingDeleteCreationModal"
       :title="'删除站点 ' + operatingStationId"
       content="确定删除站点？"
       @close="onDeleteStationModelClosed"
@@ -72,16 +77,16 @@
 import httpclient, { type Station } from '@/httpclient'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import CreateStationModal from '@/components/modal/CreateStationModal.vue'
+import UpsertStationModal from '@/components/modal/UpsertStationModal.vue'
 import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
 
 const requesting = ref(false)
 const allStations = ref<Station[]>([])
 const router = useRouter()
-const showStationCreationModal = ref(false)
-const showDeleteCreationModal = ref(false)
+const isShowingStationUpsertModal = ref(false)
+const isShowingDeleteCreationModal = ref(false)
 const operatingStationId = ref<number | undefined>(undefined)
-
+const upsertStationModal = ref<InstanceType<typeof UpsertStationModal> | null>(null)
 const loadStations = async () => {
   requesting.value = true
   const resp = await httpclient.getStations()
@@ -93,33 +98,44 @@ const viewSensorData = (stationID: number) => {
   router.push({ query: { view: 'Sensors', station_id: stationID } })
 }
 
-// station creation
+// station update
+
+const showStationUpsertModal = (station: Station) => {
+  isShowingStationUpsertModal.value = true
+  operatingStationId.value = station.id
+  upsertStationModal.value?.setStation(station)
+}
 
 const onAddButtonClicked = () => {
-  showStationCreationModal.value = true
+  upsertStationModal.value?.setStation(undefined)
+  isShowingStationUpsertModal.value = true
 }
 
 const onModalClosed = () => {
   console.log('[station-view] on station creation closed')
-  showStationCreationModal.value = false
+  isShowingStationUpsertModal.value = false
+  operatingStationId.value = undefined
+  upsertStationModal.value?.setStation(undefined)
 }
 
-const onStationCreated = async () => {
+const onStationUpserted = async () => {
   await loadStations()
-  showStationCreationModal.value = false
+  isShowingStationUpsertModal.value = false
+  operatingStationId.value = undefined
+  upsertStationModal.value?.setStation(undefined)
 }
 
 // station deletion
 
 const onDeleteStationModelClosed = () => {
-  showDeleteCreationModal.value = false
+  isShowingDeleteCreationModal.value = false
   operatingStationId.value = undefined
 }
 
 const onDeleteStation = (stationId: number | undefined) => {
   if (stationId) {
     operatingStationId.value = stationId
-    showDeleteCreationModal.value = true
+    isShowingDeleteCreationModal.value = true
   }
 }
 
@@ -129,7 +145,7 @@ const confirmDeletingStation = async () => {
     if (stationId) {
       await httpclient.deleteStation(stationId)
       await loadStations()
-      showDeleteCreationModal.value = false
+      isShowingDeleteCreationModal.value = false
     }
   } catch (_) {}
   operatingStationId.value = undefined
