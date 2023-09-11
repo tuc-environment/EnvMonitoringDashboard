@@ -4,7 +4,7 @@
       <div class="h5 mr-3">Create new station:</div>
       <button type="button" class="btn btn-success" @click="onAddButtonClicked">Add</button>
     </div>
-    <div class="row">
+    <div v-if="!requesting" class="row">
       <table class="table table-bordered align-middle">
         <thead class="table-dark">
           <tr>
@@ -75,11 +75,13 @@
 
 <script setup lang="ts">
 import httpclient, { type Station } from '@/httpclient'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import UpsertStationModal from '@/components/modal/UpsertStationModal.vue'
 import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
+import { useLoading } from 'vue3-loading-overlay'
 
+const loader = useLoading()
 const requesting = ref(false)
 const allStations = ref<Station[]>([])
 const router = useRouter()
@@ -87,6 +89,15 @@ const isShowingStationUpsertModal = ref(false)
 const isShowingDeleteCreationModal = ref(false)
 const operatingStationId = ref<number | undefined>(undefined)
 const upsertStationModal = ref<InstanceType<typeof UpsertStationModal> | null>(null)
+
+watch(requesting, (newVal, _) => {
+  if (newVal) {
+    loader.show()
+  } else {
+    loader.hide()
+  }
+})
+
 const loadStations = async () => {
   requesting.value = true
   const resp = await httpclient.getStations()
