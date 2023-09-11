@@ -34,7 +34,7 @@ func NewStationService(c *config.Config, db *store.DBClient, logger *logger.Logg
 	return &StationService{c, db, logger}
 }
 
-func (s *StationService) GetStations(offset *int, limit *int) (*[]Station, error, *int64) {
+func (s *StationService) GetStations(offset *int, limit *int) (*[]Station, *int64, error) {
 	log := s.logger.Sugar()
 	defer log.Sync()
 	log.Infoln("get stations")
@@ -44,15 +44,21 @@ func (s *StationService) GetStations(offset *int, limit *int) (*[]Station, error
 	err := query.Count(&count).Error
 	if err != nil {
 		log.Error(err)
-		return nil, err, nil
+		return nil, nil, err
+	}
+	if offset != nil {
+		query = query.Offset(*offset)
+	}
+	if limit != nil {
+		query = query.Limit(*limit)
 	}
 	err = query.Find(&stations).Error
 	if err != nil {
 		log.Error(err)
-		return nil, err, nil
+		return nil, nil, err
 	}
 	log.Infoln("no. of stations %d retrieved", len(stations))
-	return &stations, nil, &count
+	return &stations, &count, nil
 }
 
 func (s *StationService) Upsert(station *Station) (*Station, error) {

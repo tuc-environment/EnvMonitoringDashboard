@@ -48,7 +48,7 @@ func (api *StationAPI) GetStations(g *gin.Context) {
 		limitV, _ := strconv.Atoi(str)
 		limit = &limitV
 	}
-	stations, err, count := api.stationService.GetStations(offset, limit)
+	stations, count, err := api.stationService.GetStations(offset, limit)
 	if err != nil {
 		c.BadRequest(err)
 		return

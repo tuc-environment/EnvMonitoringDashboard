@@ -224,10 +224,10 @@ class HttpClient {
     limit?: number
   }): Promise<Response<Station[]> | null> {
     const ret = []
-    if (params?.offset) {
+    if (params?.offset != undefined) {
       ret.push(`offset=${params.offset}`)
     }
-    if (params?.limit) {
+    if (params?.limit != undefined) {
       ret.push(`limit=${params.limit}`)
     }
     const resp = await this.get<Station[]>(`/stations?${ret.join('&')}`)

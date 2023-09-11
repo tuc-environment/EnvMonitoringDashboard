@@ -54,6 +54,16 @@
             </td>
           </tr>
         </tbody>
+        <tfoot>
+          <table-paginator
+            :offset="offset"
+            :limit="limit"
+            :total="total"
+            @to-previous="toPreviousPage"
+            @to-index="toOffset"
+            @to-next="toNextPage"
+          />
+        </tfoot>
       </table>
     </div>
     <upsert-station-modal
@@ -80,7 +90,12 @@ import { useRouter } from 'vue-router'
 import UpsertStationModal from '@/components/modal/UpsertStationModal.vue'
 import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
 import { useLoading } from 'vue3-loading-overlay'
+import TablePaginator from '@/components/TablePaginator.vue'
 
+const offset = ref(0)
+// temp: for testing
+const limit = 2
+const total = ref(0)
 const loader = useLoading()
 const requesting = ref(false)
 const allStations = ref<Station[]>([])
@@ -98,10 +113,13 @@ watch(requesting, (newVal, _) => {
   }
 })
 
-const loadStations = async () => {
-  requesting.value = true
-  const resp = await httpclient.getStations()
+const loadStations = async (currentOffset: number, showLoadingIndicator: boolean) => {
+  if (showLoadingIndicator) {
+    requesting.value = true
+  }
+  const resp = await httpclient.getStations({ offset: currentOffset, limit: limit })
   allStations.value = resp?.payload || []
+  total.value = resp?.total ?? 0
   requesting.value = false
 }
 
@@ -130,7 +148,7 @@ const onModalClosed = () => {
 }
 
 const onStationUpserted = async () => {
-  await loadStations()
+  await loadStations(offset.value, false)
   isShowingStationUpsertModal.value = false
   operatingStationId.value = undefined
   upsertStationModal.value?.setStation(undefined)
@@ -155,12 +173,27 @@ const confirmDeletingStation = async () => {
     const stationId = operatingStationId.value
     if (stationId) {
       await httpclient.deleteStation(stationId)
-      await loadStations()
+      await loadStations(offset.value, false)
       isShowingDeleteCreationModal.value = false
     }
   } catch (_) {}
   operatingStationId.value = undefined
 }
 
-loadStations()
+const toPreviousPage = (offsetVal: number) => {
+  offset.value = offsetVal
+  loadStations(offset.value, false)
+}
+
+const toNextPage = (offsetVal: number) => {
+  offset.value = offsetVal
+  loadStations(offset.value, false)
+}
+
+const toOffset = (offsetVal: number) => {
+  offset.value = offsetVal
+  loadStations(offset.value, false)
+}
+
+loadStations(offset.value, true)
 </script>
