@@ -65,6 +65,9 @@ export const getPositionName = (position: SensorPosition | undefined): string =>
 
 export const getSensorDisplayText = (sensor: Sensor, stationName?: string): string => {
   let displayText = ''
+  if (sensor.id) {
+    displayText += `${sensor.id}. `
+  }
   if (stationName) {
     displayText += `${stationName}: `
   }
@@ -271,9 +274,22 @@ class HttpClient {
     return resp
   }
 
-  public async upsertSensor(sensor: Sensor): Promise<Response<Sensor> | null> {
-    const resp = await this.post<Sensor>('/sensors', sensor)
+  public async upsertSensor(params: {
+    id?: number
+    station_id: number
+    position?: SensorPosition
+    tag?: string
+    name?: string
+    group?: string
+    unit?: string
+  }): Promise<Response<Sensor> | null> {
+    const resp = await this.post<Sensor>('/sensors', params)
     return resp
+  }
+
+  public async deleteSensor(sensorId: number): Promise<Promise<number>> {
+    const resp = await this.delete<void>(`/sensors/${sensorId}`)
+    return sensorId
   }
 
   // records

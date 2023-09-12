@@ -104,6 +104,33 @@ func (api *SensorAPI) UpsertSensor(g *gin.Context) {
 	}
 }
 
+// Delete sensors godoc
+//
+//	@Summary		delete sensors
+//	@Description	delete sensors
+//	@Tags			sensors
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	"Return sensor id"
+//	@Router			/sensors/:sensor_id [delete]
+func (api *SensorAPI) DeleteSensor(g *gin.Context) {
+	log := api.logger.Sugar()
+	defer log.Sync()
+	c := WrapContext(g)
+	sensorId := c.Param("sensor_id")
+	num, err := strconv.Atoi(sensorId)
+	if err != nil {
+		c.BadRequest(errors.New("invalid sensor_id"))
+		return
+	}
+	err = api.sensorService.Delete(uint(num))
+	if err != nil {
+		c.BadRequest(err)
+	} else {
+		c.OK(nil)
+	}
+}
+
 func (api *SensorAPI) parsePosition(str string) (service.SensorPosition, bool) {
 	c, ok := service.SensorPositionMap[strings.ToLower(str)]
 	return c, ok

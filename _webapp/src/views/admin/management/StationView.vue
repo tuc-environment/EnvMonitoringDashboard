@@ -74,10 +74,10 @@
       @close="onModalClosed"
     />
     <double-confirm-modal
-      :visible="isShowingDeleteCreationModal"
+      :visible="isShowingDeletionModal"
       :title="'删除站点 ' + operatingStationId"
       content="确定删除站点？"
-      @close="onDeleteStationModelClosed"
+      @close="onDeleteStationModalClosed"
       @on-confirm="confirmDeletingStation"
     />
   </div>
@@ -101,7 +101,7 @@ const requesting = ref(false)
 const allStations = ref<Station[]>([])
 const router = useRouter()
 const isShowingStationUpsertModal = ref(false)
-const isShowingDeleteCreationModal = ref(false)
+const isShowingDeletionModal = ref(false)
 const operatingStationId = ref<number | undefined>(undefined)
 const upsertStationModal = ref<InstanceType<typeof UpsertStationModal> | null>(null)
 
@@ -156,15 +156,15 @@ const onStationUpserted = async () => {
 
 // station deletion
 
-const onDeleteStationModelClosed = () => {
-  isShowingDeleteCreationModal.value = false
+const onDeleteStationModalClosed = () => {
+  isShowingDeletionModal.value = false
   operatingStationId.value = undefined
 }
 
 const onDeleteStation = (stationId: number | undefined) => {
   if (stationId) {
     operatingStationId.value = stationId
-    isShowingDeleteCreationModal.value = true
+    isShowingDeletionModal.value = true
   }
 }
 
@@ -174,7 +174,7 @@ const confirmDeletingStation = async () => {
     if (stationId) {
       await httpclient.deleteStation(stationId)
       await loadStations(offset.value, false)
-      isShowingDeleteCreationModal.value = false
+      isShowingDeletionModal.value = false
     }
   } catch (_) {}
   operatingStationId.value = undefined

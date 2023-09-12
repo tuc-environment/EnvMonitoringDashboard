@@ -83,10 +83,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, type PropType, onMounted } from 'vue'
+import { ref } from 'vue'
 import LabelInputComponent from '@/components/LabelInputComponent.vue'
 import httpclient, { type Station } from '@/httpclient'
-import { stat } from 'fs'
 
 const props = defineProps({
   title: { type: String, default: 'Modal Title' },

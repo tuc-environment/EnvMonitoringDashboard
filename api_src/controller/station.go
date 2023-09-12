@@ -96,7 +96,7 @@ func (api *StationAPI) UpsertStations(g *gin.Context) {
 //	@Accept			json
 //	@Produce		json
 //	@Success		200	"Return station id"
-//	@Router			/stations/:stationId [delete]
+//	@Router			/stations/:station_id [delete]
 func (api *StationAPI) DeleteStation(g *gin.Context) {
 	log := api.logger.Sugar()
 	defer log.Sync()
