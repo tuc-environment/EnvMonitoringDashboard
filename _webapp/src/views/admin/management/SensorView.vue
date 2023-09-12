@@ -170,6 +170,14 @@
           </tr>
         </tbody>
       </table>
+      <table-paginator
+        :offset="offsetVal"
+        :limit="limit"
+        :total="totalVal"
+        @to-previous="toPreviousPage"
+        @to-index="toOffset"
+        @to-next="toNextPage"
+      />
     </div>
   </div>
 </template>
@@ -187,7 +195,7 @@ import UpsertSensorModal from '@/components/modal/UpsertSensorModal.vue'
 import { computed, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
-
+import TablePaginator from '@/components/TablePaginator.vue'
 const route = useRoute()
 const router = useRouter()
 const loading = ref(true)
@@ -210,6 +218,12 @@ const stationID = computed(() => {
   const stationID = route.query.station_id
   return stationID ? parseInt(stationID.toString()) : 0
 })
+
+// record pagination
+const limit = 10
+const offsetVal = ref(0)
+const totalVal = ref(0)
+
 const selectedSensors = computed(() => {
   return allSensors.value
     .filter((sensor) => selectedSensorIDs.value.includes(sensor.id))
@@ -270,9 +284,10 @@ const updateSensorRecords = async () => {
     sensorIDs: selectedSensorIDs.value,
     startTime: startDate.value,
     endTime: endDate.value,
-    offset: 0,
-    limit: 100
+    offset: offsetVal.value,
+    limit: limit
   })
+  totalVal.value = resp?.total ?? 0
   const records = resp?.payload || []
   const recordsByTime = records.reduce((acc, record) => {
     const time = record?.time?.toString() || ''
@@ -363,6 +378,24 @@ const onDeleteSensorModalClosed = () => {
   isShowingDeletionModal.value = false
   operatingSensorId.value = undefined
 }
+
+// record pagination
+
+const toPreviousPage = (offset: number) => {
+  offsetVal.value = offset
+  updateSensorRecords()
+}
+
+const toNextPage = (offset: number) => {
+  offsetVal.value = offset
+  updateSensorRecords()
+}
+
+const toOffset = (offset: number) => {
+  offsetVal.value = offset
+  updateSensorRecords()
+}
+
 // setup
 
 refresh()
