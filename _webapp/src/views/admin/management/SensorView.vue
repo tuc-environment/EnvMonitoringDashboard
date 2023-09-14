@@ -199,6 +199,7 @@ import TablePaginator from '@/components/TablePaginator.vue'
 const route = useRoute()
 const router = useRouter()
 const loading = ref(true)
+const silentLoadingRecords = ref(false)
 const isShowingDeletionModal = ref(false)
 const operatingSensorId = ref<number | undefined>(undefined)
 const startDate = ref(new Date())
@@ -275,11 +276,16 @@ const onChangeSensor = (evt: any, id: number) => {
     } else {
       selectedSensorIDs.value = selectedSensorIDs.value.filter((sensorID) => sensorID != id)
     }
-    updateSensorRecords()
+    offsetVal.value = 0
+    updateSensorRecords(false)
   })
 }
-const updateSensorRecords = async () => {
-  loading.value = true
+const updateSensorRecords = async (showLoading: boolean) => {
+  if (showLoading) {
+    loading.value = true
+  } else {
+    silentLoadingRecords.value = true
+  }
   const resp = await httpclient.getRecords({
     sensorIDs: selectedSensorIDs.value,
     startTime: startDate.value,
@@ -307,7 +313,11 @@ const updateSensorRecords = async () => {
     t,
     ...selectedSensors.value.map((s) => recordsByTime[t][s.id])
   ])
-  loading.value = false
+  if (showLoading) {
+    loading.value = false
+  } else {
+    silentLoadingRecords.value = true
+  }
 }
 
 const refresh = async () => {
@@ -329,7 +339,7 @@ const refresh = async () => {
   station.value = resps[0]?.payload.filter((station) => station.id == stationID.value).at(0)
   allSensors.value = resps[1]?.payload.sort((a, b) => a.id - b.id) || []
   selectedSensorIDs.value = []
-  await updateSensorRecords()
+  await updateSensorRecords(false)
   loading.value = false
 }
 
@@ -383,17 +393,17 @@ const onDeleteSensorModalClosed = () => {
 
 const toPreviousPage = (offset: number) => {
   offsetVal.value = offset
-  updateSensorRecords()
+  updateSensorRecords(false)
 }
 
 const toNextPage = (offset: number) => {
   offsetVal.value = offset
-  updateSensorRecords()
+  updateSensorRecords(false)
 }
 
 const toOffset = (offset: number) => {
   offsetVal.value = offset
-  updateSensorRecords()
+  updateSensorRecords(false)
 }
 
 // setup
