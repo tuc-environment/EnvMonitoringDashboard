@@ -170,15 +170,18 @@
         <tbody>
           <tr v-for="[date, sensorRecordMap] in recordsByTime" :key="date.toString()">
             <td>{{ date }}</td>
-            <td v-for="[sensorId, record] in sensorRecordMap" :key="sensorId">
-              <div v-if="rowEditingIndex != date || sensorId == 0">
-                {{ record.value }}
+            <td v-for="sensor in selectedSensors" :key="sensor.id">
+              <div v-if="rowEditingIndex != date || sensor.id == 0">
+                <div v-if="sensorRecordMap.get(sensor.id)?.value">
+                  {{ sensorRecordMap.get(sensor.id)?.value }}
+                </div>
+                <div v-else class="bg-danger w-100 h-100">N.A.</div>
               </div>
               <div v-else>
                 <input
                   type="number"
-                  :value="record.value"
-                  @input="(event) => onChangeRecordValue(event, date, sensorId)"
+                  :value="sensorRecordMap.get(sensor.id)?.value"
+                  @input="(event) => onChangeRecordValue(event, date, sensor.id)"
                 />
               </div>
             </td>
@@ -510,6 +513,16 @@ const onChangeRecordValue = (e: any, date: Date, sensorId: number) => {
   if (existingRecord && recordsToBeUpdated) {
     recordsToBeUpdated.set(sensorId, {
       ...existingRecord,
+      value: +val
+    })
+  } else {
+    if (!recordsToBeUpdated) {
+      recordsToBeUpdated = new Map<number, DataRecord>()
+    }
+    recordsToBeUpdated.set(sensorId, {
+      id: 0,
+      sensor_id: sensorId,
+      time: date,
       value: +val
     })
   }
