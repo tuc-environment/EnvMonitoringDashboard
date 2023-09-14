@@ -206,3 +206,29 @@ func (api *RecordAPI) GetRecords(g *gin.Context) {
 		c.OK(records)
 	}
 }
+
+// Batch upsert record godoc
+//
+//	@Summary		batch upsert
+//	@Description	batch upsert records
+//	@Tags			records
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	""
+//	@Router			/records [post]
+func (api *RecordAPI) BatchUpsertRecords(g *gin.Context) {
+	log := api.logger.Sugar()
+	defer log.Sync()
+	c := WrapContext(g)
+	body := []service.Record{}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.BadRequest(err)
+		return
+	}
+	records, err := api.recordService.BatchUpsert(&body)
+	if err != nil {
+		c.BadRequest(err)
+	} else {
+		c.OK(records)
+	}
+}

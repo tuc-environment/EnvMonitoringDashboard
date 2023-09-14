@@ -340,6 +340,11 @@ class HttpClient {
     const resp = await this.get<DataRecord[]>(`/records?${ret.join('&')}`)
     return resp
   }
+
+  public async updateRecords(records: DataRecord[]) {
+    const resp = await this.post<void>('/records', records)
+    return resp
+  }
 }
 
 export default new HttpClient()

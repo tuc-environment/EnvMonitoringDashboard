@@ -59,6 +59,7 @@ func NewEngine(
 	api.POST("/records/upload", recordAPI.UploadRecords)
 	api.GET("/records/template", recordAPI.ExportCSVTemplate)
 	api.GET("/records", recordAPI.GetRecords)
+	api.POST("/records", recordAPI.BatchUpsertRecords)
 	api.POST("/sensors", sensorAPI.UpsertSensor)
 	api.GET("/sensors", sensorAPI.GetSensors)
 	api.DELETE("/sensors/:sensor_id", sensorAPI.DeleteSensor)

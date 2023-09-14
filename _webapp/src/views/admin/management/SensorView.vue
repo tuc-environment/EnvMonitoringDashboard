@@ -151,7 +151,7 @@
     </div>
   </div>
 
-  <div v-else-if="allDataRecords.length == 0" class="mx-auto mt-5 text-center">
+  <div v-else-if="!recordsByTime || recordsByTime.size == 0" class="mx-auto mt-5 text-center">
     <label>无法查询到数据</label>
   </div>
 
@@ -162,17 +162,57 @@
           <tr>
             <th scope="col" width="30%">时间</th>
             <th scope="col" v-for="s in selectedSensors" :key="s.id">
-              {{ s.id }}. {{ s.name }} ({{ positionName(s.position) }})
+              {{ getSensorDisplayText(s) }}
             </th>
             <th scope="col" width="20%">操作</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(dataRecords, idx) in allDataRecords" :key="idx">
-            <td v-for="record in dataRecords" :key="record">{{ record }}</td>
+          <tr v-for="[date, sensorRecordMap] in recordsByTime" :key="date.toString()">
+            <td>{{ date }}</td>
+            <td v-for="[sensorId, record] in sensorRecordMap" :key="sensorId">
+              <div v-if="rowEditingIndex != date || sensorId == 0">
+                {{ record.value }}
+              </div>
+              <div v-else>
+                <input
+                  type="number"
+                  :value="record.value"
+                  @input="(event) => onChangeRecordValue(event, date, sensorId)"
+                />
+              </div>
+            </td>
             <td>
-              <button type="button" class="btn btn-outline-primary btn-sm mx-2" disabled>
+              <div v-if="rowUpdateingIndex == date">
+                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                修改中...
+              </div>
+
+              <button
+                v-if="rowEditingIndex != date && rowUpdateingIndex != date"
+                type="button"
+                class="btn btn-outline-primary btn-sm mx-2"
+                @click="setEditing(date)"
+              >
                 编辑
+              </button>
+
+              <button
+                v-if="rowEditingIndex == date && rowUpdateingIndex != date"
+                type="button"
+                class="btn btn-outline-success btn-sm mx-2"
+                @click="confirmEditing(date)"
+              >
+                确定
+              </button>
+
+              <button
+                v-if="rowEditingIndex == date && rowUpdateingIndex != date"
+                type="button"
+                class="btn btn-outline-secondary btn-sm mx-2"
+                @click="cancelEditing(date)"
+              >
+                取消
               </button>
             </td>
           </tr>
@@ -195,6 +235,7 @@ import Datepicker from 'vue3-datepicker'
 import httpclient, {
   type Station,
   type Sensor,
+  type DataRecord,
   SensorPosition,
   getPositionName,
   getSensorDisplayText
@@ -204,7 +245,6 @@ import { computed, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
 import TablePaginator from '@/components/TablePaginator.vue'
-import { off } from 'process'
 const route = useRoute()
 const router = useRouter()
 const loading = ref(true)
@@ -217,8 +257,7 @@ const endDate = ref(new Date())
 const station = ref<Station | undefined>(undefined)
 const allSensors = ref<Sensor[]>([])
 const selectedSensorIDs = ref<number[]>([])
-const allDataRecords = ref<string[][]>([])
-
+const recordsByTime = ref<Map<Date, Map<number, DataRecord>> | undefined>(undefined)
 const uploading = ref(false)
 const file = ref<string | null>(null)
 const isShowingUpsertSensorModal = ref(false)
@@ -295,6 +334,13 @@ const updateSensorRecords = async (showLoading: boolean) => {
   } else {
     silentLoadingRecords.value = true
   }
+
+  // clear editing cache
+  rowEditingIndex.value = undefined
+  rowUpdateingIndex.value = undefined
+  recordsToBeUpdated = undefined
+  recordsByTime.value = undefined
+
   const resp = await httpclient.getRecords({
     sensorIDs: selectedSensorIDs.value,
     startTime: startDate.value,
@@ -304,24 +350,24 @@ const updateSensorRecords = async (showLoading: boolean) => {
   })
   totalVal.value = resp?.total ?? 0
   const records = resp?.payload || []
-  const recordsByTime = records.reduce((acc, record) => {
-    const time = record?.time?.toString() || ''
-    const sensorId = record?.sensor_id || 0
-    const value = record?.value?.toString() || ''
-    if (acc[time]) {
-      acc[time][sensorId] = value
-    } else {
-      acc[time] = {}
-      acc[time][sensorId] = value
+  var result: Map<Date, Map<number, DataRecord>> = new Map<Date, Map<number, DataRecord>>()
+  records.forEach((record) => {
+    const date = record.time
+    if (date != null) {
+      const sensorId = record?.sensor_id || 0
+      var existingMap = result.get(date)
+      if (existingMap) {
+        existingMap.set(sensorId, record)
+        result.set(date, existingMap)
+      } else {
+        const map: Map<number, DataRecord> = new Map<number, DataRecord>()
+        map.set(sensorId, record)
+        result.set(date, map)
+      }
     }
-    return acc
-  }, {} as { [time: string]: { [sensorId: number]: string } })
-  console.log(recordsByTime)
-
-  allDataRecords.value = Object.keys(recordsByTime).map((t) => [
-    t,
-    ...selectedSensors.value.map((s) => recordsByTime[t][s.id])
-  ])
+  })
+  console.log(result)
+  recordsByTime.value = result
   if (showLoading) {
     loading.value = false
   } else {
@@ -334,7 +380,6 @@ const refresh = async () => {
   station.value = undefined
   allSensors.value = []
   selectedSensorIDs.value = []
-  allDataRecords.value = []
 
   startDate.value.setDate(startDate.value.getDate() - 1)
   station.value = (await httpclient.getStations())?.payload
@@ -423,6 +468,51 @@ const onDatePickerClosed = () => {
     offsetVal.value = 0
     updateSensorRecords(true)
   })
+}
+
+// edit records
+const rowEditingIndex = ref<Date | undefined>(undefined)
+const rowUpdateingIndex = ref<Date | undefined>(undefined)
+var recordsToBeUpdated: Map<number, DataRecord> | undefined = undefined
+
+const setEditing = (date: Date) => {
+  rowEditingIndex.value = date
+  if (recordsByTime.value) {
+    recordsToBeUpdated = new Map(recordsByTime.value.get(date))
+  }
+}
+
+const confirmEditing = async (date: Date) => {
+  rowEditingIndex.value = undefined
+  if (recordsByTime.value && recordsToBeUpdated) {
+    recordsByTime.value.set(date, recordsToBeUpdated)
+    rowUpdateingIndex.value = date
+    const map = recordsToBeUpdated
+    if (map) {
+      const records = Array.from(map.values())
+      const result = await httpclient.updateRecords(records)
+      if (result?.code == 200) {
+        recordsByTime.value.set(date, recordsToBeUpdated)
+      }
+      rowUpdateingIndex.value = undefined
+    }
+  }
+}
+
+const cancelEditing = (date: Date) => {
+  rowEditingIndex.value = undefined
+}
+
+const onChangeRecordValue = (e: any, date: Date, sensorId: number) => {
+  const val = e.target.value
+  console.log(val, date, sensorId)
+  const existingRecord = recordsByTime.value?.get(date)?.get(sensorId)
+  if (existingRecord && recordsToBeUpdated) {
+    recordsToBeUpdated.set(sensorId, {
+      ...existingRecord,
+      value: +val
+    })
+  }
 }
 
 // setup
