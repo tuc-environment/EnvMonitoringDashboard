@@ -36,39 +36,68 @@ func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endT
 	log := s.logger.Sugar()
 	defer log.Sync()
 	var records *[]Record
+
 	query := s.db.DB.Model(&Record{})
+	timeQuery := s.db.Table("records")
 	if afterCreatedAt != nil {
 		query = query.Where("created_at >= ?", *afterCreatedAt)
+		timeQuery = timeQuery.Where("created_at >= ?", *afterCreatedAt)
 	}
 	if beforeCreatedAt != nil {
 		query = query.Where("created_at < ?", *beforeCreatedAt)
+		timeQuery = timeQuery.Where("created_at < ?", *beforeCreatedAt)
 	}
-	if startTime != nil {
-		query = query.Where("time >= ?", *startTime)
-	}
-	if endTime != nil {
-		query = query.Where("time < ?", *endTime)
-	}
+
 	if sensorIds != nil && len(*sensorIds) > 0 {
 		query = query.Where("sensor_id in (?)", *sensorIds)
+		timeQuery = timeQuery.Where("sensor_id in (?)", *sensorIds)
 	}
-	var count int64
-	errCount := query.Count(&count).Error
-	if errCount != nil {
-		return nil, errCount, nil
+
+	var times []time.Time
+	var theStartTime time.Time
+	var theEndTime time.Time
+
+	rowEnd := timeQuery.Select("max(time)").Row()
+	rowEnd.Scan(&theEndTime)
+	log.Infof("maxTime: %v\n", theEndTime)
+
+	row := timeQuery.Select("min(time)").Row()
+	row.Scan(&theStartTime)
+	log.Infof("minTime: %v\n", theStartTime)
+	if startTime != nil && startTime.After(theStartTime) {
+		theStartTime = *startTime
 	}
-	if offset != nil {
-		query = query.Offset(*offset)
+
+	log.Infof("query minTime: %v\n", theStartTime)
+
+	var loop int
+	var base int
+	if offset != nil && *offset > 0 {
+		base = *offset
+	} else {
+		base = 0
 	}
-	if limit != nil {
-		query = query.Limit(*limit)
+	if limit != nil && *limit > 0 {
+		loop = *limit
+	} else {
+		loop = 10
 	}
-	err := query.Statement.Order("time desc").Find(&records).Error
+	for i := 0; i < loop; i++ {
+		time := theStartTime.Add(time.Minute * time.Duration(30*i+base*30))
+		times = append(times, time)
+	}
+	log.Infof("times: %v\n", times)
+
+	count := theEndTime.Sub(theStartTime) / (time.Minute * time.Duration(30))
+	total := int64(count)
+	log.Infof("total: %v\n", total)
+
+	err := query.Where("time in (?)", times).Statement.Order("time asc").Find(&records).Error
 	if err != nil {
 		log.Errorf("get records with error: %s\n", err.Error())
 		return nil, err, nil
 	} else {
-		return records, nil, &count
+		return records, nil, &total
 	}
 }
 
