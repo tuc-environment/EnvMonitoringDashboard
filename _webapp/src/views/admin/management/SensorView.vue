@@ -110,12 +110,20 @@
 
               <div class="my-2">
                 <div>开始时间</div>
-                <Datepicker v-model="startDate" style="cursor: pointer" />
+                <Datepicker
+                  v-model="startDate"
+                  style="cursor: pointer"
+                  @closed="onDatePickerClosed"
+                />
               </div>
 
               <div class="my-2">
                 <div>结束时间</div>
-                <Datepicker v-model="endDate" style="cursor: pointer" />
+                <Datepicker
+                  v-model="endDate"
+                  style="cursor: pointer"
+                  @closed="onDatePickerClosed"
+                />
               </div>
             </div>
           </div>
@@ -196,6 +204,7 @@ import { computed, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
 import TablePaginator from '@/components/TablePaginator.vue'
+import { off } from 'process'
 const route = useRoute()
 const router = useRouter()
 const loading = ref(true)
@@ -277,7 +286,7 @@ const onChangeSensor = (evt: any, id: number) => {
       selectedSensorIDs.value = selectedSensorIDs.value.filter((sensorID) => sensorID != id)
     }
     offsetVal.value = 0
-    updateSensorRecords(false)
+    updateSensorRecords(true)
   })
 }
 const updateSensorRecords = async (showLoading: boolean) => {
@@ -339,6 +348,7 @@ const refresh = async () => {
   station.value = resps[0]?.payload.filter((station) => station.id == stationID.value).at(0)
   allSensors.value = resps[1]?.payload.sort((a, b) => a.id - b.id) || []
   selectedSensorIDs.value = []
+  offsetVal.value = 0
   await updateSensorRecords(false)
   loading.value = false
 }
@@ -404,6 +414,15 @@ const toNextPage = (offset: number) => {
 const toOffset = (offset: number) => {
   offsetVal.value = offset
   updateSensorRecords(false)
+}
+
+// date picker closed
+
+const onDatePickerClosed = () => {
+  nextTick(() => {
+    offsetVal.value = 0
+    updateSensorRecords(true)
+  })
 }
 
 // setup
