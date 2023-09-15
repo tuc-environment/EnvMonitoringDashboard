@@ -46,9 +46,7 @@
         >
           {{ backButtonName }}
         </button>
-        <button type="button" class="mt-3 w-100 btn btn-outline-danger" @click="logout()">
-          登出
-        </button>
+        <button type="button" class="mt-3 w-100 btn btn-danger" @click="logout()">登出</button>
       </div>
 
       <div class="main flex-grow-1 p-3">
@@ -64,7 +62,7 @@
 import { toRaw, type Component } from 'vue'
 import NavBarComponent from '@/components/NavBarComponent.vue'
 import SideBarButtonComponent from '@/components/SideBarButtonComponent.vue'
-//   import httpclient from '@/httpclient'
+import httpclient from '@/httpclient'
 
 export interface SubView {
   name: string
@@ -91,6 +89,9 @@ export default {
     backButtonPath: { type: String }
   },
   created() {
+    if (!httpclient.token) {
+      this.logout()
+    }
     if (!this.selectedSubView) {
       this.$router.push({ query: { view: this.defaultSubView } })
     }
@@ -122,7 +123,7 @@ export default {
       this.$router.push(this.backButtonPath!)
     },
     async logout() {
-      // await httpclient.logout()
+      httpclient.logout()
       this.$router.push('/login')
     }
   }

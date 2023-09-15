@@ -1,5 +1,5 @@
 <template>
-  <SidebarLayout :sections="sections" default-sub-view="Account" />
+  <SidebarLayout :sections="sections" default-sub-view="账户管理" />
 </template>
 
 <script lang="ts">

@@ -15,6 +15,8 @@
           新用户？<RouterLink to="/register" class="register-link">注册账号</RouterLink>
         </div>
 
+        <div v-if="errorMsg" class="alert alert-danger" role="alert">{{ errorMsg }}</div>
+
         <form @submit.prevent="preventDefault">
           <div class="form-group my-3">
             <label class="mb-2">用户名</label>
@@ -67,10 +69,15 @@ import { ref } from 'vue'
 import DashboardLayout from '@/layouts/DashboardLayout.vue'
 import BackgroundComponent from '@/components/BackgroundComponent.vue'
 
+const errorMsg = ref('')
 const username = ref('')
 const password = ref('')
 const requesting = ref(false)
 const router = useRouter()
+
+if (httpclient.token) {
+  router.push('/admin')
+}
 
 const login = async (username: string, password: string) => {
   requesting.value = true
@@ -79,7 +86,7 @@ const login = async (username: string, password: string) => {
     router.push('/admin')
   } else if (resp?.code == 400) {
     clearForm()
-    alert(resp?.error)
+    errorMsg.value = '账号或密码错误!'
   }
   requesting.value = false
 }

@@ -14,6 +14,8 @@
           已经拥有账号？ <RouterLink to="/login" class="register-link">登入</RouterLink>
         </div>
 
+        <div v-if="errorMsg" class="alert alert-danger" role="alert">{{ errorMsg }}</div>
+
         <form>
           <div class="form-group my-3">
             <label class="mb-2">用户名</label>
@@ -77,6 +79,7 @@ import httpclient from '@/httpclient'
 import DashboardLayout from '@/layouts/DashboardLayout.vue'
 import BackgroundComponent from '@/components/BackgroundComponent.vue'
 
+let errorMsg = ref('')
 let username = ref('')
 let password = ref('')
 let passwordConfirm = ref('')
@@ -98,21 +101,24 @@ const register = async (username: string, password: string) => {
   if (resp?.code == 200) {
     router.push('/login')
   } else if (resp?.code == 400) {
-    clearForm()
-    alert(resp?.error)
+    errorMsg.value = '用户名已经被注册'
   }
   requesting.value = false
 }
 
-const onSubmit = () => {
+const onSubmit = async (evt: Event) => {
+  evt.preventDefault()
   if (username.value.length == 0 || password.value.length == 0) {
-    alert('Username & password cannot be empty')
+    errorMsg.value = '用户名和密码不能为空'
+    return
   } else if (password.value.length < 6) {
-    alert('Password is least 6 digits')
+    errorMsg.value = '密码至少 6 位'
+    return
   } else if (password.value !== passwordConfirm.value) {
-    alert('Please confirm password')
+    errorMsg.value = '密码不匹配'
+    return
   } else {
-    register(username.value, password.value)
+    await register(username.value, password.value)
   }
 }
 

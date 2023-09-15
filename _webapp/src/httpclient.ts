@@ -182,7 +182,7 @@ class HttpClient {
   ): Promise<Response<{ token: string }> | null> {
     const resp = await this.post<{ token: string }>('/register', { username, password: password })
     if (resp?.code === 200) {
-      alert('Registration successful. Please login to continue.')
+      resp.payload.token && (this.token = resp.payload.token)
     }
     return resp
   }
