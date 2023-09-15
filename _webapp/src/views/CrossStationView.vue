@@ -1,6 +1,6 @@
 <template>
   <DashboardLayout>
-    <div class="p-2 w-100 h-100" style="background-color: rgb(17, 18, 23)">
+    <div class="p-2 w-100 h-100 text-light" style="background-color: rgb(17, 18, 23)">
       <div class="d-flex h-100 mx-1 card-container">
         <div class="p-2 card-col">
           <DashboardCardComponent title="选择传感器" :loading="loading">
