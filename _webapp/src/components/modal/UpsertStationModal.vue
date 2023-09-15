@@ -13,6 +13,8 @@
         </div>
         <div class="modal-body">
           <div class="p-2">
+            <div v-if="errorMsg" class="alert alert-danger" role="alert">{{ errorMsg }}</div>
+
             <div class="row mb-2">
               <div class="col-md-12">
                 <LabelInputComponent
@@ -64,7 +66,7 @@
               <button type="button" class="btn btn-success" :disabled="loading" @click="onConfirm">
                 <div v-if="loading">
                   <span
-                    class="spinner-grow spinner-grow-sm"
+                    class="spinner-grow spinner-grow-sm me-2"
                     role="status"
                     aria-hidden="true"
                   ></span>
@@ -83,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import LabelInputComponent from '@/components/LabelInputComponent.vue'
 import httpclient, { type Station } from '@/httpclient'
 
@@ -96,12 +98,22 @@ const emit = defineEmits<{
   (e: 'didUpsertStation'): void
 }>()
 
+const errorMsg = ref('')
 const loading = ref(false)
 const nameVal = ref<string | undefined>('')
 const latVal = ref<number | undefined>(undefined)
 const lngVal = ref<number | undefined>(undefined)
 const altitudeVal = ref<number | undefined>(undefined)
 const stationVal = ref<Station | undefined>(undefined)
+
+watch(
+  () => props.visible,
+  (val) => {
+    if (val) {
+      errorMsg.value = ''
+    }
+  }
+)
 
 const onChangeName = (e: any) => {
   nameVal.value = e.target.value
@@ -142,9 +154,11 @@ const onConfirm = async () => {
         await emit('didUpsertStation')
       }
     } else {
-      alert('输入有误')
+      errorMsg.value = '数据项输入有误'
     }
-  } catch (_) {}
+  } catch (_) {
+    // ignore
+  }
   loading.value = false
 }
 

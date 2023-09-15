@@ -4,7 +4,7 @@
       <div class="card h-100">
         <div class="card-body">
           <div class="d-flex align-items-center">
-            <div class="h4 my-0 me-2">站点信息</div>
+            <div class="h5 my-0 me-2">站点信息</div>
             <button
               type="button"
               class="btn btn-sm btn-outline-primary"
@@ -34,7 +34,7 @@
           </table>
 
           <div class="d-flex align-items-center">
-            <h4 class="my-0 me-2">上传数据</h4>
+            <h5 class="my-0 me-2">上传数据</h5>
             <button class="btn btn-sm btn-outline-primary my-2" @click="handleTemplateDownload">
               下载数据模版
             </button>
@@ -59,59 +59,61 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
-              <div class="d-flex justify-content-between">
-                <div class="h4 mb-0">传感器列表</div>
-                <button type="button" class="btn btn-primary" @click="showCreateSensorModal">
-                  添加传感器
+              <div class="d-flex align-items-center">
+                <div class="h5 mb-0 me-2">传感器列表</div>
+                <button type="button" class="btn btn-sm btn-success" @click="showCreateSensorModal">
+                  + 添加传感器
                 </button>
               </div>
               <label class="text-secondary small mb-3">选择查看相应的传感器</label>
 
               <div style="height: 170px; overflow-y: auto">
-                <div class="form-check mb-3 d-flex" v-for="sensor in allSensors" :key="sensor.id">
+                <div
+                  class="form-check mb-3 d-flex align-items-center"
+                  v-for="sensor in allSensors"
+                  :key="sensor.id"
+                >
                   <input
                     class="form-check-input"
+                    style="margin-top: 0"
                     type="checkbox"
                     @change="onChangeSensor($event, sensor.id)"
                   />
                   <label class="form-check-label ms-1">
                     {{ getSensorDisplayText(sensor) }}
                   </label>
-                  <div v-if="operatingSensorId == sensor.id" class="ms-2">
+                  <div v-if="operatingSensorId == sensor.id" class="ms-auto small">
                     <span
-                      class="spinner-grow spinner-grow-sm"
+                      class="spinner-grow spinner-grow-sm me-1"
                       role="status"
                       aria-hidden="true"
                     ></span>
                     修改中...
                   </div>
-                  <div v-else class="d-flex">
-                    <button
-                      type="button"
-                      class="btn btn-outline-primary btn-sm mx-2"
+                  <div v-else class="d-flex align-items-center ms-auto">
+                    <i
+                      class="bi bi-exclamation-circle-fill text-primary mx-1"
+                      style="cursor: pointer"
                       @click="showSensorUpsertModal(sensor)"
-                    >
-                      编辑
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-outline-danger btn-sm mx-2"
+                    ></i>
+                    <i
+                      class="bi bi-x-circle-fill text-danger mx-1"
+                      style="cursor: pointer"
                       @click="onDeleteSensor(sensor.id)"
-                    >
-                      删除
-                    </button>
+                    ></i>
                   </div>
                 </div>
               </div>
             </div>
             <div class="col-md-6">
-              <div class="h4 mb-0">时间</div>
+              <div class="h5 mb-0">时间</div>
               <label class="text-secondary small mb-3">选择时间范围</label>
 
               <div class="my-2">
                 <div>开始时间</div>
                 <Datepicker
                   v-model="startDate"
+                  class="btn btn-sm btn-primary"
                   style="cursor: pointer"
                   @closed="onDatePickerClosed"
                 />
@@ -121,6 +123,7 @@
                 <div>结束时间</div>
                 <Datepicker
                   v-model="endDate"
+                  class="btn btn-sm btn-primary"
                   style="cursor: pointer"
                   @closed="onDatePickerClosed"
                 />
@@ -133,6 +136,7 @@
     <upsert-sensor-modal
       ref="upsertSensorModal"
       :visible="isShowingUpsertSensorModal"
+      :title="operatingSensorId ? '编辑传感器' : '添加传感器'"
       @close="onUpsertSensorModalClosed"
       @did-upsert-sensor="didUpsertSensor"
     />
@@ -169,7 +173,7 @@
         </thead>
         <tbody>
           <tr v-for="[date, sensorRecordMap] in recordsByTime" :key="date.toString()">
-            <td>{{ date }}</td>
+            <td>{{ formatDatetime(date) }}</td>
             <td v-for="sensor in selectedSensors" :key="sensor.id">
               <div v-if="rowEditingIndex != date || sensor.id == 0">
                 <div v-if="sensorRecordMap.get(sensor.id)?.value">
@@ -234,6 +238,7 @@
 </template>
 
 <script setup lang="ts">
+import { formatDatetime } from '@/utils/utils'
 import Datepicker from 'vue3-datepicker'
 import httpclient, {
   type Station,
@@ -286,7 +291,7 @@ const positionName = (position: SensorPosition | undefined): string => {
   return getPositionName(position)
 }
 const gotoStationsView = () => {
-  router.push({ query: { view: 'Stations' } })
+  router.push({ query: { view: '站点管理' } })
 }
 const viewSensorRecord = (sensorID: number) => {
   router.push({
@@ -435,7 +440,9 @@ const onConfirmDeleteSensor = async () => {
   if (operatingSensorId.value) {
     try {
       await httpclient.deleteSensor(operatingSensorId.value)
-    } catch (_) {}
+    } catch (_) {
+      // ignore
+    }
   }
   await refresh()
   operatingSensorId.value = undefined

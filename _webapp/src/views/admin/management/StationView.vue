@@ -18,8 +18,8 @@
       <table class="table table-bordered align-middle">
         <thead class="table-dark">
           <tr>
-            <th scope="col" width="5%">站点编号</th>
-            <th scope="col" width="25%">名称</th>
+            <th scope="col" width="10%">站点编号</th>
+            <th scope="col" width="20%">名称</th>
             <th scope="col" width="15%">纬度</th>
             <th scope="col" width="15%">经度</th>
             <th scope="col" width="10%">海拔</th>
@@ -35,8 +35,14 @@
             <td>{{ station.altitude }}</td>
             <td>
               <div v-if="operatingStationId == station.id">
-                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                修改中...
+                <button class="btn btn-sm">
+                  <span
+                    class="spinner-grow spinner-grow-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  修改中...
+                </button>
               </div>
               <div v-else>
                 <button
@@ -73,7 +79,7 @@
     <upsert-station-modal
       ref="upsertStationModal"
       :visible="isShowingStationUpsertModal"
-      title="Create Station"
+      title="创建站点"
       @did-upsert-station="onStationUpserted"
       @close="onModalClosed"
     />
