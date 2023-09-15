@@ -34,7 +34,7 @@
         <div class="me-auto"></div>
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="/">主页</a>
+            <a class="nav-link" href="/">数据看板</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/cross-station">数据对比</a>

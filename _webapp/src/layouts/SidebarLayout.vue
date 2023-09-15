@@ -22,24 +22,20 @@
 
         <hr style="color: rgba(0, 0, 0, 0.2)" />
 
-        <h5 class="mb-4">Support</h5>
+        <h5 class="mb-4">链接</h5>
 
         <SideBarButtonComponent
-          name="Help Center"
-          icon="bi-info-circle"
-          right-icon="bi-box-arrow-up-right"
-        />
-
-        <SideBarButtonComponent
-          name="Terms & Conditions"
+          name="数据看板"
           icon="bi-card-heading"
           right-icon="bi-box-arrow-up-right"
+          @click="open('/')"
         />
 
         <SideBarButtonComponent
-          name="Privacy Policy"
-          icon="bi-shield-lock"
+          name="天津商业大学"
+          icon="bi-info-circle"
           right-icon="bi-box-arrow-up-right"
+          @click="open('https://www.tjcu.edu.cn/')"
         />
 
         <button
@@ -51,7 +47,7 @@
           {{ backButtonName }}
         </button>
         <button type="button" class="mt-3 w-100 btn btn-outline-danger" @click="logout()">
-          Logout
+          登出
         </button>
       </div>
 
@@ -118,6 +114,9 @@ export default {
   methods: {
     clickSideBar(view: string) {
       this.$router.push({ query: { view: view } })
+    },
+    open(url: string) {
+      window.open(url)
     },
     back() {
       this.$router.push(this.backButtonPath!)

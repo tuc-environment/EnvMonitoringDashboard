@@ -1,54 +1,71 @@
 <template>
-  <div class="container">
-    <div class="mx-auto my-5 login py-3 px-5">
-      <div>
-        <img class="logo" src="/logo.png" />
+  <BackgroundComponent />
+
+  <DashboardLayout>
+    <div class="container">
+      <div class="mx-auto my-5 login py-3 px-5">
+        <div>
+          <img class="logo" src="/logo.png" />
+        </div>
+
+        <h2 class="mt-3 text-center">环境监测系统 API</h2>
+        <div class="text-center">天津商业大学</div>
+
+        <div class="my-3 mb-5 text-center">
+          新用户？<RouterLink to="/register" class="register-link">注册账号</RouterLink>
+        </div>
+
+        <form @submit.prevent="preventDefault">
+          <div class="form-group my-3">
+            <label class="mb-2">用户名</label>
+            <input type="text" class="form-control" v-model="username" :disabled="requesting" />
+          </div>
+
+          <div class="form-group my-3">
+            <label class="mb-2">密码</label>
+            <input type="password" class="form-control" v-model="password" :disabled="requesting" />
+          </div>
+
+          <button
+            type="submit"
+            class="mt-3 w-100 btn btn-lg btn-primary"
+            :disabled="requesting"
+            @click="login(username, password)"
+          >
+            <div
+              v-if="requesting"
+              class="spinner-border text-light mx-auto d-block"
+              role="status"
+            />
+            <div v-else>Login</div>
+          </button>
+
+          <div
+            class="mt-5 d-flex justify-content-center mb-2"
+            style="color: rgba(0, 0, 0, 0.5); font-size: 0.99rem"
+          >
+            <a
+              style="cursor: pointer; text-decoration: none"
+              href="https://www.tjcu.edu.cn/"
+              target="_blank"
+              >天津商业大学 <i class="bi bi-box-arrow-up-right"></i
+            ></a>
+          </div>
+        </form>
       </div>
-
-      <h2 class="my-3 text-center">Sign In to TUC Environment</h2>
-
-      <div class="my-3 mb-5 text-center">
-        New Here? <RouterLink to="/register" class="register-link">Create an Account</RouterLink>
-      </div>
-
-      <form @submit.prevent="preventDefault">
-        <div class="form-group my-3">
-          <label class="mb-2">Username</label>
-          <input type="text" class="form-control" v-model="username" :disabled="requesting" />
-        </div>
-
-        <div class="form-group my-3">
-          <label class="mb-2">Password</label>
-          <input type="password" class="form-control" v-model="password" :disabled="requesting" />
-        </div>
-
-        <button
-          type="submit"
-          class="mt-3 w-100 btn btn-lg btn-primary"
-          :disabled="requesting"
-          @click="login(username, password)"
-        >
-          <div v-if="requesting" class="spinner-border text-light mx-auto d-block" role="status" />
-          <div v-else>Login</div>
-        </button>
-
-        <div
-          class="mt-5 d-flex justify-content-between mb-2"
-          style="color: rgba(0, 0, 0, 0.5); font-size: 0.99rem"
-        >
-          <div style="cursor: pointer">Privacy Policy</div>
-          <div style="cursor: pointer">Term of Service</div>
-          <div style="cursor: pointer">Contact</div>
-        </div>
-      </form>
     </div>
-  </div>
+
+    <!-- magic padding -->
+    <div style="height: 1px"></div>
+  </DashboardLayout>
 </template>
 
 <script setup lang="ts">
 import { RouterLink, useRouter } from 'vue-router'
 import httpclient from '@/httpclient'
 import { ref } from 'vue'
+import DashboardLayout from '@/layouts/DashboardLayout.vue'
+import BackgroundComponent from '@/components/BackgroundComponent.vue'
 
 const username = ref('')
 const password = ref('')
@@ -91,8 +108,7 @@ function preventDefault(e: Event) {
 .login {
   width: 100%;
   max-width: 480px;
-  background-color: rgba(86, 161, 208, 0.15);
-  border: 1px solid #ccc;
+  background-color: rgb(255, 255, 255);
   border-radius: 4px;
 }
 

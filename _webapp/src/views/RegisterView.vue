@@ -1,65 +1,81 @@
 <template>
-  <div class="container">
-    <div class="mx-auto my-5 login py-3 px-5">
-      <div>
-        <img class="logo" src="/logo.png" />
-      </div>
+  <BackgroundComponent />
 
-      <h2 class="my-3 text-center">Register</h2>
-
-      <div class="my-3 mb-5 text-center">
-        Already have an account? <RouterLink to="/login" class="register-link">Login</RouterLink>
-      </div>
-
-      <form>
-        <div class="form-group my-3">
-          <label class="mb-2">Username</label>
-          <input type="text" class="form-control" v-model="username" :disabled="requesting" />
+  <DashboardLayout>
+    <div class="container">
+      <div class="mx-auto my-5 login py-3 px-5">
+        <div>
+          <img class="logo" src="/logo.png" />
         </div>
 
-        <div class="form-group my-3">
-          <label class="mb-2">Password</label>
-          <input type="password" class="form-control" v-model="password" :disabled="requesting" />
+        <h2 class="my-3 text-center">注册账号</h2>
+
+        <div class="my-3 mb-5 text-center">
+          已经拥有账号？ <RouterLink to="/login" class="register-link">登入</RouterLink>
         </div>
 
-        <div class="form-group my-3">
-          <label class="mb-2">Confirm password</label>
-          <input type="password" class="form-control" v-model="passwordConfirm" />
-          <!-- check password match-->
-          <div v-show="showPasswordMatch" class="small mt-2">
-            <span v-if="passwordMatch" class="text-success">Password match</span>
-            <span v-else class="text-danger">Password not match</span>
+        <form>
+          <div class="form-group my-3">
+            <label class="mb-2">用户名</label>
+            <input type="text" class="form-control" v-model="username" :disabled="requesting" />
           </div>
-        </div>
 
-        <button
-          type="submit"
-          class="mt-3 w-100 btn btn-lg btn-primary"
-          :disabled="requesting || !passwordMatch"
-          @click="onSubmit"
-        >
-          <!-- Register -->
-          <div v-if="requesting" class="spinner-border text-light mx-auto d-block" role="status" />
-          <div v-else>Register</div>
-        </button>
+          <div class="form-group my-3">
+            <label class="mb-2">密码</label>
+            <input type="password" class="form-control" v-model="password" :disabled="requesting" />
+          </div>
 
-        <div
-          class="mt-5 d-flex justify-content-between mb-2"
-          style="color: rgba(0, 0, 0, 0.5); font-size: 0.99rem"
-        >
-          <div style="cursor: pointer">Privacy Policy</div>
-          <div style="cursor: pointer">Term of Service</div>
-          <div style="cursor: pointer">Contact</div>
-        </div>
-      </form>
+          <div class="form-group my-3">
+            <label class="mb-2">确认密码</label>
+            <input type="password" class="form-control" v-model="passwordConfirm" />
+            <!-- check password match-->
+            <div v-show="showPasswordMatch" class="small mt-2">
+              <span v-if="passwordMatch" class="text-success">密码匹配</span>
+              <span v-else class="text-danger">密码不匹配</span>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="mt-3 w-100 btn btn-lg btn-primary"
+            :disabled="requesting || !passwordMatch"
+            @click="onSubmit"
+          >
+            <!-- Register -->
+            <div
+              v-if="requesting"
+              class="spinner-border text-light mx-auto d-block"
+              role="status"
+            />
+            <div v-else>注册</div>
+          </button>
+
+          <div
+            class="mt-5 d-flex justify-content-center mb-2"
+            style="color: rgba(0, 0, 0, 0.5); font-size: 0.99rem"
+          >
+            <a
+              style="cursor: pointer; text-decoration: none"
+              href="https://www.tjcu.edu.cn/"
+              target="_blank"
+              >天津商业大学 <i class="bi bi-box-arrow-up-right"></i
+            ></a>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
+
+    <!-- magic padding -->
+    <div style="height: 1px"></div>
+  </DashboardLayout>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import httpclient from '@/httpclient'
+import DashboardLayout from '@/layouts/DashboardLayout.vue'
+import BackgroundComponent from '@/components/BackgroundComponent.vue'
 
 let username = ref('')
 let password = ref('')
@@ -111,8 +127,7 @@ const clearForm = () => {
 .login {
   width: 100%;
   max-width: 480px;
-  background-color: rgba(86, 161, 208, 0.15);
-  border: 1px solid #ccc;
+  background-color: rgb(255, 255, 255);
   border-radius: 4px;
 }
 

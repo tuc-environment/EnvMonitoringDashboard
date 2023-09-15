@@ -1,6 +1,9 @@
 <template>
   <DashboardLayout>
-    <div class="p-2 d-flex flex-column w-100 h-100">
+    <div
+      class="p-2 d-flex flex-column w-100 h-100 text-light"
+      style="background-color: rgb(17, 18, 23)"
+    >
       <div class="row align-items-stretch mx-1">
         <div class="col-md-6 col-lg-3 col-xl-3 p-2">
           <DashboardCardComponent title="站点数量" :loading="!dashboardStore.$state.totalStations">

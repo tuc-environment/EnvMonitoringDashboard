@@ -17,31 +17,32 @@ export default {
     return {
       sections: [
         {
-          name: 'Account',
+          name: '管理',
           subViews: [
             {
-              name: 'Account',
+              name: '账户管理',
               icon: 'bi-person',
               component: AccountView
-            }
-          ]
-        },
-        {
-          name: 'Management',
-          subViews: [
+            },
             {
-              name: 'Stations',
+              name: '站点管理',
               icon: 'bi-building',
               component: StationView
             },
             {
-              name: 'Sensors',
+              name: '传感器管理',
               icon: 'bi-camera-video',
               component: SensorView,
               hidden: true
             }
           ]
         }
+        // {
+        //   name: '管理',
+        //   subViews: [
+
+        //   ]
+        // }
       ]
     }
   }
