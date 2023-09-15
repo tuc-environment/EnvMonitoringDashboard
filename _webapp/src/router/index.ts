@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import NewHomeViewVue from '@/views/NewHomeView.vue'
+import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import httpclient from '@/httpclient'
@@ -14,7 +14,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: NewHomeViewVue
+      component: HomeView
     },
     {
       path: '/cross-station',
