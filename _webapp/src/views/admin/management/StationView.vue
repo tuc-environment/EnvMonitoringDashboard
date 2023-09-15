@@ -1,17 +1,27 @@
 <template>
-  <div class="container">
-    <div class="d-flex flex-row my-1 align-items-center">
-      <div class="h5 mr-3">Create new station:</div>
-      <button type="button" class="btn btn-success" @click="onAddButtonClicked">Add</button>
+  <div>
+    <div class="d-flex my-1 align-items-center">
+      <button type="button" class="btn btn-success my-2" @click="onAddButtonClicked">
+        + 添加站点
+      </button>
     </div>
-    <div v-if="!requesting" class="row">
+
+    <div v-if="!requesting">
+      <table-paginator
+        :offset="offset"
+        :limit="limit"
+        :total="total"
+        @to-previous="toPreviousPage"
+        @to-index="toOffset"
+        @to-next="toNextPage"
+      />
       <table class="table table-bordered align-middle">
         <thead class="table-dark">
           <tr>
-            <th scope="col" width="10%">#</th>
-            <th scope="col" width="30%">名称</th>
-            <th scope="col" width="10%">纬度</th>
-            <th scope="col" width="10%">经度</th>
+            <th scope="col" width="5%">站点编号</th>
+            <th scope="col" width="25%">名称</th>
+            <th scope="col" width="15%">纬度</th>
+            <th scope="col" width="15%">经度</th>
             <th scope="col" width="10%">海拔</th>
             <th scope="col" width="30%">操作</th>
           </tr>
@@ -54,18 +64,12 @@
             </td>
           </tr>
         </tbody>
-        <tfoot>
-          <table-paginator
-            :offset="offset"
-            :limit="limit"
-            :total="total"
-            @to-previous="toPreviousPage"
-            @to-index="toOffset"
-            @to-next="toNextPage"
-          />
-        </tfoot>
       </table>
     </div>
+    <div v-else class="mt-5 w-100 text-center">
+      <div class="spinner-border"></div>
+    </div>
+
     <upsert-station-modal
       ref="upsertStationModal"
       :visible="isShowingStationUpsertModal"
@@ -85,18 +89,16 @@
 
 <script setup lang="ts">
 import httpclient, { type Station } from '@/httpclient'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import UpsertStationModal from '@/components/modal/UpsertStationModal.vue'
 import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
-import { useLoading } from 'vue3-loading-overlay'
 import TablePaginator from '@/components/TablePaginator.vue'
 
 const offset = ref(0)
 // temp: for testing
 const limit = 2
 const total = ref(0)
-const loader = useLoading()
 const requesting = ref(false)
 const allStations = ref<Station[]>([])
 const router = useRouter()
@@ -104,14 +106,6 @@ const isShowingStationUpsertModal = ref(false)
 const isShowingDeletionModal = ref(false)
 const operatingStationId = ref<number | undefined>(undefined)
 const upsertStationModal = ref<InstanceType<typeof UpsertStationModal> | null>(null)
-
-watch(requesting, (newVal, _) => {
-  if (newVal) {
-    loader.show()
-  } else {
-    loader.hide()
-  }
-})
 
 const loadStations = async (currentOffset: number, showLoadingIndicator: boolean) => {
   if (showLoadingIndicator) {
@@ -124,7 +118,7 @@ const loadStations = async (currentOffset: number, showLoadingIndicator: boolean
 }
 
 const viewSensorData = (stationID: number) => {
-  router.push({ query: { view: 'Sensors', station_id: stationID } })
+  router.push({ query: { view: '传感器管理', station_id: stationID } })
 }
 
 // station update
@@ -176,7 +170,9 @@ const confirmDeletingStation = async () => {
       await loadStations(offset.value, false)
       isShowingDeletionModal.value = false
     }
-  } catch (_) {}
+  } catch (_) {
+    // ignore
+  }
   operatingStationId.value = undefined
 }
 

@@ -39,7 +39,7 @@
               class="spinner-border text-light mx-auto d-block"
               role="status"
             />
-            <div v-else>Login</div>
+            <div v-else>登入</div>
           </button>
 
           <div

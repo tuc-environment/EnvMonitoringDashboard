@@ -9,16 +9,22 @@
   >
     <div class="d-flex justify-content-end align-items-center">
       <div class="my-2 mx-2">
-        Count: {{ $props.total }}, Showing {{ $props.offset + 1 }} -
+        总数: {{ $props.total }}, 当前显示 {{ $props.offset + 1 }} -
         {{ $props.offset + $props.limit }}
       </div>
       <nav>
         <ul class="pagination pagination-sm justify-content-end my-2">
-          <li class="page-item" :class="{ disabled: currentPageIdx == 0 }" @click="clickPrevious">
-            <a class="page-link" tabindex="-1">Previous</a>
+          <li
+            class="page-item"
+            :class="{ disabled: currentPageIdx == 0 }"
+            style="cursor: pointer"
+            @click="clickPrevious"
+          >
+            <a class="page-link" tabindex="-1">向前</a>
           </li>
           <li
             v-if="currentPageIdx >= Math.ceil(displayedPageCount / 2)"
+            style="cursor: pointer"
             class="page-item"
             :key="0"
             @click="clickPageIndex(0)"
@@ -31,6 +37,7 @@
             v-for="label in pageLabels"
             :key="label"
             :class="{ disabled: label - 1 == currentPageIdx }"
+            style="cursor: pointer"
             @click="clickPageIndex(label - 1)"
           >
             <a class="page-link">{{ label }}</a>
@@ -44,6 +51,7 @@
           <li
             v-if="currentPageIdx < pagesCount - Math.ceil(displayedPageCount / 2)"
             class="page-item"
+            style="cursor: pointer"
             :key="0"
             @click="clickPageIndex(pagesCount - 1)"
           >
@@ -52,9 +60,10 @@
           <li
             class="page-item"
             :class="{ disabled: currentPageIdx == pagesCount }"
+            style="cursor: pointer"
             @click="clickNext"
           >
-            <a class="page-link" tabindex="-1">Next</a>
+            <a class="page-link" tabindex="-1">向后</a>
           </li>
         </ul>
       </nav>
