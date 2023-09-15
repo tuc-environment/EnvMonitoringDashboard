@@ -16,7 +16,7 @@
       {{ noDataText }}
     </div>
 
-    <div v-else class="w-100 h-100">
+    <div v-else class="w-100 h-100 text-dark">
       <apexchart height="100%" type="line" :options="chartOptions" :series="series" />
     </div>
   </div>
