@@ -128,6 +128,22 @@
                   @closed="onDatePickerClosed"
                 />
               </div>
+
+              <button
+                class="btn btn-sm btn-outline-primary my-2"
+                :disabled="totalVal <= 0"
+                @click="handleDownloadData"
+              >
+                <div v-if="isDownloadData">
+                  <span
+                    class="spinner-grow spinner-grow-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  下载中...
+                </div>
+                <div v-if="!isDownloadData">下载全部数据</div>
+              </button>
             </div>
           </div>
         </div>
@@ -253,6 +269,8 @@ import { computed, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
 import TablePaginator from '@/components/TablePaginator.vue'
+import moment from 'moment'
+
 const route = useRoute()
 const router = useRouter()
 const loading = ref(true)
@@ -533,6 +551,67 @@ const onChangeRecordValue = (e: any, date: Date, sensorId: number) => {
       value: +val
     })
   }
+}
+
+const isDownloadData = ref(false)
+
+const handleDownloadData = async () => {
+  if (isDownloadData.value) return
+  isDownloadData.value = true
+  const resp = await httpclient.getRecords({
+    sensorIDs: selectedSensorIDs.value,
+    startTime: startDate.value,
+    endTime: endDate.value,
+    offset: 0,
+    limit: totalVal.value
+  })
+  const records = resp?.payload || []
+  var result: Map<Date, Map<number, DataRecord>> = new Map<Date, Map<number, DataRecord>>()
+  records.forEach((record) => {
+    const date = record.time
+    if (date != null) {
+      const sensorId = record?.sensor_id || 0
+      var existingMap = result.get(date)
+      if (existingMap) {
+        existingMap.set(sensorId, record)
+        result.set(date, existingMap)
+      } else {
+        const map: Map<number, DataRecord> = new Map<number, DataRecord>()
+        map.set(sensorId, record)
+        result.set(date, map)
+      }
+    }
+  })
+
+  // insert csv title row
+  var csv = '数据时间,'
+  const sensors = selectedSensors.value
+  csv += sensors.map((sensor) => getSensorDisplayText(sensor)).join(',')
+  csv += '\n'
+
+  var times: Date[] = Array.from(result.keys()).sort(
+    (d1, d2) => new Date(d1).getTime() - new Date(d2).getTime()
+  )
+  for (const time of times) {
+    // 2023/4/1 15:30:00
+    csv += moment(time).format('YYYY/M/D HH:mm:ss,')
+    for (const [index, sensor] of sensors.entries()) {
+      const data = result.get(time)?.get(sensor.id)?.value ?? ''
+      csv += data
+      if (index < sensors.length - 1) {
+        csv += ','
+      }
+    }
+    csv += '\n'
+  }
+  if (csv) {
+    const anchor = document.createElement('a')
+    anchor.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv)
+    anchor.target = '_blank'
+    anchor.download = `${startDate.value.toDateString()} - ${endDate.value.toDateString()}.csv`
+    anchor.click()
+  }
+  isDownloadData.value = false
 }
 
 // setup
