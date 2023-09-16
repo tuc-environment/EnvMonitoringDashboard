@@ -6,7 +6,11 @@ import (
 	"EnvMonitoringDashboard/api_src/logger"
 	"EnvMonitoringDashboard/api_src/service"
 	"EnvMonitoringDashboard/api_src/utils"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -112,5 +116,146 @@ func (api *StationAPI) DeleteStation(g *gin.Context) {
 		c.BadRequest(err)
 	} else {
 		c.OK(nil)
+	}
+}
+
+// Predict stations godoc
+//
+//	@Summary		predict station data
+//	@Description	predict station data
+//	@Tags			stations
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	"Return station prediction data"
+//	@Router			/stations/predict [delete]
+func (api *StationAPI) PredictStation(g *gin.Context) {
+	log := api.logger.Sugar()
+	defer log.Sync()
+	c := WrapContext(g)
+	q := c.Request.URL.Query()
+	var lat *float64
+	var lng *float64
+
+	var temp *float64
+	var humidity *float64
+	var barometricPressure *float64
+	var soilTempShallow *float64
+	var soilTempDeep *float64
+	var soilWaterContentShallow *float64
+	var soilWaterContentDeep *float64
+	var soilElectricalConductivity *float64
+
+	if q.Has("lat") {
+		str := q.Get("lat")
+		latVal, err := strconv.ParseFloat(str, 64)
+		if err == nil {
+			lat = &latVal
+		}
+	}
+	if q.Has("lng") {
+		str := q.Get("lng")
+		lngVal, err := strconv.ParseFloat(str, 64)
+		if err == nil {
+			lng = &lngVal
+		}
+	}
+
+	if q.Has("temp") {
+		str := q.Get("temp")
+		tempVal, err := strconv.ParseFloat(str, 64)
+		if err == nil {
+			temp = &tempVal
+		}
+	}
+	if q.Has("humidity") {
+		str := q.Get("humidity")
+		humidityVal, err := strconv.ParseFloat(str, 64)
+		if err == nil {
+			humidity = &humidityVal
+		}
+	}
+	if q.Has("barometric_pressure") {
+		str := q.Get("barometric_pressure")
+		barometricPressureVal, err := strconv.ParseFloat(str, 64)
+		if err == nil {
+			barometricPressure = &barometricPressureVal
+		}
+	}
+	if q.Has("soil_temp_shallow") {
+		str := q.Get("soil_temp_shallow")
+		soilTempShallowVal, err := strconv.ParseFloat(str, 64)
+		if err == nil {
+			soilTempShallow = &soilTempShallowVal
+		}
+	}
+	if q.Has("soil_temp_deep") {
+		str := q.Get("soil_temp_deep")
+		soilTempDeepVal, err := strconv.ParseFloat(str, 64)
+		if err == nil {
+			soilTempDeep = &soilTempDeepVal
+		}
+	}
+	if q.Has("soil_water_content_shallow") {
+		str := q.Get("soil_water_content_shallow")
+		soilWaterContentShallowVal, err := strconv.ParseFloat(str, 64)
+		if err == nil {
+			soilWaterContentShallow = &soilWaterContentShallowVal
+		}
+	}
+	if q.Has("soil_water_content_deep") {
+		str := q.Get("soil_water_content_deep")
+		soilWaterContentDeepVal, err := strconv.ParseFloat(str, 64)
+		if err == nil {
+			soilWaterContentDeep = &soilWaterContentDeepVal
+		}
+	}
+	if q.Has("soil_electrical_conductivity") {
+		str := q.Get("soil_electrical_conductivity")
+		soilElectricalConductivityVal, err := strconv.ParseFloat(str, 64)
+		if err == nil {
+			soilElectricalConductivity = &soilElectricalConductivityVal
+		}
+	}
+	log.Infof("[station-prediction] temp: %v, humidity: %v, barometricPressure: %v, soilTempShallow: %v, soilTempDeep: %v, soilWaterContentShallow: %v, soilWaterContentDeep: %v, soilElectricalConductivity: %v", temp, humidity, barometricPressure, soilTempShallow, soilTempDeep, soilWaterContentShallow, soilWaterContentDeep, soilElectricalConductivity)
+	if temp != nil && humidity != nil && barometricPressure != nil && soilTempShallow != nil && soilTempDeep != nil && soilWaterContentShallow != nil && soilWaterContentDeep != nil && soilElectricalConductivity != nil {
+		if lat != nil && lng != nil {
+			log.Infof("[station-prediction] lat: %v, lng: %v", *lat, *lng)
+		}
+		log.Infof("[station-prediction] temp: %v, humidity: %v, barometricPressure: %v, soilTempShallow: %v, soilTempDeep: %v, soilWaterContentShallow: %v, soilWaterContentDeep: %v, soilElectricalConductivity: %v", *temp, *humidity, *barometricPressure, *soilTempShallow, *soilTempDeep, *soilWaterContentShallow, *soilWaterContentDeep, *soilElectricalConductivity)
+
+		// algorithm input sequence:
+		// soilElectricalConductivity,
+		// humidity
+		// barometricPressure,
+		// soilTempShallow,
+		// soilTempDeep,
+		// soilWaterContentShallow,
+		// soilWaterContentDeep,
+		// temp
+		requestURL := fmt.Sprintf("http://localhost:8080/stations?soil_electrical_conductivity=%v&humidity=%v&barometric_pressure=%v&soil_temp_shallow=%v&soil_temp_deep=%v&soil_water_content_shallow=%v&soil_water_content_deep=%v&temp=%v", *soilElectricalConductivity, *humidity, *barometricPressure, *soilTempShallow, *soilTempDeep, *soilWaterContentShallow, *soilWaterContentDeep, *temp)
+		req, err := http.NewRequest(http.MethodGet, requestURL, nil)
+		if err != nil {
+			c.InternalServerError(errors.New("cannot create http request"))
+			return
+		}
+		res, err := http.DefaultClient.Do(req)
+		if err != nil {
+			c.InternalServerError(errors.New("algo service unavailable"))
+			return
+		}
+		defer res.Body.Close()
+		body, err := io.ReadAll(res.Body)
+		if err != nil {
+			c.InternalServerError(errors.New("failed to read res body"))
+			return
+		}
+		var result service.StationPredictionResult
+		if err := json.Unmarshal(body, &result); err != nil {
+			c.InternalServerError(errors.New("failed to unmarshal JSON"))
+			return
+		}
+		c.OK(result)
+	} else {
+		c.BadRequest(errors.New("missing params"))
 	}
 }

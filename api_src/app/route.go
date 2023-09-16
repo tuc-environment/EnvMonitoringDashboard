@@ -53,6 +53,7 @@ func NewEngine(
 	api.POST("/login", accountAPI.Login)
 
 	api.GET("/stations", stationAPI.GetStations)
+	api.GET("/stations/predict", stationAPI.PredictStation)
 	api.POST("/stations", stationAPI.UpsertStations)
 	api.DELETE("/stations/:station_id", stationAPI.DeleteStation)
 

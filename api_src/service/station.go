@@ -18,6 +18,17 @@ type Station struct {
 	Altitude float64 `json:"altitude"`
 }
 
+type StationPredictionResult struct {
+	Temp                       float64 `json:"temp"`
+	Humidity                   float64 `json:"humidity"`
+	BarometricPressure         float64 `json:"barometric_pressure"`
+	SoilTempShallow            float64 `json:"soil_temp_shallow"`
+	SoilTempDeep               float64 `json:"soil_temp_deep"`
+	SoilWaterContentShallow    float64 `json:"soil_water_content_shallow"`
+	SoilWaterContentDeep       float64 `json:"soil_water_content_deep"`
+	SoilElectricalConductivity float64 `json:"soil_electrical_conductivity"`
+}
+
 type StationService struct {
 	config *config.Config
 	db     *store.DBClient
