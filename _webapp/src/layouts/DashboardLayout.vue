@@ -1,15 +1,5 @@
 <template>
-  <div
-    style="
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      left: 0;
-      top: 0;
-      background-color: rgb(17, 18, 23);
-      z-index: -2000;
-    "
-  ></div>
+  <div style="position: fixed; width: 100%; height: 100%; left: 0; top: 0; z-index: -2000"></div>
 
   <div class="view">
     <NavBarComponent class="navbar" />

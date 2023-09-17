@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark" style="z-index: 1000">
+  <nav class="navbar navbar-expand-lg" style="z-index: 1000">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">
         <div
@@ -44,7 +44,7 @@
           </li>
         </ul>
         <form class="form-inline" style="margin-left: 10px">
-          <a class="btn btn-outline-warning my-sm-0" type="button" href="/login"> 登入管理后台 </a>
+          <a class="btn btn-warning my-sm-0" type="button" href="/login"> 登入管理后台 </a>
         </form>
       </div>
     </div>
@@ -53,7 +53,8 @@
 
 <style scoped lang="scss">
 nav {
-  background-color: $nav-background;
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .admin {

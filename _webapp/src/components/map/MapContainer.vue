@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 import AMapLoader from '@amap/amap-jsapi-loader'
-import { reactive, ref, onMounted, createApp, h, render } from 'vue'
+import { reactive, ref, onMounted, h, render } from 'vue'
 import { type Station } from '@/httpclient'
 import iconMarker from '@/assets/img/marker.png'
 import iconMarkerSelected from '@/assets/img/marker-selected.png'
@@ -47,7 +47,6 @@ const initMap = async () => {
       center: mapCenter,
       pitch: 0,
       viewMode: '2D',
-      mapStyle: 'amap://styles/grey',
       clickable: true,
       keyboardEnable: false
     })

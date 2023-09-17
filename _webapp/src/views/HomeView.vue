@@ -1,34 +1,31 @@
 <template>
   <DashboardLayout>
-    <div
-      class="p-2 d-flex flex-column w-100 h-100 text-light"
-      style="background-color: rgb(17, 18, 23)"
-    >
+    <div class="p-2 d-flex flex-column w-100 h-100">
       <div class="row align-items-stretch mx-1">
         <div class="col-md-6 col-lg-3 col-xl-3 p-2">
           <DashboardCardComponent title="站点数量" :loading="!dashboardStore.$state.totalStations">
-            <div class="text-warning" style="font-size: 4rem">
+            <div style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalStations ?? 0) }}
             </div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-3 col-xl-3 p-2">
           <DashboardCardComponent title="传感器数量" :loading="!dashboardStore.$state.totalSensors">
-            <div class="text-warning" style="font-size: 4rem">
+            <div style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalSensors ?? 0) }}
             </div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-3 col-xl-3 p-2">
           <DashboardCardComponent title="数据总量" :loading="!dashboardStore.$state.totalRecords">
-            <div class="text-warning" style="font-size: 4rem">
+            <div style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalRecords ?? 0) }}
             </div>
           </DashboardCardComponent>
         </div>
         <div class="col-md-6 col-lg-3 col-xl-3 p-2">
           <DashboardCardComponent title="今日更新数据量">
-            <div class="text-warning" style="font-size: 4rem">
+            <div style="font-size: 4rem">
               {{ formatDisplayNumber(dashboardStore.$state.totalCreatedToday ?? 0) }}
             </div>
           </DashboardCardComponent>

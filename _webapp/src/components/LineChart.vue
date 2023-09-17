@@ -50,7 +50,7 @@ const chartOptions = computed(() => {
       palette: 'palette2'
     },
     chart: {
-      foreColor: '#d3d3d3'
+      // foreColor: '#d3d3d3'
     },
     xaxis: {
       type: 'datetime',

@@ -28,9 +28,9 @@ export default {
 
 <style scoped>
 .dashboard-card {
-  background-color: rgb(24, 27, 31);
-  border: 1px solid rgba(204, 204, 220, 0.12);
-  border-radius: 2px;
+  background: linear-gradient(144deg, rgba(225, 255, 177, 0.2) 0%, rgba(182, 227, 136, 0.15) 100%);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
   min-height: 168px;
 }
 </style>

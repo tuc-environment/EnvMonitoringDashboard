@@ -1,6 +1,6 @@
 <template>
   <DashboardLayout>
-    <div style="background-color: rgb(17, 18, 23)">
+    <div>
       <div
         class="w-100 background-image d-flex align-items-center"
         style="
@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <div class="container my-5 text-light">
+      <div class="container my-5">
         <div class="row align-items-center my-3">
           <div class="col-md-6 my-2 text-center">
             <img class="rounded w-100" src="/map.png" style="aspect-ratio: 16/9" />
