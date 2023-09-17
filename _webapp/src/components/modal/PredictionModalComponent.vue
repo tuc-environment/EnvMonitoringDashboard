@@ -1,6 +1,10 @@
 <template>
-  <div class="modal fade" :class="{ show: visible, hidden: !visible }" tabindex="-1"
-    style="display: block; background-color: rgba(0, 0, 0, 0.5)">
+  <div
+    class="modal fade"
+    :class="{ show: visible, hidden: !visible }"
+    tabindex="-1"
+    style="display: block; background-color: rgba(0, 0, 0, 0.5)"
+  >
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
@@ -11,52 +15,118 @@
           <div v-if="!showingResult" class="p-2">
             <div class="row mb-2">
               <div class="col-md-6">
-                <LabelInputComponent label="纬度" type="number" :required="false" :disabled="true" placeholder="纬度" unit="°"
-                  :field="`${latVal}`" />
+                <LabelInputComponent
+                  label="纬度"
+                  type="number"
+                  :required="false"
+                  :disabled="true"
+                  placeholder="纬度"
+                  unit="°"
+                  :field="`${latVal}`"
+                />
               </div>
               <div class="col-md-6">
-                <LabelInputComponent label="经度" type="number" :required="false" :disabled="true" placeholder="经度" unit="°"
-                  :field="`${lngVal}`" />
+                <LabelInputComponent
+                  label="经度"
+                  type="number"
+                  :required="false"
+                  :disabled="true"
+                  placeholder="经度"
+                  unit="°"
+                  :field="`${lngVal}`"
+                />
               </div>
 
               <div class="col-md-6">
-                <LabelInputComponent label="空气温度" type="number" :required="false" placeholder="输入空气温度" unit="°C"
-                  @input="onTempChanged" />
+                <LabelInputComponent
+                  label="空气温度"
+                  type="number"
+                  :required="false"
+                  placeholder="输入空气温度"
+                  unit="°C"
+                  @input="onTempChanged"
+                />
               </div>
               <div class="col-md-6">
-                <LabelInputComponent label="空气湿度" type="number" :required="false" placeholder="输入空气湿度" unit="%"
-                  @input="onHumidityChanged" />
+                <LabelInputComponent
+                  label="空气湿度"
+                  type="number"
+                  :required="false"
+                  placeholder="输入空气湿度"
+                  unit="%"
+                  @input="onHumidityChanged"
+                />
               </div>
               <div class="col-md-12">
-                <LabelInputComponent label="大气压强" type="number" :required="false" placeholder="输入大气压强" unit="MPar"
-                  @input="onBarometricPressureChanged" />
+                <LabelInputComponent
+                  label="大气压强"
+                  type="number"
+                  :required="false"
+                  placeholder="输入大气压强"
+                  unit="MPar"
+                  @input="onBarometricPressureChanged"
+                />
               </div>
               <div class="col-md-6">
-                <LabelInputComponent label="土壤浅层温度" type="number" :required="false" placeholder="输入土壤浅层温度" unit="°C"
-                  @input="onSoilTempShallowChanged" />
+                <LabelInputComponent
+                  label="土壤浅层温度"
+                  type="number"
+                  :required="false"
+                  placeholder="输入土壤浅层温度"
+                  unit="°C"
+                  @input="onSoilTempShallowChanged"
+                />
               </div>
               <div class="col-md-6">
-                <LabelInputComponent label="土壤浅层含水量" type="number" :required="false" placeholder="输入土壤浅层含水量" unit="%"
-                  @input="onSoilWaterContentShallowChanged" />
+                <LabelInputComponent
+                  label="土壤浅层含水量"
+                  type="number"
+                  :required="false"
+                  placeholder="输入土壤浅层含水量"
+                  unit="%"
+                  @input="onSoilWaterContentShallowChanged"
+                />
               </div>
               <div class="col-md-6">
-                <LabelInputComponent label="土壤深层温度" type="number" :required="false" placeholder="输入土壤深层温度" unit="°C"
-                  @input="onSoilTempDeepChanged" />
+                <LabelInputComponent
+                  label="土壤深层温度"
+                  type="number"
+                  :required="false"
+                  placeholder="输入土壤深层温度"
+                  unit="°C"
+                  @input="onSoilTempDeepChanged"
+                />
               </div>
               <div class="col-md-6">
-                <LabelInputComponent label="土壤深层含水量" type="number" :required="false" placeholder="输入土壤深层含水量" unit="%"
-                  @input="onSoilWaterContentDeepChanged" />
+                <LabelInputComponent
+                  label="土壤深层含水量"
+                  type="number"
+                  :required="false"
+                  placeholder="输入土壤深层含水量"
+                  unit="%"
+                  @input="onSoilWaterContentDeepChanged"
+                />
               </div>
               <div class="col-md-12">
-                <LabelInputComponent label="土壤导电率" type="number" :disabled="true" :required="false" placeholder="输入土壤导电率"
-                  unit="mS/cm" @input="onSoilElectricalConductivityChanged" />
+                <LabelInputComponent
+                  label="土壤导电率"
+                  type="number"
+                  :required="false"
+                  placeholder="输入土壤导电率"
+                  unit="mS/cm"
+                  @input="onSoilElectricalConductivityChanged"
+                />
               </div>
             </div>
 
             <div style="text-align: center" class="mb-2">
               <button type="button" class="btn btn-success" :disabled="loading" @click="onConfirm">
                 <div v-if="loading">
-                  <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                  <span
+                    class="spinner-grow spinner-grow-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
                   Loading...
                 </div>
                 <div v-if="!loading">开始预测</div>
@@ -65,12 +135,8 @@
           </div>
           <div v-else class="p-2">
             <div class="row mb-2">
-              <div class="col-md-12">
-                空气温度(°C): {{ predictionResult?.temp ?? 'N.A.' }}
-              </div>
-              <div class="col-md-6">
-                空气湿度(%): {{ predictionResult?.humidity ?? 'N.A.' }}
-              </div>
+              <div class="col-md-12">空气温度(°C): {{ predictionResult?.temp ?? 'N.A.' }}</div>
+              <div class="col-md-6">空气湿度(%): {{ predictionResult?.humidity ?? 'N.A.' }}</div>
               <div class="col-md-12">
                 大气压强(mbar): {{ predictionResult?.barometric_pressure ?? 'N.A.' }}
               </div>
@@ -100,12 +166,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import LabelInputComponent from '@/components/LabelInputComponent.vue'
-import httpclient, { type StationPrediction } from '@/httpclient';
-import { load } from '@amap/amap-jsapi-loader';
+import httpclient, { type StationPrediction } from '@/httpclient'
+import { load } from '@amap/amap-jsapi-loader'
 
 const props = defineProps({
   title: { type: String, default: 'Modal Title' },
-  visible: { type: Boolean, default: false },
+  visible: { type: Boolean, default: false }
 })
 
 const loading = ref(false)
@@ -156,7 +222,7 @@ const onSoilElectricalConductivityChanged = (e: any) => {
 
 const onConfirm = async () => {
   loading.value = true
-  const result = await httpclient.predictStation({
+  const params = {
     lat: latVal.value,
     lng: lngVal.value,
     temp: tempVal.value,
@@ -166,8 +232,10 @@ const onConfirm = async () => {
     soil_temp_deep: soilTempDeepVal.value,
     soil_water_content_shallow: soilWaterContentShallowVal.value,
     soil_water_content_deep: soilWaterContentDeepVal.value,
-    soil_electrical_conductivity: soilElectricalConductivityVal.value,
-  })
+    soil_electrical_conductivity: soilElectricalConductivityVal.value
+  }
+  console.log(params)
+  const result = await httpclient.predictStation(params)
   if (result?.code == 200) {
     predictionResult.value = result.payload
     showingResult.value = true
@@ -192,7 +260,7 @@ const setCoordinate = (lat?: number, lng?: number) => {
 }
 
 defineExpose({
-  setCoordinate,
+  setCoordinate
 })
 </script>
 

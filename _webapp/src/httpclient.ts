@@ -50,14 +50,14 @@ export interface DataRecord extends Base {
 }
 
 export interface StationPrediction {
-  temp?: number;
-  humidity?: number;
-  barometric_pressure?: number;
-  soil_temp_shallow?: number;
-  soil_temp_deep?: number;
-  soil_water_content_shallow?: number;
-  soil_water_content_deep?: number;
-  soil_electrical_conductivity?: number;
+  temp?: number
+  humidity?: number
+  barometric_pressure?: number
+  soil_temp_shallow?: number
+  soil_temp_deep?: number
+  soil_water_content_shallow?: number
+  soil_water_content_deep?: number
+  soil_electrical_conductivity?: number
 }
 
 export const getPositionName = (position: SensorPosition | undefined): string => {
@@ -103,9 +103,7 @@ export const getSensorDisplayText = (sensor: Sensor, stationName?: string): stri
 class HttpClient {
   public baseUrl: string = (function (): string {
     if (import.meta.env.VITE_API_ENDPOINT) return import.meta.env.VITE_API_ENDPOINT
-    return import.meta.env.DEV
-      ? 'http://localhost:8080/api'
-      : '/api'
+    return import.meta.env.DEV ? 'http://localhost:8080/api' : '/api'
   })()
 
   private _token: string = ''
@@ -268,16 +266,16 @@ class HttpClient {
   }
 
   public async predictStation(params: {
-    lat?: number;
-    lng?: number;
-    temp?: number;
-    humidity?: number;
-    barometric_pressure?: number;
-    soil_temp_shallow?: number;
-    soil_temp_deep?: number;
-    soil_water_content_shallow?: number;
-    soil_water_content_deep?: number;
-    soil_electrical_conductivity?: number;
+    lat?: number
+    lng?: number
+    temp?: number
+    humidity?: number
+    barometric_pressure?: number
+    soil_temp_shallow?: number
+    soil_temp_deep?: number
+    soil_water_content_shallow?: number
+    soil_water_content_deep?: number
+    soil_electrical_conductivity?: number
   }): Promise<Response<StationPrediction> | null> {
     const ret = []
     if (params?.lat != undefined) {
@@ -310,8 +308,8 @@ class HttpClient {
     if (params?.soil_electrical_conductivity != undefined) {
       ret.push(`soil_electrical_conductivity=${params.soil_electrical_conductivity}`)
     }
-    const resp = await this.get<StationPrediction>(`/stations/predict`)
-    return resp;
+    const resp = await this.get<StationPrediction>(`/stations/predict?${ret.join('&')}`)
+    return resp
   }
 
   // sensors
