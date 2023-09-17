@@ -49,6 +49,17 @@ export interface DataRecord extends Base {
   time?: Date
 }
 
+export interface StationPrediction {
+  temp?: number;
+  humidity?: number;
+  barometric_pressure?: number;
+  soil_temp_shallow?: number;
+  soil_temp_deep?: number;
+  soil_water_content_shallow?: number;
+  soil_water_content_deep?: number;
+  soil_electrical_conductivity?: number;
+}
+
 export const getPositionName = (position: SensorPosition | undefined): string => {
   if (position) {
     switch (position) {
@@ -251,9 +262,56 @@ class HttpClient {
     return resp
   }
 
-  public async deleteStation(stationId: number): Promise<Promise<number>> {
+  public async deleteStation(stationId: number): Promise<number> {
     const resp = await this.delete<void>(`/stations/${stationId}`)
     return stationId
+  }
+
+  public async predictStation(params: {
+    lat?: number;
+    lng?: number;
+    temp?: number;
+    humidity?: number;
+    barometric_pressure?: number;
+    soil_temp_shallow?: number;
+    soil_temp_deep?: number;
+    soil_water_content_shallow?: number;
+    soil_water_content_deep?: number;
+    soil_electrical_conductivity?: number;
+  }): Promise<Response<StationPrediction> | null> {
+    const ret = []
+    if (params?.lat != undefined) {
+      ret.push(`lat=${params.lat}`)
+    }
+    if (params?.lng != undefined) {
+      ret.push(`lng=${params.lng}`)
+    }
+    if (params?.temp != undefined) {
+      ret.push(`temp=${params.temp}`)
+    }
+    if (params?.humidity != undefined) {
+      ret.push(`humidity=${params.humidity}`)
+    }
+    if (params?.barometric_pressure != undefined) {
+      ret.push(`barometric_pressure=${params.barometric_pressure}`)
+    }
+    if (params?.soil_temp_shallow != undefined) {
+      ret.push(`soil_temp_shallow=${params.soil_temp_shallow}`)
+    }
+    if (params?.soil_temp_deep != undefined) {
+      ret.push(`soil_temp_deep=${params.soil_temp_deep}`)
+    }
+    if (params?.soil_water_content_shallow != undefined) {
+      ret.push(`soil_water_content_shallow=${params.soil_water_content_shallow}`)
+    }
+    if (params?.soil_water_content_deep != undefined) {
+      ret.push(`soil_water_content_deep=${params.soil_water_content_deep}`)
+    }
+    if (params?.soil_electrical_conductivity != undefined) {
+      ret.push(`soil_electrical_conductivity=${params.soil_electrical_conductivity}`)
+    }
+    const resp = await this.get<StationPrediction>(`/stations/predict`)
+    return resp;
   }
 
   // sensors
@@ -290,7 +348,7 @@ class HttpClient {
     return resp
   }
 
-  public async deleteSensor(sensorId: number): Promise<Promise<number>> {
+  public async deleteSensor(sensorId: number): Promise<number> {
     const resp = await this.delete<void>(`/sensors/${sensorId}`)
     return sensorId
   }

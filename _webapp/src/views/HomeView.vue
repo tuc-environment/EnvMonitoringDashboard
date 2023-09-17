@@ -90,10 +90,9 @@
   </DashboardLayout>
 
   <PredictionModalComponent
+    ref="predictionModal"
     title="预测站点信息"
     :visible="showPredictionModal"
-    :lat="latVal"
-    :lng="lngVal"
     @close="onModalClosed"
   />
 </template>
@@ -115,6 +114,7 @@ const treeChart = ref<InstanceType<typeof TreeChart> | null>(null)
 const dashboardStore = useDashboardStore()
 const stations = ref<Station[]>([])
 const mapContainer = ref<InstanceType<typeof MapContainer> | null>(null)
+const predictionModal = ref<InstanceType<typeof PredictionModalComponent> | null>(null)
 
 // predict marker
 const lngVal = ref<number | undefined>(undefined)
@@ -135,7 +135,7 @@ const selectStationHandler = (station: Station | undefined) => {
 const onPredictionMarkerConfirmed = (lng: number, lat: number) => {
   lngVal.value = lng
   latVal.value = lat
-  console.log(lng, lat)
+  predictionModal.value?.setCoordinate(lat, lng)
   showPredictionModal.value = true
 }
 
