@@ -1,26 +1,40 @@
-from typing import Union
-
 from fastapi import FastAPI
-import uvicorn
+from model import Model
 
+model = Model()
 app = FastAPI()
 
 
 @app.get("/stations")
-def stations():
+def stations(
+    temp: float,
+    humidity: float,
+    barometric_pressure: float,
+    soil_temp_shallow: float,
+    soil_temp_deep: float,
+    soil_water_content_shallow: float,
+    soil_water_content_deep: float,
+    soil_electrical_conductivity: float,
+):
+    args = [
+        temp,
+        humidity,
+        barometric_pressure,
+        soil_temp_shallow,
+        soil_temp_deep,
+        soil_water_content_shallow,
+        soil_water_content_deep,
+        soil_electrical_conductivity,
+    ]
+    result = model.predict(args)
+
     return {
-        "temp": 10,
-        "humidity": 10,
-        "barometric_pressure": 10,
-        "soil_temp_shallow": 10,
-        "soil_temp_deep": 10,
-        "soil_water_content_shallow": 10,
-        "soil_water_content_deep": 10,
-        "soil_electrical_conductivity": 10,
+        "temp": result[0],
+        "humidity": result[1],
+        "barometric_pressure": result[2],
+        "soil_temp_shallow": result[3],
+        "soil_temp_deep": result[4],
+        "soil_water_content_shallow": result[5],
+        "soil_water_content_deep": result[6],
+        "soil_electrical_conductivity": result[7],
     }
-
-
-if __name__ == "__main__":
-    config = uvicorn.Config("main:app", port=5000, log_level="info")
-    server = uvicorn.Server(config)
-    server.run()
