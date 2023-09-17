@@ -17,5 +17,5 @@ jobs:
           password: ${{secrets.GITHUB_TOKEN}}
       - name: "Build And Publish"
         run: |
-          docker build . --tag ghcr.io/tuc-environment/EnvMonitoringDashboard:latest
-          docker push ghcr.io/tuc-environment/EnvMonitoringDashboard:latest
+          docker build . --tag ghcr.io/tuc-environment/env-monitoring-dashboard:latest
+          docker push ghcr.io/tuc-environment/env-monitoring-dashboard:latest
