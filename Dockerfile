@@ -26,6 +26,7 @@ RUN apt-get update && apt-get install nodejs -y
 
 WORKDIR /app
 COPY --from=builder /app/EnvMonitoringDashboard.exe /app/EnvMonitoringDashboard.exe
+COPY db.sqlite /app/db.sqlite
 COPY requirements.txt /app/requirements.txt
 COPY main.py /app/main.py
 RUN pip install -r requirements.txt
