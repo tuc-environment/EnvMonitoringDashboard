@@ -23,7 +23,7 @@
 go.work
 .env
 tmp/
-*.sqlite
+# *.sqlite
 main
 
 *.DS_Store
