@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from model import Model
+import numpy as np
 
 model = Model()
 app = FastAPI()
@@ -16,7 +17,7 @@ def stations(
     soil_water_content_deep: float,
     soil_electrical_conductivity: float,
 ):
-    args = [
+    args = np.array([
         temp,
         humidity,
         barometric_pressure,
@@ -25,16 +26,16 @@ def stations(
         soil_water_content_shallow,
         soil_water_content_deep,
         soil_electrical_conductivity,
-    ]
+    ]).reshape(1, -1)
     result = model.predict(args)
 
     return {
         "temp": result[0],
-        "humidity": result[1],
-        "barometric_pressure": result[2],
-        "soil_temp_shallow": result[3],
-        "soil_temp_deep": result[4],
-        "soil_water_content_shallow": result[5],
-        "soil_water_content_deep": result[6],
-        "soil_electrical_conductivity": result[7],
+        # "humidity": result[1],
+        # "barometric_pressure": result[2],
+        # "soil_temp_shallow": result[3],
+        # "soil_temp_deep": result[4],
+        # "soil_water_content_shallow": result[5],
+        # "soil_water_content_deep": result[6],
+        # "soil_electrical_conductivity": result[7],
     }
