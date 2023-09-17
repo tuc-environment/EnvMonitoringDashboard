@@ -27,3 +27,5 @@ tmp/
 main
 
 *.DS_Store
+__pycache__
+*.sqlite
