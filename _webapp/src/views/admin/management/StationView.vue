@@ -103,7 +103,7 @@ import TablePaginator from '@/components/TablePaginator.vue'
 
 const offset = ref(0)
 // temp: for testing
-const limit = 2
+const limit = 10
 const total = ref(0)
 const requesting = ref(false)
 const allStations = ref<Station[]>([])

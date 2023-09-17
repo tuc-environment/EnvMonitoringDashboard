@@ -197,6 +197,7 @@ const setSensor = (stationId: number, sensor?: Sensor) => {
   sensorVal.value = sensor
   nameVal.value = sensor?.name
   positionVal.value = sensor?.position
+  unitVal.value = sensor?.unit
   tagVal.value = sensor?.tag
   groupVal.value = sensor?.group
 }

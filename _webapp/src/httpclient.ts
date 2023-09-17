@@ -83,6 +83,9 @@ export const getSensorDisplayText = (sensor: Sensor, stationName?: string): stri
   if (sensor.tag) {
     displayText += `(${sensor.tag})`
   }
+  if (sensor.unit) {
+    displayText += `-${sensor.unit}`
+  }
   return displayText
 }
 

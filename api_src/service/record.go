@@ -38,32 +38,44 @@ func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endT
 	var records *[]Record
 
 	query := s.db.DB.Model(&Record{})
-	timeQuery := s.db.Table("records")
+	// timeQuery := s.db.Table("records"
+	timeQuery := s.db.DB.Model(&Record{})
+	startTimeQuery := s.db.DB.Model(&Record{})
 	if afterCreatedAt != nil {
 		query = query.Where("created_at >= ?", *afterCreatedAt)
 		timeQuery = timeQuery.Where("created_at >= ?", *afterCreatedAt)
+		startTimeQuery = startTimeQuery.Where("created_at >= ?", *afterCreatedAt)
 	}
 	if beforeCreatedAt != nil {
 		query = query.Where("created_at < ?", *beforeCreatedAt)
 		timeQuery = timeQuery.Where("created_at < ?", *beforeCreatedAt)
+		startTimeQuery = startTimeQuery.Where("created_at < ?", *beforeCreatedAt)
 	}
 
 	if sensorIds != nil && len(*sensorIds) > 0 {
 		query = query.Where("sensor_id in (?)", *sensorIds)
 		timeQuery = timeQuery.Where("sensor_id in (?)", *sensorIds)
+		startTimeQuery = startTimeQuery.Where("sensor_id in (?)", *sensorIds)
 	}
 
 	var times []time.Time
 	var theStartTime time.Time
+	var startTimeRecords *[]Record
 	var theEndTime time.Time
+	var endTimeRecords *[]Record
 
-	rowEnd := timeQuery.Select("max(time)").Row()
-	rowEnd.Scan(&theEndTime)
-	log.Infof("maxTime: %v\n", theEndTime)
+	endQueryErr := timeQuery.Limit(1).Order("time desc").Find(&endTimeRecords).Error
+	if endQueryErr == nil && endTimeRecords != nil && len(*endTimeRecords) > 0 {
+		theEndTime = (*endTimeRecords)[0].Time
+		log.Infof("maxTime: %v\n", theEndTime)
+	}
 
-	row := timeQuery.Select("min(time)").Row()
-	row.Scan(&theStartTime)
-	log.Infof("minTime: %v\n", theStartTime)
+	startTimeErr := startTimeQuery.Limit(1).Order("time asc").Find(&startTimeRecords).Error
+	if startTimeErr == nil && startTimeRecords != nil && len(*startTimeRecords) > 0 {
+		theStartTime = (*startTimeRecords)[0].Time
+		log.Infof("minTime: %v\n", theStartTime)
+	}
+
 	if startTime != nil && startTime.After(theStartTime) {
 		theStartTime = *startTime
 	}
@@ -104,12 +116,29 @@ func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endT
 func (s *RecordService) BatchUpsert(records *[]Record) (*[]Record, error) {
 	log := s.logger.Sugar()
 	defer log.Sync()
-	log.Infoln("batch upsert records count: ", len(*records))
-	err := s.db.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "sensor_id"}, {Name: "time"}},
-		DoUpdates: clause.AssignmentColumns([]string{"value", "updated_at", "deleted_at"}),
-	}).Create(records).Error
-	return records, err
+
+	if records == nil || len(*records) == 0 {
+		return records, nil
+	} else {
+		log.Infoln("batch upsert records count: ", len(*records))
+		for i := 0; i < len(*records); i += 100 {
+			end := i + 100
+			var slice []Record
+			if len(*records) < end {
+				slice = (*records)[i:]
+			} else {
+				slice = (*records)[i:end]
+			}
+			err := s.db.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "sensor_id"}, {Name: "time"}},
+				DoUpdates: clause.AssignmentColumns([]string{"value", "updated_at", "deleted_at"}),
+			}).Create(&slice).Error
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+	return records, nil
 }
 
 func (s *RecordService) DeleteRecord(id uint) error {

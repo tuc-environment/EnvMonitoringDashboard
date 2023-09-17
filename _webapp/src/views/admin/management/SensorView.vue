@@ -295,7 +295,7 @@ const stationID = computed(() => {
 })
 
 // record pagination
-const limit = 10
+const limit = 20
 const offsetVal = ref(0)
 const totalVal = ref(0)
 
@@ -341,7 +341,9 @@ const uploadCSVFile = async () => {
       console.error(error)
     }
     uploading.value = false
+    file.value = null
   }
+  await updateSensorRecords(true)
 }
 const onChangeSensor = (evt: any, id: number) => {
   nextTick(() => {
