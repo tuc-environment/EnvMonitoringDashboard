@@ -6,9 +6,18 @@ import uvicorn
 app = FastAPI()
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+@app.get("/stations")
+def stations():
+    return {
+        "temp": 10,
+        "humidity": 10,
+        "barometric_pressure": 10,
+        "soil_temp_shallow": 10,
+        "soil_temp_deep": 10,
+        "soil_water_content_shallow": 10,
+        "soil_water_content_deep": 10,
+        "soil_electrical_conductivity": 10,
+    }
 
 
 if __name__ == "__main__":

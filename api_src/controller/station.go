@@ -232,7 +232,7 @@ func (api *StationAPI) PredictStation(g *gin.Context) {
 		// soilWaterContentShallow,
 		// soilWaterContentDeep,
 		// temp
-		requestURL := fmt.Sprintf("http://localhost:8080/stations?soil_electrical_conductivity=%v&humidity=%v&barometric_pressure=%v&soil_temp_shallow=%v&soil_temp_deep=%v&soil_water_content_shallow=%v&soil_water_content_deep=%v&temp=%v", *soilElectricalConductivity, *humidity, *barometricPressure, *soilTempShallow, *soilTempDeep, *soilWaterContentShallow, *soilWaterContentDeep, *temp)
+		requestURL := fmt.Sprintf("http://localhost:5000/stations?soil_electrical_conductivity=%v&humidity=%v&barometric_pressure=%v&soil_temp_shallow=%v&soil_temp_deep=%v&soil_water_content_shallow=%v&soil_water_content_deep=%v&temp=%v", *soilElectricalConductivity, *humidity, *barometricPressure, *soilTempShallow, *soilTempDeep, *soilWaterContentShallow, *soilWaterContentDeep, *temp)
 		req, err := http.NewRequest(http.MethodGet, requestURL, nil)
 		if err != nil {
 			c.InternalServerError(errors.New("cannot create http request"))
