@@ -19,14 +19,18 @@ type Station struct {
 }
 
 type StationPredictionResult struct {
-	Temp                       float64 `json:"temp"`
-	Humidity                   float64 `json:"humidity"`
-	BarometricPressure         float64 `json:"barometric_pressure"`
-	SoilTempShallow            float64 `json:"soil_temp_shallow"`
-	SoilTempDeep               float64 `json:"soil_temp_deep"`
-	SoilWaterContentShallow    float64 `json:"soil_water_content_shallow"`
-	SoilWaterContentDeep       float64 `json:"soil_water_content_deep"`
-	SoilElectricalConductivity float64 `json:"soil_electrical_conductivity"`
+	DownSoilTempShallow           float64 `json:"down_soil_temp_shallow"`
+	DownSoilTempDeep              float64 `json:"down_soil_temp_deep"`
+	DownSoilWaterContentShallow   float64 `json:"down_soil_water_content_shallow"`
+	DownSoilWaterContentDeep      float64 `json:"down_soil_water_content_deep"`
+	DownTemp                      float64 `json:"down_temp"`
+	DownHumidity                  float64 `json:"down_humidity"`
+	MiddleSoilTempShallow         float64 `json:"middle_soil_temp_shallow"`
+	MiddleSoilTempDeep            float64 `json:"middle_soil_temp_deep"`
+	MiddleSoilWaterContentShallow float64 `json:"middle_soil_water_content_shallow"`
+	MiddleSoilWaterContentDeep    float64 `json:"middle_soil_water_content_deep"`
+	MiddleTemp                    float64 `json:"middle_temp"`
+	MiddleHumidity                float64 `json:"middle_humidity"`
 }
 
 type StationService struct {

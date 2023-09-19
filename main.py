@@ -28,14 +28,20 @@ def stations(
         soil_electrical_conductivity,
     ]).reshape(1, -1)
     result = model.predict(args)
-
-    return {
-        "temp": result[0],
-        # "humidity": result[1],
-        # "barometric_pressure": result[2],
-        # "soil_temp_shallow": result[3],
-        # "soil_temp_deep": result[4],
-        # "soil_water_content_shallow": result[5],
-        # "soil_water_content_deep": result[6],
-        # "soil_electrical_conductivity": result[7],
-    }
+    if len(result) >= 12:
+        return {
+            "down_soil_temp_shallow": result[0],
+            "down_soil_temp_deep": result[1],
+            "down_soil_water_content_shallow": result[2],
+            "down_soil_water_content_deep": result[3],
+            "down_temp": result[4],
+            "down_humidity": result[5],
+            "middle_soil_temp_shallow": result[6],
+            "middle_soil_temp_deep": result[7],
+            "middle_soil_water_content_shallow": result[8],
+            "middle_soil_water_content_deep": result[9],
+            "middle_temp": result[10],
+            "middle_humidity": result[11]
+        }
+    else:
+        return {}

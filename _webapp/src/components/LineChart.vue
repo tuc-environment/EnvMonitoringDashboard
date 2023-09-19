@@ -34,6 +34,10 @@ const props = defineProps({
   defaultText: String,
   noDataText: String,
   loading: Boolean,
+  showSelections: {
+    type: Boolean,
+    default: false
+  },
   maxLines: {
     type: Number,
     default: 4

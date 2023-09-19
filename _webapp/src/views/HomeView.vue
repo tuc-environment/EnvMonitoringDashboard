@@ -57,6 +57,7 @@
                   :records="dashboardStore.$state.airRelatedRecords"
                   :show-default-text="!dashboardStore.$state.selectedStation"
                   :loading="dashboardStore.$state.loadingDataForStation"
+                  :show-selections="true"
                   default-text="点击地图选择站点查看数据"
                   no-data-text="暂无数据"
                 />
@@ -75,6 +76,7 @@
                   :records="dashboardStore.$state.soilRelatedRecords"
                   :show-default-text="!dashboardStore.$state.selectedStation"
                   :loading="dashboardStore.$state.loadingDataForStation"
+                  :show-selections="true"
                   default-text="点击地图选择站点查看数据"
                   no-data-text="暂无数据"
                 />

@@ -50,14 +50,18 @@ export interface DataRecord extends Base {
 }
 
 export interface StationPrediction {
-  temp?: number
-  humidity?: number
-  barometric_pressure?: number
-  soil_temp_shallow?: number
-  soil_temp_deep?: number
-  soil_water_content_shallow?: number
-  soil_water_content_deep?: number
-  soil_electrical_conductivity?: number
+  down_soil_temp_shallow?: number
+  down_soil_temp_deep?: number
+  down_soil_water_content_shallow?: number
+  down_soil_water_content_deep?: number
+  down_temp?: number
+  down_humidity?: number
+  middle_soil_temp_shallow?: number
+  middle_soil_temp_deep?: number
+  middle_soil_water_content_shallow?: number
+  middle_soil_water_content_deep?: number
+  middle_temp?: number
+  middle_humidity?: number
 }
 
 export const getPositionName = (position: SensorPosition | undefined): string => {

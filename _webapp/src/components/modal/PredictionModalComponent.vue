@@ -41,7 +41,7 @@
                 <LabelInputComponent
                   label="空气温度"
                   type="number"
-                  :required="false"
+                  :required="true"
                   placeholder="输入空气温度"
                   unit="°C"
                   @input="onTempChanged"
@@ -51,7 +51,7 @@
                 <LabelInputComponent
                   label="空气湿度"
                   type="number"
-                  :required="false"
+                  :required="true"
                   placeholder="输入空气湿度"
                   unit="%"
                   @input="onHumidityChanged"
@@ -61,7 +61,7 @@
                 <LabelInputComponent
                   label="大气压强"
                   type="number"
-                  :required="false"
+                  :required="true"
                   placeholder="输入大气压强"
                   unit="MPar"
                   @input="onBarometricPressureChanged"
@@ -71,7 +71,7 @@
                 <LabelInputComponent
                   label="土壤浅层温度"
                   type="number"
-                  :required="false"
+                  :required="true"
                   placeholder="输入土壤浅层温度"
                   unit="°C"
                   @input="onSoilTempShallowChanged"
@@ -81,7 +81,7 @@
                 <LabelInputComponent
                   label="土壤浅层含水量"
                   type="number"
-                  :required="false"
+                  :required="true"
                   placeholder="输入土壤浅层含水量"
                   unit="%"
                   @input="onSoilWaterContentShallowChanged"
@@ -91,7 +91,7 @@
                 <LabelInputComponent
                   label="土壤深层温度"
                   type="number"
-                  :required="false"
+                  :required="true"
                   placeholder="输入土壤深层温度"
                   unit="°C"
                   @input="onSoilTempDeepChanged"
@@ -101,7 +101,7 @@
                 <LabelInputComponent
                   label="土壤深层含水量"
                   type="number"
-                  :required="false"
+                  :required="true"
                   placeholder="输入土壤深层含水量"
                   unit="%"
                   @input="onSoilWaterContentDeepChanged"
@@ -111,7 +111,7 @@
                 <LabelInputComponent
                   label="土壤导电率"
                   type="number"
-                  :required="false"
+                  :required="true"
                   placeholder="输入土壤导电率"
                   unit="mS/cm"
                   @input="onSoilElectricalConductivityChanged"
@@ -134,28 +134,132 @@
             </div>
           </div>
           <div v-else class="p-2">
-            <div class="row mb-2">
-              <div class="col-md-12">空气温度(°C): {{ predictionResult?.temp ?? 'N.A.' }}</div>
-              <div class="col-md-6">空气湿度(%): {{ predictionResult?.humidity ?? 'N.A.' }}</div>
-              <div class="col-md-12">
-                大气压强(mbar): {{ predictionResult?.barometric_pressure ?? 'N.A.' }}
-              </div>
-              <div class="col-md-6">
-                土壤浅层温度(°C): {{ predictionResult?.soil_temp_shallow ?? 'N.A.' }}
-              </div>
-              <div class="col-md-6">
-                土壤浅层含水量(%): {{ predictionResult?.soil_temp_deep ?? 'N.A.' }}
-              </div>
-              <div class="col-md-6">
-                土壤深层温度(°C): {{ predictionResult?.soil_water_content_shallow ?? 'N.A.' }}
-              </div>
-              <div class="col-md-6">
-                土壤深层含水量(%): {{ predictionResult?.soil_water_content_deep ?? 'N.A.' }}
-              </div>
-              <div class="col-md-6">
-                土壤电导率(μS/m): {{ predictionResult?.soil_electrical_conductivity ?? 'N.A.' }}
-              </div>
-            </div>
+            <h5>预测结果</h5>
+            <table class="table table-striped my-3">
+              <tbody>
+                <tr>
+                  <td width="20%">板下浅层土壤温度:</td>
+                  <td>
+                    {{
+                      predictionResult?.down_soil_temp_shallow == null
+                        ? 'N.A.'
+                        : predictionResult?.down_soil_temp_shallow.toFixed(2)
+                    }}℃
+                  </td>
+                </tr>
+                <tr>
+                  <td>板下深层土壤温度:</td>
+                  <td>
+                    {{
+                      predictionResult?.down_soil_temp_deep == null
+                        ? 'N.A.'
+                        : predictionResult?.down_soil_temp_deep.toFixed(2)
+                    }}℃
+                  </td>
+                </tr>
+                <tr>
+                  <td width="70%">板下浅层土壤湿度:</td>
+                  <td>
+                    {{
+                      predictionResult?.down_soil_water_content_shallow == null
+                        ? 'N.A.'
+                        : predictionResult?.down_soil_water_content_shallow.toFixed(2)
+                    }}%
+                  </td>
+                </tr>
+                <tr>
+                  <td>板下深层土壤湿度:</td>
+                  <td>
+                    {{
+                      predictionResult?.down_soil_water_content_deep == null
+                        ? 'N.A.'
+                        : predictionResult?.down_soil_water_content_deep.toFixed(2)
+                    }}%
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">板下大气温度:</td>
+                  <td>
+                    {{
+                      predictionResult?.down_temp == null
+                        ? 'N.A.'
+                        : predictionResult?.down_temp.toFixed(2)
+                    }}℃
+                  </td>
+                </tr>
+                <tr>
+                  <td>板下大气湿度:</td>
+                  <td>
+                    {{
+                      predictionResult?.down_humidity == null
+                        ? 'N.A.'
+                        : predictionResult?.down_humidity.toFixed(2)
+                    }}%
+                  </td>
+                </tr>
+
+                <tr>
+                  <td width="20%">板间浅层土壤温度:</td>
+                  <td>
+                    {{
+                      predictionResult?.middle_soil_temp_shallow == null
+                        ? 'N.A.'
+                        : predictionResult?.middle_soil_temp_shallow.toFixed(2)
+                    }}℃
+                  </td>
+                </tr>
+                <tr>
+                  <td>板间深层土壤温度:</td>
+                  <td>
+                    {{
+                      predictionResult?.middle_soil_temp_deep == null
+                        ? 'N.A.'
+                        : predictionResult?.middle_soil_temp_deep.toFixed(2)
+                    }}℃
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">板间浅层土壤湿度:</td>
+                  <td>
+                    {{
+                      predictionResult?.middle_soil_water_content_shallow == null
+                        ? 'N.A.'
+                        : predictionResult?.middle_soil_water_content_shallow.toFixed(2)
+                    }}%
+                  </td>
+                </tr>
+                <tr>
+                  <td>板间深层土壤湿度:</td>
+                  <td>
+                    {{
+                      predictionResult?.middle_soil_water_content_deep == null
+                        ? 'N.A.'
+                        : predictionResult?.middle_soil_water_content_deep.toFixed(2)
+                    }}%
+                  </td>
+                </tr>
+                <tr>
+                  <td width="20%">板间大气温度:</td>
+                  <td>
+                    {{
+                      predictionResult?.middle_temp == null
+                        ? 'N.A.'
+                        : predictionResult?.middle_temp.toFixed(2)
+                    }}℃
+                  </td>
+                </tr>
+                <tr>
+                  <td>板间大气湿度:</td>
+                  <td>
+                    {{
+                      predictionResult?.middle_humidity == null
+                        ? 'N.A.'
+                        : predictionResult?.middle_humidity.toFixed(2)
+                    }}%
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
