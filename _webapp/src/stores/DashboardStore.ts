@@ -147,17 +147,23 @@ export const useDashboardStore = defineStore('dashboard', () => {
               .filter((sensor) => sensor.id && sensor.name && soilOptionNames.includes(sensor.name))
               .map((sensor) => sensor.id) as number[])
           : []
+        const startDate = new Date()
+        startDate.setDate(startDate.getDay() - 180)
+        console.log(`[dashboard-store] half year before: ${startDate}`)
+
         const airRecordRes = await httpclient.getRecords({
-          sensorIDs: airSensorIds.concat(soilSensorIds),
+          sensorIDs: airSensorIds,
           offset: 0,
-          limit: 1000000
+          limit: 100000,
+          startTime: startDate
         })
         const airRecords = airRecordRes?.payload ?? []
 
         const soilRecordRes = await httpclient.getRecords({
           sensorIDs: soilSensorIds,
           offset: 0,
-          limit: 10000
+          limit: 100000,
+          startTime: startDate
         })
         const soilRecords = soilRecordRes?.payload ?? []
 
