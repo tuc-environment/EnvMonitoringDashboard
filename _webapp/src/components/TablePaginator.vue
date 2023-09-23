@@ -10,7 +10,7 @@
     <div class="d-flex justify-content-end align-items-center">
       <div class="my-2 mx-2">
         总数: {{ $props.total }}, 当前显示 {{ $props.offset + 1 }} -
-        {{ $props.offset + $props.limit }}
+        {{ +$props.offset + +$props.limit }}
       </div>
       <nav>
         <ul class="pagination pagination-sm justify-content-end my-2">

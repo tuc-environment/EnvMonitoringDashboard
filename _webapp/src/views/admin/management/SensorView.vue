@@ -1,6 +1,6 @@
 <template>
   <div class="row align-items-stretch">
-    <div class="col-md-4 my-2">
+    <div class="col-md-3 my-2">
       <div class="card h-100">
         <div class="card-body">
           <div class="d-flex align-items-center">
@@ -54,7 +54,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-8 my-2">
+    <div class="col-md-5 my-2">
       <div class="card h-100">
         <div class="card-body">
           <div class="row">
@@ -106,9 +106,7 @@
               </div>
             </div>
             <div class="col-md-6">
-              <div class="h5 mb-0">时间</div>
-              <label class="text-secondary small mb-3">选择时间范围</label>
-
+              <div class="h5 mb-0">时间范围</div>
               <div class="my-2">
                 <div>开始时间</div>
                 <Datepicker
@@ -128,6 +126,18 @@
                   @closed="onDatePickerClosed"
                 />
               </div>
+              <div class="h6 mb-0">每页数据时间跨度(30mins * limit)</div>
+              <div class="my-2">
+                <select class="form-select" @input="onLimitChanged">
+                  <option
+                    v-for="limitOption in [10, 20, 50, 100, 200]"
+                    :value="limitOption"
+                    :selected="limitOption == limitVal"
+                  >
+                    {{ limitOption }}
+                  </option>
+                </select>
+              </div>
 
               <button
                 class="btn btn-sm btn-outline-primary my-2"
@@ -146,6 +156,22 @@
               </button>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 my-2">
+      <div class="card h-100">
+        <div class="card-body">
+          <line-chart
+            :stations="station ? [station] : []"
+            :sensors="selectedSensors"
+            :records="displayedRecords"
+            title="当前数据"
+            default-text="请选择数据项"
+            no-data-text="暂无数据"
+            :show-default-text="false"
+            :loading="loading"
+          />
         </div>
       </div>
     </div>
@@ -171,7 +197,7 @@
     </div>
   </div>
 
-  <div v-else-if="!recordsByTime || recordsByTime.size == 0" class="mx-auto mt-5 text-center">
+  <div v-else-if="!totalVal || totalVal == 0" class="mx-auto mt-5 text-center">
     <label>无法查询到数据</label>
   </div>
 
@@ -243,7 +269,7 @@
       </table>
       <table-paginator
         :offset="offsetVal"
-        :limit="limit"
+        :limit="limitVal"
         :total="totalVal"
         @to-previous="toPreviousPage"
         @to-index="toOffset"
@@ -270,6 +296,7 @@ import { useRoute, useRouter } from 'vue-router'
 import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
 import TablePaginator from '@/components/TablePaginator.vue'
 import moment from 'moment'
+import LineChart from '@/components/LineChart.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -277,8 +304,13 @@ const loading = ref(true)
 const silentLoadingRecords = ref(false)
 const isShowingDeletionModal = ref(false)
 const operatingSensorId = ref<number | undefined>(undefined)
-const startDate = ref(new Date())
-const endDate = ref(new Date())
+const startDateVal = new Date()
+const endDateVal = new Date()
+startDateVal.setHours(0, 0, 0, 0)
+endDateVal.setHours(0, 0, 0, 0)
+const startDate = ref(startDateVal)
+const endDate = ref(endDateVal)
+const displayedRecords = ref<DataRecord[]>([])
 
 const station = ref<Station | undefined>(undefined)
 const allSensors = ref<Sensor[]>([])
@@ -295,7 +327,7 @@ const stationID = computed(() => {
 })
 
 // record pagination
-const limit = 20
+const limitVal = ref(20)
 const offsetVal = ref(0)
 const totalVal = ref(0)
 
@@ -368,20 +400,22 @@ const updateSensorRecords = async (showLoading: boolean) => {
   rowUpdateingIndex.value = undefined
   recordsToBeUpdated = undefined
   recordsByTime.value = undefined
+  displayedRecords.value = []
 
   const resp = await httpclient.getRecords({
     sensorIDs: selectedSensorIDs.value,
     startTime: startDate.value,
     endTime: endDate.value,
     offset: offsetVal.value,
-    limit: limit
+    limit: limitVal.value
   })
   totalVal.value = resp?.total ?? 0
   const records = resp?.payload || []
-  var result: Map<Date, Map<number, DataRecord>> = new Map<Date, Map<number, DataRecord>>()
+  displayedRecords.value = records
+  var result: Map<number, Map<number, DataRecord>> = new Map<number, Map<number, DataRecord>>()
   records.forEach((record) => {
-    const date = record.time
-    if (date != null) {
+    if (record.time) {
+      const date = new Date(record.time).getTime()
       const sensorId = record?.sensor_id || 0
       var existingMap = result.get(date)
       if (existingMap) {
@@ -394,8 +428,36 @@ const updateSensorRecords = async (showLoading: boolean) => {
       }
     }
   })
+  const datetimes: number[] = Array.from(result.keys())
+
+  var startDateTime: Date
+  if (datetimes.length > 0) {
+    startDateTime = new Date(datetimes[0])
+  } else {
+    startDateTime = startDate.value
+  }
+  console.log(startDateTime)
+  const MS_PER_MINUTE = 60000
+  for (let index = 0; index < limitVal.value; index++) {
+    const temp = new Date(startDateTime.getTime() + 30 * index * MS_PER_MINUTE).getTime()
+    const existingMap = result.get(temp)
+    console.log(existingMap)
+    if (!existingMap) {
+      result.set(temp, new Map<number, DataRecord>())
+    }
+  }
   console.log(result)
-  recordsByTime.value = result
+
+  var sortedResult: Map<Date, Map<number, DataRecord>> = new Map<Date, Map<number, DataRecord>>()
+  const fullDatetimes = Array.from(result.keys())
+  fullDatetimes.sort((d1, d2) => d1 - d2)
+  for (const date of fullDatetimes) {
+    const data = result.get(date)
+    if (data) {
+      sortedResult.set(new Date(date), data)
+    }
+  }
+  recordsByTime.value = sortedResult
   if (showLoading) {
     loading.value = false
   } else {
@@ -409,7 +471,7 @@ const refresh = async () => {
   allSensors.value = []
   selectedSensorIDs.value = []
 
-  startDate.value.setDate(startDate.value.getDate() - 1)
+  endDate.value.setDate(startDate.value.getDate() + 1)
   station.value = (await httpclient.getStations())?.payload
     ?.filter((station) => station.id == stationID.value)
     .at(0)
@@ -488,6 +550,12 @@ const toNextPage = (offset: number) => {
 
 const toOffset = (offset: number) => {
   offsetVal.value = offset
+  updateSensorRecords(false)
+}
+
+const onLimitChanged = (e: any) => {
+  offsetVal.value = 0
+  limitVal.value = e.target.value
   updateSensorRecords(false)
 }
 
