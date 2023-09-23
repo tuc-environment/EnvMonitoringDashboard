@@ -35,7 +35,7 @@ func NewRecordService(c *config.Config, db *store.DBClient, logger *logger.Logge
 func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endTime *time.Time, afterCreatedAt *time.Time, beforeCreatedAt *time.Time, offset *int, limit *int) (*[]Record, error, *int64) {
 	log := s.logger.Sugar()
 	defer log.Sync()
-	var records *[]Record
+	var records []Record
 
 	query := s.db.DB.Model(&Record{})
 	// timeQuery := s.db.Table("records"
@@ -58,7 +58,6 @@ func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endT
 		startTimeQuery = startTimeQuery.Where("sensor_id in (?)", *sensorIds)
 	}
 
-	var times []time.Time
 	var theStartTime time.Time
 	var startTimeRecords *[]Record
 	var theEndTime time.Time
@@ -82,34 +81,31 @@ func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endT
 
 	log.Infof("query minTime: %v\n", theStartTime)
 
-	var loop int
-	var base int
+	var queryStartTime time.Time
+	var queryEndTime time.Time
 	if offset != nil && *offset > 0 {
-		base = *offset
+		queryStartTime = theStartTime.Add(time.Minute * time.Duration(30*(*offset)))
 	} else {
-		base = 0
+		queryStartTime = theStartTime
 	}
 	if limit != nil && *limit > 0 {
-		loop = *limit
+		queryEndTime = queryStartTime.Add(time.Minute * time.Duration(30*(*limit)))
 	} else {
-		loop = 10
+		queryEndTime = queryStartTime.Add(time.Minute * time.Duration(300))
 	}
-	for i := 0; i < loop; i++ {
-		time := theStartTime.Add(time.Minute * time.Duration(30*i+base*30))
-		times = append(times, time)
-	}
-	log.Infof("times: %v\n", times)
+
+	log.Infof("query start time: %v, end time: %v\n", queryStartTime, queryEndTime)
 
 	count := theEndTime.Sub(theStartTime) / (time.Minute * time.Duration(30))
 	total := int64(count)
 	log.Infof("total: %v\n", total)
 
-	err := query.Where("time in (?)", times).Statement.Order("time asc").Find(&records).Error
+	err := query.Where("time >= ?", queryStartTime).Where("time < ?", queryEndTime).Order("time asc").Find(&records).Error
 	if err != nil {
 		log.Errorf("get records with error: %s\n", err.Error())
 		return nil, err, nil
 	} else {
-		return records, nil, &total
+		return &records, nil, &total
 	}
 }
 

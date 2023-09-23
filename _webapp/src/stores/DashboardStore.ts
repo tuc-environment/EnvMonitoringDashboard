@@ -148,9 +148,9 @@ export const useDashboardStore = defineStore('dashboard', () => {
               .map((sensor) => sensor.id) as number[])
           : []
         const airRecordRes = await httpclient.getRecords({
-          sensorIDs: airSensorIds,
+          sensorIDs: airSensorIds.concat(soilSensorIds),
           offset: 0,
-          limit: 10000
+          limit: 1000000
         })
         const airRecords = airRecordRes?.payload ?? []
 
