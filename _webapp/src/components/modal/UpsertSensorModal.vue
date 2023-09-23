@@ -20,7 +20,7 @@
                   ><span class="ms-1 text-danger">*</span>
                   <div class="input-group">
                     <select class="form-select" @input="onNameChanged">
-                      <option :value="undefined">选择数据项</option>
+                      <option :value="false">选择数据项</option>
                       <option
                         v-for="optionName in allOptionNames"
                         :value="optionName"
@@ -38,7 +38,7 @@
                   ><span class="ms-1 text-danger">*</span>
                   <div class="input-group">
                     <select class="form-select" @input="onPostionChanged">
-                      <option :value="undefined">选择传感器位置</option>
+                      <option :value="false">选择传感器位置</option>
                       <option
                         v-for="position in positions"
                         :value="position"
@@ -168,11 +168,21 @@ const onConfirm = async () => {
 }
 
 const onNameChanged = (e: any) => {
-  nameVal.value = e.target.value
+  if (e.target.value != 'false') {
+    nameVal.value = e.target.value
+  } else {
+    nameVal.value = undefined
+  }
+  console.log(nameVal.value)
 }
 
 const onPostionChanged = (e: any) => {
-  positionVal.value = e.target.value
+  if (e.target.value != 'false') {
+    positionVal.value = e.target.value
+  } else {
+    positionVal.value = undefined
+  }
+  console.log(positionVal.value)
 }
 
 const onUnitChanged = (e: any) => {

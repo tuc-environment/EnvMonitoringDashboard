@@ -17,14 +17,63 @@
     </div>
 
     <div v-else class="w-100 h-100 text-dark">
+      <div v-if="showSelections" class="d-flex flex-row">
+        <select v-if="availablePositions.length > 0" class="form-select" @input="onPositionChanged">
+          <option :value="false">可选位置</option>
+          <option
+            v-for="position in availablePositions"
+            :value="position"
+            :selected="position == selectedPosition"
+          >
+            {{ getPositionName(position) }}
+          </option>
+        </select>
+        <select v-if="avaialebleTags.length > 0" class="form-select" @input="onTagChanged">
+          <option :value="false">可选深度</option>
+          <option v-for="tag in avaialebleTags" :value="tag" :selected="selectedTag == tag">
+            {{ tag }}
+          </option>
+        </select>
+        <select v-if="avaialebleGroups.length > 0" class="form-select" @input="onGroupChanged">
+          <option :value="false">可选组</option>
+          <option
+            v-for="group in avaialebleGroups"
+            :value="group"
+            :selected="selectedGroup == group"
+          >
+            {{ group }}
+          </option>
+        </select>
+        <select
+          v-if="availableOptionNames.length > 0"
+          class="form-select"
+          @input="onOptionNameChanged"
+        >
+          <option :value="false">可选数据项</option>
+          <option
+            v-for="optionName in availableOptionNames"
+            :value="optionName"
+            :selected="selectedOptionName == optionName"
+          >
+            {{ optionName }}
+          </option>
+        </select>
+      </div>
       <apexchart height="100%" type="line" :options="chartOptions" :series="series" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType } from 'vue'
-import { type DataRecord, type Sensor, getSensorDisplayText, type Station } from '@/httpclient'
+import { computed, ref, type PropType } from 'vue'
+import {
+  getSensorDisplayText,
+  getPositionName,
+  type Station,
+  SensorPosition,
+  type DataRecord,
+  type Sensor
+} from '@/httpclient'
 
 const props = defineProps({
   records: Array as PropType<DataRecord[]>,
@@ -62,8 +111,7 @@ const chartOptions = computed(() => {
       max: getMaxDate(dates),
       title: {
         text: '时间',
-        offsetX: '-50%',
-        offsetY: -20
+        offsetX: '-50%'
       }
     }
   }
@@ -76,6 +124,18 @@ const series = computed(() => {
   const records = props.records ?? []
   if (sensors.length > 0 && records.length > 0) {
     for (var sensor of sensors) {
+      if (selectedPosition.value && sensor.position != selectedPosition.value) {
+        continue
+      }
+      if (selectedGroup.value && sensor.group != selectedGroup.value) {
+        continue
+      }
+      if (selectedTag.value && sensor.tag != selectedTag.value) {
+        continue
+      }
+      if (selectedOptionName.value && sensor.name != selectedOptionName.value) {
+        continue
+      }
       const relatedRecords = records.filter(
         (record) =>
           record.sensor_id &&
@@ -101,16 +161,110 @@ const series = computed(() => {
     }
   }
   console.log('[line-chart] series: ', result)
-  if (result.length > props.maxLines) {
-    return result.slice(0, props.maxLines)
-  } else {
-    return result
-  }
+  return result
 })
 
 const getMinDate = (dates: Date[]): Date => new Date(Math.min(...dates.map(Number)))
 const getMaxDate = (dates: Date[]): Date => new Date(Math.max(...dates.map(Number)))
 const getDatesFromRecords = (records?: DataRecord[]): Date[] => {
-  return records ? (records.map((record) => record.time).filter((date) => date) as Date[]) : []
+  var result = new Set<Date>()
+  for (const record of records ?? []) {
+    if (record.time) {
+      result.add(record.time)
+    }
+  }
+  const arr = Array.from(result.values())
+  console.log(`[line-chart] dates in records: ${arr}`)
+  return arr
+}
+
+// selector logic
+const availablePositions = computed<SensorPosition[]>(() => {
+  var result: Set<SensorPosition> = new Set<SensorPosition>()
+  const sensors = props.sensors ?? []
+  if (sensors.length > 0) {
+    for (var sensor of sensors) {
+      if (sensor.position) {
+        result.add(sensor.position)
+      }
+    }
+  }
+  console.log('[line-chart] availablePositions: ', result)
+  return Array.from(result.values())
+})
+const selectedPosition = ref<SensorPosition | undefined>(undefined)
+const onPositionChanged = (e: any) => {
+  if (e.target.value != 'false') {
+    selectedPosition.value = e.target.value
+  } else {
+    selectedPosition.value = undefined
+  }
+}
+
+const avaialebleGroups = computed<string[]>(() => {
+  var result: Set<string> = new Set<string>()
+  const sensors = props.sensors ?? []
+  if (sensors.length > 0) {
+    for (var sensor of sensors) {
+      if (sensor.group) {
+        result.add(sensor.group)
+      }
+    }
+  }
+  console.log('[line-chart] avaialebleGroups: ', result)
+  return Array.from(result.values())
+})
+const selectedGroup = ref<string | undefined>(undefined)
+const onGroupChanged = (e: any) => {
+  if (e.target.value != 'false') {
+    selectedGroup.value = e.target.value
+  } else {
+    selectedGroup.value = undefined
+  }
+  console.log(selectedGroup.value)
+}
+
+const avaialebleTags = computed<string[]>(() => {
+  var result: Set<string> = new Set<string>()
+  const sensors = props.sensors ?? []
+  if (sensors.length > 0) {
+    for (var sensor of sensors) {
+      if (sensor.tag) {
+        result.add(sensor.tag)
+      }
+    }
+  }
+  console.log('[line-chart] avaialebleTags: ', result)
+  return Array.from(result.values())
+})
+const selectedTag = ref<string | undefined>(undefined)
+const onTagChanged = (e: any) => {
+  if (e.target.value != 'false') {
+    selectedTag.value = e.target.value
+  } else {
+    selectedTag.value = undefined
+  }
+}
+
+const availableOptionNames = computed<string[]>(() => {
+  var result: Set<string> = new Set<string>()
+  const sensors = props.sensors ?? []
+  if (sensors.length > 0) {
+    for (var sensor of sensors) {
+      if (sensor.name) {
+        result.add(sensor.name)
+      }
+    }
+  }
+  console.log('[line-chart] availableOptions: ', result)
+  return Array.from(result.values())
+})
+const selectedOptionName = ref<string | undefined>(undefined)
+const onOptionNameChanged = (e: any) => {
+  if (e.target.value != 'false') {
+    selectedOptionName.value = e.target.value
+  } else {
+    selectedOptionName.value = undefined
+  }
 }
 </script>

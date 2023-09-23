@@ -147,19 +147,29 @@ export const useDashboardStore = defineStore('dashboard', () => {
               .filter((sensor) => sensor.id && sensor.name && soilOptionNames.includes(sensor.name))
               .map((sensor) => sensor.id) as number[])
           : []
-        const recordsRes = await httpclient.getRecords({
-          sensorIDs: airSensorIds.concat(soilSensorIds)
+        const airRecordRes = await httpclient.getRecords({
+          sensorIDs: airSensorIds,
+          offset: 0,
+          limit: 10000
         })
-        const records = recordsRes?.payload ?? []
+        const airRecords = airRecordRes?.payload ?? []
+
+        const soilRecordRes = await httpclient.getRecords({
+          sensorIDs: soilSensorIds,
+          offset: 0,
+          limit: 10000
+        })
+        const soilRecords = soilRecordRes?.payload ?? []
+
         airRelatedSensors.value = sensors.filter((sensor) => airSensorIds.includes(sensor.id))
         soilRelatedSensors.value = sensors.filter((sensor) => soilSensorIds.includes(sensor.id))
-        airRelatedRecords.value = records.filter((record) =>
+        airRelatedRecords.value = airRecords.filter((record) =>
           airSensorIds.includes(record.sensor_id)
         )
-        soilRelatedRecords.value = records.filter((record) =>
+        soilRelatedRecords.value = soilRecords.filter((record) =>
           soilSensorIds.includes(record.sensor_id)
         )
-        console.log('[dashboard] get records count: ', records.length)
+        console.log('[dashboard] get records count: ', airRecords.length + soilRecords.length)
       }
     }
     loadingDataForStation.value = false
