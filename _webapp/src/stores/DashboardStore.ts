@@ -76,8 +76,13 @@ export const useDashboardStore = defineStore('dashboard', () => {
     const sensors = treeSensorsSelected.value
     if (sensors.length > 0) {
       try {
+        const startDate = new Date()
+        startDate.setDate(startDate.getDay() - 180)
         const result = await httpclient.getRecords({
-          sensorIDs: sensors.map((sensor) => sensor.id)
+          sensorIDs: sensors.map((sensor) => sensor.id),
+          offset: 0,
+          limit: 900000,
+          startTime: startDate
         })
         treeSensorRecordsLoaded.value = result?.payload ?? []
       } catch (e) {
@@ -154,7 +159,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
         const airRecordRes = await httpclient.getRecords({
           sensorIDs: airSensorIds,
           offset: 0,
-          limit: 100000,
+          limit: 900000,
           startTime: startDate
         })
         const airRecords = airRecordRes?.payload ?? []
@@ -162,7 +167,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
         const soilRecordRes = await httpclient.getRecords({
           sensorIDs: soilSensorIds,
           offset: 0,
-          limit: 100000,
+          limit: 900000,
           startTime: startDate
         })
         const soilRecords = soilRecordRes?.payload ?? []
