@@ -35,7 +35,8 @@ func InitializeApp(webappFS fs.FS) (*app.App, error) {
 	stationService := service.NewStationService(configConfig, dbClient, loggerLogger)
 	stationAPI := controller.NewStationAPI(configConfig, loggerLogger, stationService)
 	recordService := service.NewRecordService(configConfig, dbClient, loggerLogger)
-	recordAPI := controller.NewRecordAPI(configConfig, loggerLogger, recordService)
+	deviceService := service.NewDeviceService(configConfig, dbClient, loggerLogger)
+	recordAPI := controller.NewRecordAPI(configConfig, loggerLogger, recordService, deviceService)
 	sensorService := service.NewSensorService(configConfig, dbClient, loggerLogger)
 	sensorAPI := controller.NewSensorAPI(configConfig, loggerLogger, sensorService)
 	dataAPI := controller.NewDataAPI()
@@ -49,4 +50,4 @@ func InitializeApp(webappFS fs.FS) (*app.App, error) {
 
 // wire.go:
 
-var appSet = wire.NewSet(app.NewEngine, config.NewConfig, logger.NewLogger, store.NewDBClient, service.NewAccountService, service.NewStationService, service.NewRecordService, service.NewSensorService, controller.NewNoRouteAPI, controller.NewDataAPI, controller.NewAccountAPI, controller.NewStationAPI, controller.NewRecordAPI, controller.NewSensorAPI)
+var appSet = wire.NewSet(app.NewEngine, config.NewConfig, logger.NewLogger, store.NewDBClient, service.NewAccountService, service.NewStationService, service.NewRecordService, service.NewSensorService, service.NewDeviceService, controller.NewNoRouteAPI, controller.NewDataAPI, controller.NewAccountAPI, controller.NewStationAPI, controller.NewRecordAPI, controller.NewSensorAPI)

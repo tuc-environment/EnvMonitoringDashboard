@@ -64,7 +64,7 @@ func NewEngine(
 	api.POST("/sensors", sensorAPI.UpsertSensor)
 	api.GET("/sensors", sensorAPI.GetSensors)
 	api.DELETE("/sensors/:sensor_id", sensorAPI.DeleteSensor)
-
+	api.POST("/devices/report", recordAPI.DeviceReportRecords)
 	// authorised required apis
 	api.Use(accountAPI.AuthMiddleware)
 	{

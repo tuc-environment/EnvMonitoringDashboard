@@ -28,12 +28,14 @@ var (
 
 type Sensor struct {
 	Base
-	StationId uint           `json:"station_id,omitempty"`
-	Position  SensorPosition `json:"position,omitempty"`
-	Tag       string         `json:"tag,omitempty"`
-	Name      string         `json:"name,omitempty"`
-	Group     string         `json:"group,omitempty"`
-	Unit      string         `json:"unit,omitempty"`
+	StationId  uint           `json:"station_id,omitempty"`
+	Position   SensorPosition `json:"position,omitempty"`
+	Tag        string         `json:"tag,omitempty"`
+	Name       string         `json:"name,omitempty"`
+	Group      string         `json:"group,omitempty"`
+	Unit       string         `json:"unit,omitempty"`
+	IMEI       string         `json:"imei,omitempty"`
+	SensorCode string         `json:"sensor_code,omitempty"`
 }
 
 type SensorService struct {

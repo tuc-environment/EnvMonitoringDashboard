@@ -1,5 +1,11 @@
 package service
 
+import (
+	"EnvMonitoringDashboard/api_src/config"
+	"EnvMonitoringDashboard/api_src/logger"
+	"EnvMonitoringDashboard/api_src/store"
+)
+
 type DeviceSensor struct {
 	Name string
 	Unit string
@@ -1597,4 +1603,23 @@ var deviceMap = map[string]Device{
 			},
 		},
 	},
+}
+
+type DeviceService struct {
+	config *config.Config
+	db     *store.DBClient
+	logger *logger.Logger
+}
+
+func NewDeviceService(c *config.Config, db *store.DBClient, logger *logger.Logger) *DeviceService {
+	log := logger.Sugar()
+	defer log.Sync()
+	return &DeviceService{c, db, logger}
+}
+
+func (s *DeviceService) ReceiveData(data string) error {
+	log := s.logger.Sugar()
+	defer log.Sync()
+	
+	return nil
 }

@@ -26,6 +26,7 @@ var appSet = wire.NewSet(
 	service.NewStationService,
 	service.NewRecordService,
 	service.NewSensorService,
+	service.NewDeviceService,
 	// api
 	controller.NewNoRouteAPI,
 	controller.NewDataAPI,

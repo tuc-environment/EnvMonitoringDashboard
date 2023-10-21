@@ -21,6 +21,7 @@ type RecordAPI struct {
 	config        *config.Config
 	logger        *logger.Logger
 	recordService *service.RecordService
+	deviceService *service.DeviceService
 }
 
 type FileUpload struct {
@@ -28,8 +29,8 @@ type FileUpload struct {
 	StationId string                `form:"station_id"`
 }
 
-func NewRecordAPI(c *config.Config, l *logger.Logger, s *service.RecordService) *RecordAPI {
-	return &RecordAPI{c, l, s}
+func NewRecordAPI(c *config.Config, l *logger.Logger, s *service.RecordService, d *service.DeviceService) *RecordAPI {
+	return &RecordAPI{c, l, s, d}
 }
 
 // Upload record godoc
@@ -230,5 +231,30 @@ func (api *RecordAPI) BatchUpsertRecords(g *gin.Context) {
 		c.BadRequest(err)
 	} else {
 		c.OK(records)
+	}
+}
+
+// device reported records godoc
+//
+//	@Summary		device reported records
+//	@Description	device reported records
+//	@Tags			records
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	""
+//	@Router			/devices/report [post]
+func (api *RecordAPI) DeviceReportRecords(g *gin.Context) {
+	log := api.logger.Sugar()
+	defer log.Sync()
+	c := WrapContext(g)
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(c.Request.Body)
+	rawRequestBody := buf.String()
+	log.Infoln("[device-reports-records] receive raw data: ", rawRequestBody)
+	err := api.deviceService.ReceiveData(rawRequestBody)
+	if err != nil {
+		c.BadRequest(err)
+	} else {
+		c.OK(nil)
 	}
 }
