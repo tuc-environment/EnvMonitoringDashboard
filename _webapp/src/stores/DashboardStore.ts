@@ -1,13 +1,13 @@
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
-import httpclient, {
-  type Station,
-  type Sensor,
-  type DataRecord,
-  getSensorDisplayText
-} from '@/httpclient'
 import { type TagData } from '@/components/tags/TagData'
+import httpclient, {
+  getSensorDisplayText,
+  type DataRecord,
+  type Sensor,
+  type Station
+} from '@/httpclient'
 import { airOptionNames, soilOptionNames } from '@/utils/constants'
+import { defineStore } from 'pinia'
+import { computed, ref } from 'vue'
 
 export const useDashboardStore = defineStore('dashboard', () => {
   // tree
@@ -106,7 +106,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
 
   const loadTotalCounts = async () => {
     try {
-      const sensorRes = await httpclient.getSensors({ limit: 0 })
+      const sensorRes = await httpclient.getSensors({ limit: 0, visibleInDashboard: true })
       totalSensors.value = sensorRes?.total
       const recordRes = await httpclient.getRecords({ limit: 0 })
       totalRecords.value = recordRes?.total
@@ -139,7 +139,10 @@ export const useDashboardStore = defineStore('dashboard', () => {
     soilRelatedRecords.value = []
     const stationId = station?.id
     if (stationId) {
-      const sensorsRes = await httpclient.getSensors({ stationID: stationId })
+      const sensorsRes = await httpclient.getSensors({
+        stationID: stationId,
+        visibleInDashboard: true
+      })
       const sensors = sensorsRes?.payload ?? []
       if (sensors.length > 0) {
         const airSensorIds = sensors

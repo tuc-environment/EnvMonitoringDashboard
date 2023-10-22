@@ -34,36 +34,6 @@ export enum SensorPosition {
   down = 'down'
 }
 
-export interface Sensor extends Base {
-  station_id: number
-  position?: SensorPosition
-  tag?: string
-  name?: string
-  group?: string
-  unit?: string
-}
-
-export interface DataRecord extends Base {
-  sensor_id: number
-  value?: number
-  time?: Date
-}
-
-export interface StationPrediction {
-  down_soil_temp_shallow?: number
-  down_soil_temp_deep?: number
-  down_soil_water_content_shallow?: number
-  down_soil_water_content_deep?: number
-  down_temp?: number
-  down_humidity?: number
-  middle_soil_temp_shallow?: number
-  middle_soil_temp_deep?: number
-  middle_soil_water_content_shallow?: number
-  middle_soil_water_content_deep?: number
-  middle_temp?: number
-  middle_humidity?: number
-}
-
 export const getPositionName = (position: SensorPosition | undefined): string => {
   if (position) {
     switch (position) {
@@ -76,6 +46,45 @@ export const getPositionName = (position: SensorPosition | undefined): string =>
     }
   }
   return ''
+}
+
+export enum SensorSampleMethod {
+  sampling = 'sampling',
+  average = 'average',
+  total = 'total',
+  max = 'max',
+  min = 'min'
+}
+
+export const getSampleMethodDiplayText = (position: SensorSampleMethod | undefined): string => {
+  if (position) {
+    switch (position) {
+      case SensorSampleMethod.sampling:
+        return '采样值'
+      case SensorSampleMethod.average:
+        return '平均值'
+      case SensorSampleMethod.total:
+        return '总计值'
+      case SensorSampleMethod.max:
+        return '最大值'
+      case SensorSampleMethod.min:
+        return '最小值'
+    }
+  }
+  return ''
+}
+
+export interface Sensor extends Base {
+  station_id: number
+  position?: SensorPosition
+  tag?: string
+  name?: string
+  group?: string
+  unit?: string
+  sensor_code?: string
+  sensor_report_code?: string
+  sample_method?: SensorSampleMethod
+  visible_in_dashboard?: boolean
 }
 
 export const getSensorDisplayText = (sensor: Sensor, stationName?: string): string => {
@@ -102,6 +111,28 @@ export const getSensorDisplayText = (sensor: Sensor, stationName?: string): stri
     displayText += `-${sensor.unit}`
   }
   return displayText
+}
+
+export interface DataRecord extends Base {
+  sensor_id: number
+  value?: number
+  time?: Date
+  record_index?: number
+}
+
+export interface StationPrediction {
+  down_soil_temp_shallow?: number
+  down_soil_temp_deep?: number
+  down_soil_water_content_shallow?: number
+  down_soil_water_content_deep?: number
+  down_temp?: number
+  down_humidity?: number
+  middle_soil_temp_shallow?: number
+  middle_soil_temp_deep?: number
+  middle_soil_water_content_shallow?: number
+  middle_soil_water_content_deep?: number
+  middle_temp?: number
+  middle_humidity?: number
 }
 
 class HttpClient {
@@ -320,6 +351,7 @@ class HttpClient {
 
   public async getSensors(params?: {
     stationID?: number
+    visibleInDashboard?: boolean
     offset?: number
     limit?: number
   }): Promise<Response<Sensor[]> | null> {
@@ -332,6 +364,9 @@ class HttpClient {
     }
     if (params?.stationID) {
       ret.push(`station_id=${params.stationID}`)
+    }
+    if (params?.visibleInDashboard) {
+      ret.push(`visible_in_dashboard=${params.visibleInDashboard}`)
     }
     const resp = await this.get<Sensor[]>(`/sensors?${ret.join('&')}`)
     return resp

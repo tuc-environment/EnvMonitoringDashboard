@@ -6,10 +6,10 @@
 
 <script setup lang="ts">
 import type { SensorPosition, Station } from '@/httpclient'
+import httpclient, { getPositionName } from '@/httpclient'
+import { onMounted, ref } from 'vue'
 import NodeComponent from './NodeComponent.vue'
 import { type Tree } from './Tree'
-import { ref, onMounted } from 'vue'
-import httpclient, { getPositionName } from '@/httpclient'
 
 const nodes = ref<Tree[]>([])
 const stations = ref<Station[]>([])
@@ -22,7 +22,7 @@ const setStations = async (updatedStations: Station[]) => {
 }
 
 const loadSensors = async () => {
-  const sensorsRes = await httpclient.getSensors()
+  const sensorsRes = await httpclient.getSensors({ visibleInDashboard: true })
   const sensors = sensorsRes?.payload ?? []
   var result: Tree[] = []
   for (const station of stations.value) {
