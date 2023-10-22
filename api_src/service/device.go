@@ -4,6 +4,13 @@ import (
 	"EnvMonitoringDashboard/api_src/config"
 	"EnvMonitoringDashboard/api_src/logger"
 	"EnvMonitoringDashboard/api_src/store"
+	"errors"
+	"fmt"
+	"strconv"
+	"strings"
+	"time"
+
+	"gorm.io/gorm"
 )
 
 type DeviceSensor struct {
@@ -16,6 +23,14 @@ type Device struct {
 	Code string
 	Name string
 	Data []DeviceSensor
+}
+
+var sampleMethodMap = map[string]string{
+	"0": "采样值",
+	"1": "平均值",
+	"2": "总计值",
+	"3": "最大值",
+	"4": "最小值",
 }
 
 var deviceMap = map[string]Device{
@@ -1606,20 +1621,134 @@ var deviceMap = map[string]Device{
 }
 
 type DeviceService struct {
-	config *config.Config
-	db     *store.DBClient
-	logger *logger.Logger
+	config        *config.Config
+	db            *store.DBClient
+	logger        *logger.Logger
+	sensorService *SensorService
+	recordService *RecordService
 }
 
-func NewDeviceService(c *config.Config, db *store.DBClient, logger *logger.Logger) *DeviceService {
+func NewDeviceService(c *config.Config, db *store.DBClient, logger *logger.Logger, sensorService *SensorService, recordService *RecordService) *DeviceService {
 	log := logger.Sugar()
 	defer log.Sync()
-	return &DeviceService{c, db, logger}
+	return &DeviceService{c, db, logger, sensorService, recordService}
 }
 
 func (s *DeviceService) ReceiveData(data string) error {
 	log := s.logger.Sugar()
 	defer log.Sync()
-	
+	arr := strings.Split(data, ",")
+	const kIndexIMEI = 0
+	// const kIndexUploadTime = 1
+	// const kIndexLat = 2
+	// const kIndexLng = 3
+	// const kIndexAltitude = 4
+	const kIndexSensorStructs = 5
+	const kIndexCreateTime = 6
+	const kIndexRecordIndex = 7
+	// const kIndexVoltage = 8
+	// const kIndexTemperature = 9
+	// const kIndexHumidity = 10
+	const kIndexDataStart = 11
+
+	const kValidSensorStructsLength = 30
+	const kSensorDataSampleMethodIndex = 15
+	if len(arr) < kIndexDataStart+1 {
+		return errors.New("[device-service] invalid length of report data")
+	}
+	dataIMEI := strings.TrimSpace(arr[kIndexIMEI])
+	// dataUploadTime := strings.TrimSpace(arr[kIndexUploadTime])
+	// dataLat := strings.TrimSpace(arr[kIndexLat])
+	// dataLng := strings.TrimSpace(arr[kIndexLng])
+	// dataAltitude := strings.TrimSpace(arr[kIndexAltitude])
+	dataSensorStructs := strings.TrimSpace(arr[kIndexSensorStructs])
+	dataCreateTime := strings.TrimSpace(arr[kIndexCreateTime])
+	dataRecordIndex := strings.TrimSpace(arr[kIndexRecordIndex])
+	// dataVoltage := strings.TrimSpace(arr[kIndexVoltage])
+	// dataTemperature := strings.TrimSpace(arr[kIndexTemperature])
+	// dataHumidity := strings.TrimSpace(arr[kIndexHumidity])
+	recordCreateTime, err := time.Parse("2006-01-02 15:04:05", dataCreateTime)
+	if err != nil {
+		return fmt.Errorf("[device-service] invalid create time format: %s", recordCreateTime)
+	}
+
+	recordIndexValue, err := strconv.ParseUint(dataRecordIndex, 10, 64)
+	if err != nil {
+		return fmt.Errorf("[device-service] invalid record index: %s", dataRecordIndex)
+	}
+
+	if len(dataIMEI) == 0 {
+		return errors.New("[device-service] invalid imei length")
+	}
+	if len(dataSensorStructs) != kValidSensorStructsLength {
+		return errors.New("[device-service] invalid sensorTypes length")
+	}
+	dataSensorTypes := string(dataSensorStructs[0:kSensorDataSampleMethodIndex])
+	dataSensorSampleMethods := string(dataSensorStructs[kSensorDataSampleMethodIndex:])
+	recordDataIndex := kIndexDataStart
+
+	parsedRecords := []Record{}
+
+	for i := 0; i < kValidSensorStructsLength/2; i++ {
+		sensorType := string(dataSensorTypes[i])
+		sensorSampleMethodIndex := string(dataSensorSampleMethods[i])
+		sensorSampleMethod, ok := sampleMethodMap[sensorSampleMethodIndex]
+		if !ok {
+			log.Errorln("[device-service] received an invalid sample method index: ", sensorSampleMethodIndex)
+			continue
+		}
+		if sensorType == "0" {
+			log.Infof("[device-service] no sensor at position: %d\n", i)
+			continue
+		}
+		device, ok := deviceMap[sensorType]
+		if !ok {
+			log.Errorln("[device-service] received an invalid type: ", sensorType)
+			continue
+		}
+		sensors := device.Data
+		for i := 0; i < len(sensors); i++ {
+			sensorData := sensors[i]
+			sensorReportCode := fmt.Sprintf("%s-%s-%s-%d", dataIMEI, sensorType, sensorData.Code, i)
+			log.Infof("[device-service] add record in index: %d, sensorReportCode: %s, sensorCode: %s, sensorName: %s, sampleMethod: %s\n", recordDataIndex, sensorReportCode, sensorData.Code, sensorData.Name, sensorData.Unit, sensorSampleMethod)
+			var dbSensor Sensor
+			err := s.db.Where("sensor_report_code = ?", sensorReportCode).First(&dbSensor).Error
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				log.Infof("[device-service] sensor not found, insert new for code: %s\n", sensorReportCode)
+				newSensor := Sensor{
+					Name:             sensorData.Name,
+					Unit:             sensorData.Unit,
+					SensorCode:       sensorData.Code,
+					IMEI:             dataIMEI,
+					SensorReportCode: sensorReportCode,
+					SampleMethod:     sensorSampleMethod,
+				}
+				insertedSensor, err := s.sensorService.Upsert(&newSensor)
+				if err != nil {
+					log.Errorln("[device-service] insert sensor with error: ", err)
+				} else {
+					dbSensor = *insertedSensor
+				}
+			}
+			if len(arr) <= recordDataIndex {
+				return fmt.Errorf("[device-service] parse sensor data out of range, at index:%d, sensorReportCode: %s", recordDataIndex, sensorReportCode)
+			}
+			recordData := arr[recordDataIndex]
+			recordValue, err := strconv.ParseFloat(recordData, 64)
+			if err != nil {
+				log.Errorf("[device-service] failed to parse record value: %s, error: %v\n", recordData, err)
+				continue
+			}
+			record := Record{
+				SensorId:    dbSensor.ID,
+				Value:       recordValue,
+				Time:        recordCreateTime,
+				RecordIndex: recordIndexValue,
+			}
+			parsedRecords = append(parsedRecords, record)
+			recordDataIndex += 1
+		}
+	}
+	s.recordService.BatchUpsert(&parsedRecords)
 	return nil
 }

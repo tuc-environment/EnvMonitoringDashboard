@@ -36,6 +36,9 @@ type Sensor struct {
 	Unit       string         `json:"unit,omitempty"`
 	IMEI       string         `json:"imei,omitempty"`
 	SensorCode string         `json:"sensor_code,omitempty"`
+	// imei-sensorType-sensorCode-index
+	SensorReportCode string `json:"sensor_report_code,omitempty"`
+	SampleMethod     string `json:"sample_method,omitempty"`
 }
 
 type SensorService struct {
