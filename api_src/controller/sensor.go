@@ -37,6 +37,7 @@ func (api *SensorAPI) GetSensors(g *gin.Context) {
 	var stationId *uint
 	var offset *int
 	var limit *int
+	var visibleInDashboard *bool
 	q := c.Request.URL.Query()
 	if q.Has("station_id") {
 		str := q.Get("station_id")
@@ -58,7 +59,12 @@ func (api *SensorAPI) GetSensors(g *gin.Context) {
 		limitV, _ := strconv.Atoi(str)
 		limit = &limitV
 	}
-	sensors, count, err := api.sensorService.Get(stationId, offset, limit)
+	if q.Has("visible_in_dashboard") {
+		str := q.Get("visible_in_dashboard")
+		visibleInDashboardV, _ := strconv.ParseBool(str)
+		visibleInDashboard = &visibleInDashboardV
+	}
+	sensors, count, err := api.sensorService.Get(stationId, offset, limit, visibleInDashboard)
 	if err != nil {
 		c.BadRequest(err)
 	} else {

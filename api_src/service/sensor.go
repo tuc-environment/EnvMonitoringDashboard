@@ -60,8 +60,9 @@ type Sensor struct {
 	IMEI       string `json:"imei,omitempty"`
 	SensorCode string `json:"sensor_code,omitempty"`
 	// imei-sensorType-sensorCode-index
-	SensorReportCode string             `json:"sensor_report_code,omitempty"`
-	SampleMethod     SensorSampleMethod `json:"sample_method,omitempty"`
+	SensorReportCode   string             `json:"sensor_report_code,omitempty"`
+	SampleMethod       SensorSampleMethod `json:"sample_method,omitempty"`
+	VisibleInDashboard bool               `json:"visible_in_dashboard"`
 }
 
 type SensorService struct {
@@ -80,7 +81,7 @@ func NewSensorService(c *config.Config, db *store.DBClient, logger *logger.Logge
 	return &SensorService{c, db, logger}
 }
 
-func (s *SensorService) Get(stationId *uint, limit *int, offset *int) (*[]Sensor, *int64, error) {
+func (s *SensorService) Get(stationId *uint, limit *int, offset *int, visibleInDashboard *bool) (*[]Sensor, *int64, error) {
 	log := s.logger.Sugar()
 	defer log.Sync()
 	log.Infoln("get sensors for station id: ", stationId)
@@ -91,7 +92,12 @@ func (s *SensorService) Get(stationId *uint, limit *int, offset *int) (*[]Sensor
 	if stationId == nil {
 		query = query.Where("deleted_at IS NULL")
 	} else {
+		log.Infof("get sensors for station id: %v\n", *stationId)
 		query = query.Where("station_id = ? and deleted_at IS NULL", stationId)
+	}
+	if visibleInDashboard != nil {
+		log.Infof("get sensors for visibleInDashboard: %v\n", *visibleInDashboard)
+		query = query.Where("visible_in_dashboard = ?", *visibleInDashboard)
 	}
 	err = query.Count(&count).Error
 	if err != nil {
@@ -99,9 +105,11 @@ func (s *SensorService) Get(stationId *uint, limit *int, offset *int) (*[]Sensor
 		return nil, nil, err
 	}
 	if offset != nil {
+		log.Infof("get sensors for offset: %v\n", *offset)
 		query = query.Offset(*offset)
 	}
 	if limit != nil {
+		log.Infof("get sensors for limit: %v\n", *limit)
 		query = query.Limit(*limit)
 	}
 	err = query.Find(&sensors).Error
@@ -175,7 +183,7 @@ func (s *SensorService) BatchUpsert(sensors *[]Sensor) (*[]Sensor, error) {
 			}
 			err := s.db.Clauses(clause.OnConflict{
 				Columns:   []clause.Column{{Name: "id"}},
-				DoUpdates: clause.AssignmentColumns([]string{"station_id", "position", "tag", "name", "group", "unit", "updated_at", "deleted_at", "imei", "sensor_code", "sensor_report_code", "sample_method"}),
+				DoUpdates: clause.AssignmentColumns([]string{"station_id", "position", "tag", "name", "group", "unit", "updated_at", "deleted_at", "imei", "sensor_code", "sensor_report_code", "sample_method", "visible_in_dashboard"}),
 			}).Create(&slice).Error
 			if err != nil {
 				return nil, err
@@ -192,7 +200,7 @@ func (s *SensorService) Upsert(sensor *Sensor) (*Sensor, error) {
 	log.Infoln("upsert sensor: ", string(jsonVal))
 	err := s.db.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "id"}},
-		DoUpdates: clause.AssignmentColumns([]string{"station_id", "position", "tag", "name", "group", "unit", "updated_at", "deleted_at", "imei", "sensor_code", "sensor_report_code", "sample_method"}),
+		DoUpdates: clause.AssignmentColumns([]string{"station_id", "position", "tag", "name", "group", "unit", "updated_at", "deleted_at", "imei", "sensor_code", "sensor_report_code", "sample_method", "visible_in_dashboard"}),
 	}).Create(sensor).Error
 	return sensor, err
 }
