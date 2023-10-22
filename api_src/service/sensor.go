@@ -5,8 +5,10 @@ import (
 	"EnvMonitoringDashboard/api_src/logger"
 	"EnvMonitoringDashboard/api_src/store"
 	"encoding/json"
+	"errors"
 	"time"
 
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -26,19 +28,40 @@ var (
 	}
 )
 
+type SensorSampleMethod string
+
+const (
+	SensorSampleMethodSampling SensorSampleMethod = "sampling"
+	SensorSampleMethodAverage  SensorSampleMethod = "average"
+	SensorSampleMethodTotal    SensorSampleMethod = "total"
+	SensorSampleMethodMax      SensorSampleMethod = "max"
+	SensorSampleMethodMin      SensorSampleMethod = "min"
+)
+
+var (
+	SensorSampleMethodnMap = map[string]SensorSampleMethod{
+		"0": SensorSampleMethodSampling,
+		"1": SensorSampleMethodAverage,
+		"2": SensorSampleMethodTotal,
+		"3": SensorSampleMethodMax,
+		"4": SensorSampleMethodMin,
+	}
+)
+
 type Sensor struct {
 	Base
-	StationId  uint           `json:"station_id,omitempty"`
-	Position   SensorPosition `json:"position,omitempty"`
-	Tag        string         `json:"tag,omitempty"`
-	Name       string         `json:"name,omitempty"`
-	Group      string         `json:"group,omitempty"`
-	Unit       string         `json:"unit,omitempty"`
-	IMEI       string         `json:"imei,omitempty"`
-	SensorCode string         `json:"sensor_code,omitempty"`
+	StationId uint           `json:"station_id,omitempty"`
+	Position  SensorPosition `json:"position,omitempty"`
+	Tag       string         `json:"tag,omitempty"`
+	Name      string         `json:"name,omitempty"`
+	Group     string         `json:"group,omitempty"`
+	Unit      string         `json:"unit,omitempty"`
+	// v1.1
+	IMEI       string `json:"imei,omitempty"`
+	SensorCode string `json:"sensor_code,omitempty"`
 	// imei-sensorType-sensorCode-index
-	SensorReportCode string `json:"sensor_report_code,omitempty"`
-	SampleMethod     string `json:"sample_method,omitempty"`
+	SensorReportCode string             `json:"sensor_report_code,omitempty"`
+	SampleMethod     SensorSampleMethod `json:"sample_method,omitempty"`
 }
 
 type SensorService struct {
@@ -57,7 +80,7 @@ func NewSensorService(c *config.Config, db *store.DBClient, logger *logger.Logge
 	return &SensorService{c, db, logger}
 }
 
-func (s *SensorService) Get(stationId *uint, limit *int, offset *int) (*[]Sensor, error, *int64) {
+func (s *SensorService) Get(stationId *uint, limit *int, offset *int) (*[]Sensor, *int64, error) {
 	log := s.logger.Sugar()
 	defer log.Sync()
 	log.Infoln("get sensors for station id: ", stationId)
@@ -73,7 +96,7 @@ func (s *SensorService) Get(stationId *uint, limit *int, offset *int) (*[]Sensor
 	err = query.Count(&count).Error
 	if err != nil {
 		log.Errorln("get sensors with error: ", err)
-		return nil, err, nil
+		return nil, nil, err
 	}
 	if offset != nil {
 		query = query.Offset(*offset)
@@ -84,10 +107,82 @@ func (s *SensorService) Get(stationId *uint, limit *int, offset *int) (*[]Sensor
 	err = query.Find(&sensors).Error
 	if err != nil {
 		log.Errorln("get sensors with error: ", err)
-		return nil, err, nil
+		return nil, nil, err
 	} else {
-		return &sensors, nil, &count
+		return &sensors, &count, nil
 	}
+}
+
+func (s *SensorService) GetUnassignedSensors(limit *int, offset *int) (*[]Sensor, *int64, error) {
+	log := s.logger.Sugar()
+	defer log.Sync()
+	log.Infoln("get unlinked sensors")
+	var sensors []Sensor
+	var err error
+	var count int64
+	query := s.db.Model(&Sensor{})
+	query = query.Where("station_id IS NULL and deleted_at IS NULL")
+	err = query.Count(&count).Error
+	if err != nil {
+		log.Errorln("get sensors with error: ", err)
+		return nil, nil, err
+	}
+	if offset != nil {
+		query = query.Offset(*offset)
+	}
+	if limit != nil {
+		query = query.Limit(*limit)
+	}
+	err = query.Find(&sensors).Error
+	if err != nil {
+		log.Errorln("get sensors with error: ", err)
+		return nil, nil, err
+	} else {
+		return &sensors, &count, nil
+	}
+}
+
+func (s *SensorService) GetSensorByReportCode(reportCode string) (*Sensor, error) {
+	log := s.logger.Sugar()
+	defer log.Sync()
+	log.Infoln("get sensor by report id: ", reportCode)
+	var sensor Sensor
+	err := s.db.Where("sensor_report_code = ? AND deleted_at IS NULL", reportCode).First(&sensor).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	} else if err == nil {
+		return &sensor, nil
+	} else {
+		return nil, err
+	}
+}
+
+func (s *SensorService) BatchUpsert(sensors *[]Sensor) (*[]Sensor, error) {
+	log := s.logger.Sugar()
+	defer log.Sync()
+
+	if sensors == nil || len(*sensors) == 0 {
+		return sensors, nil
+	} else {
+		log.Infoln("batch upsert sensors count: ", len(*sensors))
+		for i := 0; i < len(*sensors); i += 100 {
+			end := i + 100
+			var slice []Sensor
+			if len(*sensors) < end {
+				slice = (*sensors)[i:]
+			} else {
+				slice = (*sensors)[i:end]
+			}
+			err := s.db.Clauses(clause.OnConflict{
+				Columns:   []clause.Column{{Name: "id"}},
+				DoUpdates: clause.AssignmentColumns([]string{"station_id", "position", "tag", "name", "group", "unit", "updated_at", "deleted_at", "imei", "sensor_code", "sensor_report_code", "sample_method"}),
+			}).Create(&slice).Error
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+	return sensors, nil
 }
 
 func (s *SensorService) Upsert(sensor *Sensor) (*Sensor, error) {
@@ -97,7 +192,7 @@ func (s *SensorService) Upsert(sensor *Sensor) (*Sensor, error) {
 	log.Infoln("upsert sensor: ", string(jsonVal))
 	err := s.db.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "id"}},
-		DoUpdates: clause.AssignmentColumns([]string{"station_id", "position", "tag", "name", "group", "unit", "updated_at", "deleted_at"}),
+		DoUpdates: clause.AssignmentColumns([]string{"station_id", "position", "tag", "name", "group", "unit", "updated_at", "deleted_at", "imei", "sensor_code", "sensor_report_code", "sample_method"}),
 	}).Create(sensor).Error
 	return sensor, err
 }

@@ -14,7 +14,7 @@ type Record struct {
 	SensorId    uint      `json:"sensor_id,omitempty" gorm:"uniqueIndex:sensor_time"`
 	Value       float64   `json:"value,omitempty"`
 	Time        time.Time `json:"time,omitempty" gorm:"uniqueIndex:sensor_time"`
-	RecordIndex uint64    `json:"record_id,omitempty"`
+	RecordIndex uint64    `json:"record_index,omitempty"`
 }
 
 type RecordService struct {
@@ -128,7 +128,7 @@ func (s *RecordService) BatchUpsert(records *[]Record) (*[]Record, error) {
 			}
 			err := s.db.Clauses(clause.OnConflict{
 				Columns:   []clause.Column{{Name: "sensor_id"}, {Name: "time"}},
-				DoUpdates: clause.AssignmentColumns([]string{"value", "updated_at", "deleted_at"}),
+				DoUpdates: clause.AssignmentColumns([]string{"value", "updated_at", "deleted_at", "record_index"}),
 			}).Create(&slice).Error
 			if err != nil {
 				return nil, err

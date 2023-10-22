@@ -2,7 +2,6 @@ package controller
 
 import (
 	"EnvMonitoringDashboard/api_src/config"
-	"EnvMonitoringDashboard/api_src/controller/args"
 	"EnvMonitoringDashboard/api_src/logger"
 	"EnvMonitoringDashboard/api_src/service"
 	"EnvMonitoringDashboard/api_src/utils"
@@ -59,7 +58,41 @@ func (api *SensorAPI) GetSensors(g *gin.Context) {
 		limitV, _ := strconv.Atoi(str)
 		limit = &limitV
 	}
-	sensors, err, count := api.sensorService.Get(stationId, offset, limit)
+	sensors, count, err := api.sensorService.Get(stationId, offset, limit)
+	if err != nil {
+		c.BadRequest(err)
+	} else {
+		c.Header(utils.XTotalCount, strconv.FormatInt(*count, 10))
+		c.OK(sensors)
+	}
+}
+
+// Get sensors godoc
+//
+//	@Summary	get sensors
+//	@Tags		sensors
+//	@Accept		json
+//	@Produce	json
+//	@Success	200	"return sensors by station_id"
+//	@Router		/sensors [get]
+func (api *SensorAPI) GetUnassignedSensors(g *gin.Context) {
+	log := api.logger.Sugar()
+	defer log.Sync()
+	c := WrapContext(g)
+	var offset *int
+	var limit *int
+	q := c.Request.URL.Query()
+	if q.Has("offset") {
+		str := q.Get("offset")
+		offsetV, _ := strconv.Atoi(str)
+		offset = &offsetV
+	}
+	if q.Has("limit") {
+		str := q.Get("limit")
+		limitV, _ := strconv.Atoi(str)
+		limit = &limitV
+	}
+	sensors, count, err := api.sensorService.GetUnassignedSensors(offset, limit)
 	if err != nil {
 		c.BadRequest(err)
 	} else {
@@ -80,27 +113,43 @@ func (api *SensorAPI) UpsertSensor(g *gin.Context) {
 	log := api.logger.Sugar()
 	defer log.Sync()
 	c := WrapContext(g)
-	body := args.SensorCreationArgs{}
-	if err := c.ShouldBindJSON(&body); err != nil {
+	var sensor *service.Sensor
+	sensor = &service.Sensor{}
+	if err := c.ShouldBindJSON(&sensor); err != nil {
 		c.BadRequest(err)
 		return
 	}
-	position, _ := api.parsePosition(body.Position)
-	sensor, err := api.sensorService.Upsert(&service.Sensor{
-		Base: service.Base{
-			ID: body.ID,
-		},
-		StationId: body.StationId,
-		Position:  position,
-		Tag:       body.Tag,
-		Name:      body.Name,
-		Group:     body.Group,
-		Unit:      body.Unit,
-	})
+	sensor, err := api.sensorService.Upsert(sensor)
 	if err != nil {
 		c.BadRequest(err)
 	} else {
 		c.OK(sensor)
+	}
+}
+
+// Batch upsert sensor godoc
+//
+//	@Summary		batch upsert
+//	@Description	batch upsert sensors
+//	@Tags			sensors
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	""
+//	@Router			/sensors [post]
+func (api *SensorAPI) BatchUpsertSensors(g *gin.Context) {
+	log := api.logger.Sugar()
+	defer log.Sync()
+	c := WrapContext(g)
+	body := []service.Sensor{}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.BadRequest(err)
+		return
+	}
+	records, err := api.sensorService.BatchUpsert(&body)
+	if err != nil {
+		c.BadRequest(err)
+	} else {
+		c.OK(records)
 	}
 }
 

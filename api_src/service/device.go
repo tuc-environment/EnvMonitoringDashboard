@@ -9,8 +9,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type DeviceSensor struct {
@@ -23,14 +21,6 @@ type Device struct {
 	Code string
 	Name string
 	Data []DeviceSensor
-}
-
-var sampleMethodMap = map[string]string{
-	"0": "采样值",
-	"1": "平均值",
-	"2": "总计值",
-	"3": "最大值",
-	"4": "最小值",
 }
 
 var deviceMap = map[string]Device{
@@ -1692,7 +1682,7 @@ func (s *DeviceService) ReceiveData(data string) error {
 	for i := 0; i < kValidSensorStructsLength/2; i++ {
 		sensorType := string(dataSensorTypes[i])
 		sensorSampleMethodIndex := string(dataSensorSampleMethods[i])
-		sensorSampleMethod, ok := sampleMethodMap[sensorSampleMethodIndex]
+		sensorSampleMethod, ok := SensorSampleMethodnMap[sensorSampleMethodIndex]
 		if !ok {
 			log.Errorln("[device-service] received an invalid sample method index: ", sensorSampleMethodIndex)
 			continue
@@ -1711,9 +1701,9 @@ func (s *DeviceService) ReceiveData(data string) error {
 			sensorData := sensors[i]
 			sensorReportCode := fmt.Sprintf("%s-%s-%s-%d", dataIMEI, sensorType, sensorData.Code, i)
 			log.Infof("[device-service] add record in index: %d, sensorReportCode: %s, sensorCode: %s, sensorName: %s, sampleMethod: %s\n", recordDataIndex, sensorReportCode, sensorData.Code, sensorData.Name, sensorData.Unit, sensorSampleMethod)
-			var dbSensor Sensor
-			err := s.db.Where("sensor_report_code = ?", sensorReportCode).First(&dbSensor).Error
-			if errors.Is(err, gorm.ErrRecordNotFound) {
+			var dbSensor *Sensor
+			dbSensor, err := s.sensorService.GetSensorByReportCode(sensorReportCode)
+			if dbSensor == nil {
 				log.Infof("[device-service] sensor not found, insert new for code: %s\n", sensorReportCode)
 				newSensor := Sensor{
 					Name:             sensorData.Name,
@@ -1727,8 +1717,11 @@ func (s *DeviceService) ReceiveData(data string) error {
 				if err != nil {
 					log.Errorln("[device-service] insert sensor with error: ", err)
 				} else {
-					dbSensor = *insertedSensor
+					dbSensor = insertedSensor
 				}
+			} else if err != nil {
+				log.Infof("[device-service] get sensor %s failed, error: %v\n", sensorReportCode, err)
+				continue
 			}
 			if len(arr) <= recordDataIndex {
 				return fmt.Errorf("[device-service] parse sensor data out of range, at index:%d, sensorReportCode: %s", recordDataIndex, sensorReportCode)
