@@ -63,6 +63,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'onConfirm'): void
+  (e: 'close'): void
 }>()
 
 const loading = ref(false)

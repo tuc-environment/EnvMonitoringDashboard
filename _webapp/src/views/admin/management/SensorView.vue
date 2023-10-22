@@ -280,23 +280,23 @@
 </template>
 
 <script setup lang="ts">
-import { formatDatetime } from '@/utils/utils'
-import Datepicker from 'vue3-datepicker'
+import LineChart from '@/components/LineChart.vue'
+import TablePaginator from '@/components/TablePaginator.vue'
+import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
+import UpsertSensorModal from '@/components/modal/UpsertSensorModal.vue'
 import httpclient, {
-  type Station,
-  type Sensor,
-  type DataRecord,
   SensorPosition,
   getPositionName,
-  getSensorDisplayText
+  getSensorDisplayText,
+  type DataRecord,
+  type Sensor,
+  type Station
 } from '@/httpclient'
-import UpsertSensorModal from '@/components/modal/UpsertSensorModal.vue'
+import { formatDatetime } from '@/utils/utils'
+import moment from 'moment'
 import { computed, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
-import TablePaginator from '@/components/TablePaginator.vue'
-import moment from 'moment'
-import LineChart from '@/components/LineChart.vue'
+import Datepicker from 'vue3-datepicker'
 
 const route = useRoute()
 const router = useRouter()

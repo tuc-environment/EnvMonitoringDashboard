@@ -16,6 +16,64 @@
             <div class="row mb-2">
               <div class="col-md-12">
                 <div class="mb-2">
+                  <div class="input-group form-control">
+                    <input
+                      type="checkbox"
+                      style="margin-right: 8px"
+                      :value="sensorVal?.visible_in_dashboard"
+                      @input="onChangeDashboardVisibility"
+                    />
+                    <label>是否在看板展示</label>
+                  </div>
+                </div>
+              </div>
+              <div
+                v-if="sensorVal?.name && !allOptionNames.includes(sensorVal?.name)"
+                class="col-md-12"
+              >
+                <div class="mb-2">
+                  <label class="form-label small">未经修改的数据项:</label>
+                  <div class="input-group">
+                    <label>
+                      {{ sensorVal?.name }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="mb-2">
+                  <label class="form-label small">IMEI:</label>
+                  <div class="input-group">
+                    <label>
+                      {{ sensorVal?.imei }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="mb-2">
+                  <label class="form-label small"
+                    >数据上传编码(imei-传感器设备编码-传感器型号-传感器数值index):</label
+                  >
+                  <div class="input-group">
+                    <label>
+                      {{ sensorVal?.sensor_report_code }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="mb-2">
+                  <label class="form-label small">传感器型号:</label>
+                  <div class="input-group">
+                    <label>
+                      {{ sensorVal?.sensor_code }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="mb-2">
                   <label class="form-label small">数据项</label
                   ><span class="ms-1 text-danger">*</span>
                   <div class="input-group">
@@ -50,6 +108,26 @@
                   </div>
                 </div>
               </div>
+
+              <div class="col-md-12">
+                <div class="mb-2">
+                  <label class="form-label small">数据取样值类型</label
+                  ><span class="ms-1 text-danger">*</span>
+                  <div class="input-group">
+                    <select class="form-select" @input="onSamplingMethodChanged">
+                      <option :value="false">选择取样值类型</option>
+                      <option
+                        v-for="sampleMethod in sensorSamplingMethods"
+                        :value="sampleMethod"
+                        :selected="sampleMethod == sampleMethodVal"
+                      >
+                        {{ getSampleMethodDiplayText(sampleMethod) }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
               <div class="col-md-12">
                 <LabelInputComponent
                   label="单位"
@@ -104,11 +182,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import LabelInputComponent from '@/components/LabelInputComponent.vue'
-import httpclient, { type Sensor } from '@/httpclient'
-import { allOptionNames } from '@/utils/constants'
-import { getPositionName, SensorPosition } from '@/httpclient'
+import httpclient, {
+  SensorPosition,
+  SensorSampleMethod,
+  getPositionName,
+  getSampleMethodDiplayText,
+  type Sensor
+} from '@/httpclient'
+import { allOptionNames, sensorSamplingMethods } from '@/utils/constants'
+import { ref } from 'vue'
 
 const props = defineProps({
   title: { type: String, default: 'Modal Title' },
@@ -117,6 +200,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (e: 'didUpsertSensor'): void
+  (e: 'close'): void
 }>()
 
 const loading = ref(false)
@@ -128,6 +212,8 @@ const tagVal = ref<string | undefined>(undefined)
 const groupVal = ref<string | undefined>(undefined)
 const stationIdVal = ref<number | undefined>(undefined)
 const sensorVal = ref<Sensor | undefined>(undefined)
+const dashboardVisibilityVal = ref<boolean | undefined>(undefined)
+const sampleMethodVal = ref<SensorSampleMethod | undefined>(undefined)
 
 const onConfirm = async () => {
   loading.value = true
@@ -141,16 +227,20 @@ const onConfirm = async () => {
     const validName = name && name.trim().length > 0
     const validPosition = position != undefined
     const validStationId = stationIdVal.value != undefined
+    const sampleMethod = sampleMethodVal.value
+    const dashboardVisibility = dashboardVisibilityVal.value
 
     if (validName && validPosition && validStationId) {
       const result = await httpclient.upsertSensor({
+        ...sensorVal.value,
         station_id: stationId!,
-        id: sensorVal.value?.id,
         name,
         position,
         tag,
         unit,
-        group
+        group,
+        sample_method: sampleMethod,
+        visible_in_dashboard: dashboardVisibility
       })
       if (result?.code == 200) {
         nameVal.value = undefined
@@ -165,6 +255,10 @@ const onConfirm = async () => {
     }
   } catch (_) {}
   loading.value = false
+}
+
+const onChangeDashboardVisibility = (e: any) => {
+  dashboardVisibilityVal.value = e.target.value == 'true'
 }
 
 const onNameChanged = (e: any) => {
@@ -183,6 +277,15 @@ const onPostionChanged = (e: any) => {
     positionVal.value = undefined
   }
   console.log(positionVal.value)
+}
+
+const onSamplingMethodChanged = (e: any) => {
+  if (e.target.value != 'false') {
+    sampleMethodVal.value = e.target.value
+  } else {
+    sampleMethodVal.value = undefined
+  }
+  console.log(sampleMethodVal.value)
 }
 
 const onUnitChanged = (e: any) => {
@@ -210,6 +313,8 @@ const setSensor = (stationId: number, sensor?: Sensor) => {
   unitVal.value = sensor?.unit
   tagVal.value = sensor?.tag
   groupVal.value = sensor?.group
+  sampleMethodVal.value = sensor?.sample_method
+  dashboardVisibilityVal.value = sensor?.visible_in_dashboard
 }
 
 defineExpose({

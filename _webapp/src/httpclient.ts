@@ -81,6 +81,7 @@ export interface Sensor extends Base {
   name?: string
   group?: string
   unit?: string
+  imei?: string
   sensor_code?: string
   sensor_report_code?: string
   sample_method?: SensorSampleMethod
@@ -380,6 +381,8 @@ class HttpClient {
     name?: string
     group?: string
     unit?: string
+    sample_method?: SensorSampleMethod
+    visible_in_dashboard?: boolean
   }): Promise<Response<Sensor> | null> {
     const resp = await this.post<Sensor>('/sensors', params)
     return resp

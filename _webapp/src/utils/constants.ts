@@ -1,3 +1,5 @@
+import { SensorSampleMethod } from '@/httpclient'
+
 export const airOptionNames = [
   '空气温度',
   '空气湿度',
@@ -15,3 +17,10 @@ export const airOptionNames = [
 ]
 export const soilOptionNames = ['土壤水分', '土壤温度', '土壤电导率']
 export const allOptionNames = airOptionNames.concat(soilOptionNames)
+export const sensorSamplingMethods: SensorSampleMethod[] = [
+  SensorSampleMethod.sampling,
+  SensorSampleMethod.average,
+  SensorSampleMethod.total,
+  SensorSampleMethod.max,
+  SensorSampleMethod.min
+]
