@@ -65,15 +65,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, type PropType } from 'vue'
 import {
-  getSensorDisplayText,
-  getPositionName,
-  type Station,
   SensorPosition,
+  getPositionName,
+  getSensorDisplayText,
   type DataRecord,
-  type Sensor
-} from '@/httpclient'
+  type Sensor,
+  type Station
+} from '@/http-client'
+import { computed, ref, type PropType } from 'vue'
 
 const props = defineProps({
   records: Array as PropType<DataRecord[]>,
@@ -268,3 +268,4 @@ const onOptionNameChanged = (e: any) => {
   }
 }
 </script>
+@/http-client

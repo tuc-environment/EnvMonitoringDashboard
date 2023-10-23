@@ -63,11 +63,11 @@
 </template>
 
 <script setup lang="ts">
-import { RouterLink, useRouter } from 'vue-router'
-import httpclient from '@/httpclient'
-import { ref } from 'vue'
-import DashboardLayout from '@/layouts/DashboardLayout.vue'
 import BackgroundComponent from '@/components/BackgroundComponent.vue'
+import httpclient from '@/http-client'
+import DashboardLayout from '@/layouts/DashboardLayout.vue'
+import { ref } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
 
 const errorMsg = ref('')
 const username = ref('')
@@ -132,3 +132,4 @@ function preventDefault(e: Event) {
   font-weight: 600;
 }
 </style>
+@/http-client

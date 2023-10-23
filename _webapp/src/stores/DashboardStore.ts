@@ -4,7 +4,7 @@ import httpclient, {
   type DataRecord,
   type Sensor,
   type Station
-} from '@/httpclient'
+} from '@/http-client'
 import { airOptionNames, soilOptionNames } from '@/utils/constants'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'

@@ -73,11 +73,11 @@
 </template>
 
 <script setup lang="ts">
+import BackgroundComponent from '@/components/BackgroundComponent.vue'
+import httpclient from '@/http-client'
+import DashboardLayout from '@/layouts/DashboardLayout.vue'
 import { computed, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import httpclient from '@/httpclient'
-import DashboardLayout from '@/layouts/DashboardLayout.vue'
-import BackgroundComponent from '@/components/BackgroundComponent.vue'
 
 let errorMsg = ref('')
 let username = ref('')
@@ -154,3 +154,4 @@ input {
   background-color: rgb(243, 247, 251);
 }
 </style>
+@/http-client

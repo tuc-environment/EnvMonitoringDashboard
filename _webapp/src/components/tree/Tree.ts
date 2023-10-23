@@ -1,4 +1,4 @@
-import type { Sensor, Station } from '@/httpclient'
+import type { Sensor, Station } from '@/http-client'
 
 export interface TreeNode {}
 

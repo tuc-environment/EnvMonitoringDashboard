@@ -268,10 +268,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import LabelInputComponent from '@/components/LabelInputComponent.vue'
-import httpclient, { type StationPrediction } from '@/httpclient'
-import { load } from '@amap/amap-jsapi-loader'
+import httpclient, { type StationPrediction } from '@/http-client'
+import { ref } from 'vue'
 
 const props = defineProps({
   title: { type: String, default: 'Modal Title' },
@@ -373,3 +372,4 @@ defineExpose({
   visibility: hidden;
 }
 </style>
+@/http-client

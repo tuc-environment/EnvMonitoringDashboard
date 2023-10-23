@@ -189,7 +189,7 @@ import httpclient, {
   getPositionName,
   getSampleMethodDiplayText,
   type Sensor
-} from '@/httpclient'
+} from '@/http-client'
 import { allOptionNames, sensorSamplingMethods } from '@/utils/constants'
 import { ref } from 'vue'
 
@@ -327,3 +327,4 @@ defineExpose({
   visibility: hidden;
 }
 </style>
+@/http-client

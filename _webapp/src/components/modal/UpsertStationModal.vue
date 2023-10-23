@@ -85,9 +85,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
 import LabelInputComponent from '@/components/LabelInputComponent.vue'
-import httpclient, { type Station } from '@/httpclient'
+import httpclient, { type Station } from '@/http-client'
+import { ref, watch } from 'vue'
 
 const props = defineProps({
   title: { type: String, default: 'Modal Title' },
@@ -180,3 +180,4 @@ defineExpose({
   visibility: hidden;
 }
 </style>
+@/http-client

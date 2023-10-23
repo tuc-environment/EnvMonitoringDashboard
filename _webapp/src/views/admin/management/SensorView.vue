@@ -61,8 +61,18 @@
             <div class="col-md-6">
               <div class="d-flex align-items-center">
                 <div class="h5 mb-0 me-2">传感器列表</div>
-                <button type="button" class="btn btn-sm btn-success" @click="showCreateSensorModal">
+              </div>
+              <div class="d-flex align-items-center my-2">
+                <button
+                  type="button"
+                  style="margin-right: 8px"
+                  class="btn btn-sm btn-success"
+                  @click="showCreateSensorModal"
+                >
                   + 添加传感器
+                </button>
+                <button type="button" class="btn btn-sm btn-success" @click="showLinkSensorModal">
+                  @ 关联传感器
                 </button>
               </div>
               <label class="text-secondary small mb-3">选择查看相应的传感器</label>
@@ -75,7 +85,7 @@
                 >
                   <input
                     class="form-check-input"
-                    style="margin-top: 0"
+                    style="margin-top: 0; flex-shrink: 0"
                     type="checkbox"
                     @change="onChangeSensor($event, sensor.id)"
                   />
@@ -182,6 +192,12 @@
       @close="onUpsertSensorModalClosed"
       @did-upsert-sensor="didUpsertSensor"
     />
+    <link-sensors-modal
+      ref="linkSensorModal"
+      :visible="isShowingLinkSensorsModal"
+      @close="onCloseLinkedSensors"
+      @on-confirm="onConfirmLinkedSensors"
+    />
     <double-confirm-modal
       :visible="isShowingDeletionModal"
       :title="'删除传感器 ' + operatingSensorId"
@@ -284,6 +300,7 @@ import LineChart from '@/components/LineChart.vue'
 import TablePaginator from '@/components/TablePaginator.vue'
 import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
 import UpsertSensorModal from '@/components/modal/UpsertSensorModal.vue'
+import LinkSensorsModal from '@/components/modal/link-sensors-model/LinkSensorsModal.vue'
 import httpclient, {
   SensorPosition,
   getPositionName,
@@ -291,7 +308,7 @@ import httpclient, {
   type DataRecord,
   type Sensor,
   type Station
-} from '@/httpclient'
+} from '@/http-client'
 import { formatDatetime } from '@/utils/utils'
 import moment from 'moment'
 import { computed, nextTick, ref } from 'vue'
@@ -319,8 +336,10 @@ const recordsByTime = ref<Map<Date, Map<number, DataRecord>> | undefined>(undefi
 const uploading = ref(false)
 const file = ref<string | null>(null)
 const isShowingUpsertSensorModal = ref(false)
+const isShowingLinkSensorsModal = ref(false)
 const disableSubmitButton = computed(() => file.value == null)
 const upsertSensorModal = ref<InstanceType<typeof UpsertSensorModal> | null>(null)
+const linkSensorModal = ref<InstanceType<typeof LinkSensorsModal> | null>(null)
 const stationID = computed(() => {
   const stationID = route.query.station_id
   return stationID ? parseInt(stationID.toString()) : 0
@@ -536,6 +555,22 @@ const onDeleteSensorModalClosed = () => {
   operatingSensorId.value = undefined
 }
 
+// link sensors
+
+const showLinkSensorModal = () => {
+  linkSensorModal.value?.setStation(station.value)
+  isShowingLinkSensorsModal.value = true
+}
+
+const onConfirmLinkedSensors = async () => {
+  isShowingLinkSensorsModal.value = false
+  await refresh()
+}
+
+const onCloseLinkedSensors = () => {
+  isShowingLinkSensorsModal.value = false
+}
+
 // record pagination
 
 const toPreviousPage = (offset: number) => {
@@ -700,3 +735,4 @@ refresh()
   z-index: 1;
 }
 </style>
+@/http-client

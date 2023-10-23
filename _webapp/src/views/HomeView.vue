@@ -97,16 +97,16 @@
 </template>
 
 <script setup lang="ts">
-import DashboardLayout from '@/layouts/DashboardLayout.vue'
 import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
-import PredictionModalComponent from '@/components/modal/PredictionModalComponent.vue'
 import LineChart from '@/components/LineChart.vue'
-import TreeChart from '@/components/tree/TreeComponent.vue'
 import MapContainer from '@/components/map/MapContainer.vue'
-import { type Station } from '@/httpclient'
+import PredictionModalComponent from '@/components/modal/PredictionModalComponent.vue'
+import TreeChart from '@/components/tree/TreeComponent.vue'
+import { type Station } from '@/http-client'
+import DashboardLayout from '@/layouts/DashboardLayout.vue'
 import { useDashboardStore } from '@/stores/DashboardStore'
-import { ref } from 'vue'
 import { formatDisplayNumber } from '@/utils/utils'
+import { ref } from 'vue'
 
 const showPredictionModal = ref(false)
 const treeChart = ref<InstanceType<typeof TreeChart> | null>(null)
@@ -153,3 +153,4 @@ dashboardStore.loadTotalCounts()
   padding-right: 0;
 }
 </style>
+@/http-client

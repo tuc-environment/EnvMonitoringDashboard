@@ -94,12 +94,12 @@
 </template>
 
 <script setup lang="ts">
-import httpclient, { type Station } from '@/httpclient'
+import TablePaginator from '@/components/TablePaginator.vue'
+import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
+import UpsertStationModal from '@/components/modal/UpsertStationModal.vue'
+import httpclient, { type Station } from '@/http-client'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import UpsertStationModal from '@/components/modal/UpsertStationModal.vue'
-import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
-import TablePaginator from '@/components/TablePaginator.vue'
 
 const offset = ref(0)
 // temp: for testing
@@ -199,3 +199,4 @@ const toOffset = (offsetVal: number) => {
 
 loadStations(offset.value, true)
 </script>
+@/http-client

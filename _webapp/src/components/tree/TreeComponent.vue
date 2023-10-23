@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-import type { SensorPosition, Station } from '@/httpclient'
-import httpclient, { getPositionName } from '@/httpclient'
+import type { SensorPosition, Station } from '@/http-client'
+import httpclient, { getPositionName } from '@/http-client'
 import { onMounted, ref } from 'vue'
 import NodeComponent from './NodeComponent.vue'
 import { type Tree } from './Tree'
@@ -162,3 +162,4 @@ defineExpose({
   box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
 </style>
+@/http-client@/http-client

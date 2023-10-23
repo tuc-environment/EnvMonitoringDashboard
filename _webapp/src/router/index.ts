@@ -1,12 +1,12 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import httpclient from '@/http-client'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
-import httpclient from '@/httpclient'
+import { createRouter, createWebHistory } from 'vue-router'
 
-import AdminView from '@/views/admin/AdminView.vue'
-import CrossStationView from '@/views/CrossStationView.vue'
 import ContactUsView from '@/views/ContactUsView.vue'
+import CrossStationView from '@/views/CrossStationView.vue'
+import AdminView from '@/views/admin/AdminView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

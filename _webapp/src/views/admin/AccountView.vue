@@ -36,9 +36,9 @@
 </template>
 
 <script lang="ts">
-import SectionLayout from '@/layouts/SectionLayout.vue'
 import LabelInputComponent from '@/components/LabelInputComponent.vue'
-import httpclient from '@/httpclient'
+import httpclient from '@/http-client'
+import SectionLayout from '@/layouts/SectionLayout.vue'
 
 export default {
   components: {
@@ -71,3 +71,4 @@ export default {
   }
 }
 </script>
+@/http-client

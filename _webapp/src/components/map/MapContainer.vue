@@ -3,13 +3,13 @@
 </template>
 
 <script setup lang="ts">
-import AMapLoader from '@amap/amap-jsapi-loader'
-import { reactive, ref, onMounted, h, render } from 'vue'
-import { type Station } from '@/httpclient'
-import iconMarker from '@/assets/img/marker.png'
 import iconMarkerSelected from '@/assets/img/marker-selected.png'
+import iconMarker from '@/assets/img/marker.png'
 import iconPredictionMarker from '@/assets/img/prediction_marker.png'
 import MapPredictionPopup from '@/components/map/MapPredictionPopup.vue'
+import { type Station } from '@/http-client'
+import AMapLoader from '@amap/amap-jsapi-loader'
+import { h, onMounted, reactive, ref, render } from 'vue'
 
 const mapCenter = [104, 35]
 var map: any | undefined
@@ -318,3 +318,4 @@ defineExpose({
   display: flex;
 }
 </style>
+@/http-client

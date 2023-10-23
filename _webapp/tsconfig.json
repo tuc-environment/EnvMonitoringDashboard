@@ -11,6 +11,11 @@
   "compilerOptions": {
     "types": [
       "vue3-toastify/global"
-    ]
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*" // set path `@/*` as alias of `src/*`
+      ]
+    },
   }
 }

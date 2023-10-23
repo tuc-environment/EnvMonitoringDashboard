@@ -1,4 +1,4 @@
-import { SensorSampleMethod } from '@/httpclient'
+import { SensorSampleMethod } from '@/http-client'
 
 export const airOptionNames = [
   '空气温度',

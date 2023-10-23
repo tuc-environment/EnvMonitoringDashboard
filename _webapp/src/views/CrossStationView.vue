@@ -27,11 +27,11 @@
 </template>
 
 <script setup lang="ts">
-import DashboardLayout from '@/layouts/DashboardLayout.vue'
 import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
 import LineChart from '@/components/LineChart.vue'
 import TreeComponent from '@/components/tree/TreeComponent.vue'
-import { type Station } from '@/httpclient'
+import { type Station } from '@/http-client'
+import DashboardLayout from '@/layouts/DashboardLayout.vue'
 import { useDashboardStore } from '@/stores/DashboardStore'
 import { ref } from 'vue'
 
@@ -79,3 +79,4 @@ dashboardStore.loadStations().then(() => {
   }
 }
 </style>
+@/http-client

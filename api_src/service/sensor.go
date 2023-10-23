@@ -129,7 +129,7 @@ func (s *SensorService) GetUnassignedSensors(limit *int, offset *int) (*[]Sensor
 	var err error
 	var count int64
 	query := s.db.Model(&Sensor{})
-	query = query.Where("station_id IS NULL and deleted_at IS NULL")
+	query = query.Where("(station_id IS NULL OR station_id = 0) and deleted_at IS NULL")
 	err = query.Count(&count).Error
 	if err != nil {
 		log.Errorln("get sensors with error: ", err)

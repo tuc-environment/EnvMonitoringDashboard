@@ -59,10 +59,10 @@
 </template>
 
 <script lang="ts">
-import { toRaw, type Component } from 'vue'
 import NavBarComponent from '@/components/NavBarComponent.vue'
 import SideBarButtonComponent from '@/components/SideBarButtonComponent.vue'
-import httpclient from '@/httpclient'
+import httpclient from '@/http-client'
+import { toRaw, type Component } from 'vue'
 
 export interface SubView {
   name: string
@@ -176,3 +176,4 @@ export default {
   }
 }
 </style>
+@/http-client
