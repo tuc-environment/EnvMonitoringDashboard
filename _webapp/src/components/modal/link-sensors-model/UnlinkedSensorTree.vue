@@ -124,7 +124,7 @@ const mapSensorsToNodes = (sensors: Sensor[]): CommonNode[] => {
       .filter((s) => s.imei == imei)
       .map((s) => {
         return {
-          label: s.name,
+          label: s.sensor_report_code + ': ' + s.name,
           id: s.id,
           children: new Array<CommonNode>(),
           selected: selectedSensorIds.value.has(s.id)

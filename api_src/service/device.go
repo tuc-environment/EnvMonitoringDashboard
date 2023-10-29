@@ -1697,8 +1697,8 @@ func (s *DeviceService) ReceiveData(data string) error {
 			continue
 		}
 		sensors := device.Data
-		for i := 0; i < len(sensors); i++ {
-			sensorData := sensors[i]
+		for j := 0; j < len(sensors); j++ {
+			sensorData := sensors[j]
 			sensorReportCode := fmt.Sprintf("%s-%s-%s-%d", dataIMEI, sensorType, sensorData.Code, i)
 			log.Infof("[device-service] add record in index: %d, sensorReportCode: %s, sensorCode: %s, sensorName: %s, sampleMethod: %s\n", recordDataIndex, sensorReportCode, sensorData.Code, sensorData.Name, sensorData.Unit, sensorSampleMethod)
 			var dbSensor *Sensor
