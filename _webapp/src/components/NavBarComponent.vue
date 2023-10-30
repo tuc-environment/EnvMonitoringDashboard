@@ -26,7 +26,7 @@
           "
           class="d-inline-block align-top"
         ></div>
-        <span style="font-size: 1.1rem" class="m-2">环境监测系统 API</span>
+        <span style="font-size: 1.1rem" class="m-2">光伏发电生态设计评估系统</span>
       </a>
 
       <button

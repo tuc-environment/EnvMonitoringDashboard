@@ -23,7 +23,7 @@
       <div class="container my-5">
         <div class="row align-items-center my-3">
           <div class="col-md-6 my-2 text-center">
-            <img class="rounded w-100" src="/map.png" style="aspect-ratio: 16/9" />
+            <img class="rounded w-100" src="/tianjin-map.png" style="aspect-ratio: 16/9" />
           </div>
           <div class="col-md-6 my-2">
             <div class="h1">天津商业大学</div>
@@ -33,11 +33,34 @@
             </div>
             <div class="my-3">
               <div class="h5">电话</div>
-              <div>(86)022-26675774</div>
+              <div>(022) 2667 5774</div>
             </div>
             <div class="my-3">
               <div class="h5">邮箱</div>
               <div>president@tjcu.edu.cn</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container my-5">
+        <div class="row align-items-center my-3">
+          <div class="col-md-6 my-2 text-center">
+            <img class="rounded w-100" src="/diangong-map.png" style="aspect-ratio: 16/9" />
+          </div>
+          <div class="col-md-6 my-2">
+            <div class="h1">中科院电工研究所</div>
+            <div class="my-3">
+              <div class="h5">地址</div>
+              <div>北京市海淀区中关村北二条六号</div>
+            </div>
+            <div class="my-3">
+              <div class="h5">电话</div>
+              <div>(010) 8254 7001</div>
+            </div>
+            <div class="my-3">
+              <div class="h5">邮箱</div>
+              <div>office@mail.iee.ac.cn</div>
             </div>
           </div>
         </div>
