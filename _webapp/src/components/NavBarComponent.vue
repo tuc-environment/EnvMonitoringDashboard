@@ -6,9 +6,20 @@
           style="
             border: 0px solid white;
             border-radius: 4px;
-            padding: 5px;
             background-color: white;
-            background-image: url('/logo.png');
+            background-image: url('/tianjin-logo.png');
+            background-size: cover;
+            width: 30px;
+            height: 30px;
+          "
+          class="d-inline-block align-top"
+        ></div>
+        <div
+          style="
+            border: 0px solid white;
+            border-radius: 4px;
+            background-color: white;
+            background-image: url('/diangong-logo.png');
             background-size: cover;
             width: 30px;
             height: 30px;
