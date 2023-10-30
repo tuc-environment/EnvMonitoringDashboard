@@ -122,20 +122,22 @@ const props = defineProps({
 
 const latVal = ref(0)
 const lngVal = ref(0)
-const tempVal = ref<number | undefined>(undefined)
-const humidityVal = ref<number | undefined>(undefined)
-const barometricPressureVal = ref<number | undefined>(undefined)
-const soilTempShallowVal = ref<number | undefined>(undefined)
-const soilTempDeepVal = ref<number | undefined>(undefined)
-const soilWaterContentShallowVal = ref<number | undefined>(undefined)
-const soilWaterContentDeepVal = ref<number | undefined>(undefined)
-const soilElectricalConductivityVal = ref<number | undefined>(undefined)
+// const tempVal = ref<number | undefined>(undefined)
+// const humidityVal = ref<number | undefined>(undefined)
+// const barometricPressureVal = ref<number | undefined>(undefined)
+// const soilTempShallowVal = ref<number | undefined>(undefined)
+// const soilTempDeepVal = ref<number | undefined>(undefined)
+// const soilWaterContentShallowVal = ref<number | undefined>(undefined)
+// const soilWaterContentDeepVal = ref<number | undefined>(undefined)
+// const soilElectricalConductivityVal = ref<number | undefined>(undefined)
 const loading = ref(false)
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 watch(latVal, (newVal, oldVal) => {
   onPositionChanged()
 })
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 watch(lngVal, (newVal, oldVal) => {
   onPositionChanged()
 })
@@ -157,8 +159,8 @@ const onPositionChanged = () => {
 
 const onSubmit = () => {
   loading.value = true
-  const temp = tempVal.value
-  const humidity = humidityVal.value
+  // const temp = tempVal.value
+  // const humidity = humidityVal.value
   emit('onConfirm', lngVal.value, latVal.value)
 }
 </script>

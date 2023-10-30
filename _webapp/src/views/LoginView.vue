@@ -91,16 +91,6 @@ const login = async (username: string, password: string) => {
   requesting.value = false
 }
 
-const onSubmit = () => {
-  if (username.value.length == 0 || password.value.length == 0) {
-    alert('Username & password cannot be empty')
-  } else if (password.value.length < 6) {
-    alert('Password is least 6 digits')
-  } else {
-    login(username.value, password.value)
-  }
-}
-
 const clearForm = () => {
   username.value = ''
   password.value = ''

@@ -94,9 +94,7 @@ const props = defineProps({
   visible: { type: Boolean, default: false }
 })
 
-const emit = defineEmits<{
-  (e: 'didUpsertStation'): void
-}>()
+const emit = defineEmits(["close", "didUpsertStation"])
 
 const errorMsg = ref('')
 const loading = ref(false)

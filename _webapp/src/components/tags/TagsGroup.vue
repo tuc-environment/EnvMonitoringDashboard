@@ -1,13 +1,14 @@
 <template>
   <div v-if="$props.tags && $props.tags.length > 0" class="tagGroup">
-    <tag v-for="tag in $props.tags" :tag="tag" @on-tag-selected="onTagSelected" />
+    <tag v-for="(tag, idx) in $props.tags" :key="idx" :tag="tag" @on-tag-selected="onTagSelected" />
   </div>
 </template>
 <script setup lang="ts">
-import { ref, type PropType, computed } from 'vue'
-import Tag from '@/components/tags/Tag.vue'
+import {  type PropType,  } from 'vue'
+import Tag from '@/components/tags/TagComponent.vue'
 import type { TagData } from './TagData'
-const props = defineProps({
+
+defineProps({
   tags: Array as PropType<TagData[]>
 })
 

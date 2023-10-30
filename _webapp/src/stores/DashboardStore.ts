@@ -45,14 +45,14 @@ export const useDashboardStore = defineStore('dashboard', () => {
 
   // tree related actions
   const addTreeNodeSelected = (sensor: Sensor, station: Station) => {
-    var sensors = treeSensorsSelected.value
+    const sensors = treeSensorsSelected.value
     const selectedSensorIds = sensors.map((sensor) => sensor.id)
     if (selectedSensorIds.includes(sensor.id)) {
       return
     }
     sensors.push(sensor)
     treeSensorsSelected.value = sensors
-    var stations = treeStationsSelected.value
+    const stations = treeStationsSelected.value
     stations.push(station)
     treeStationsSelected.value = stations
     loadRecordsForSelectedTreeSensor()
@@ -100,7 +100,9 @@ export const useDashboardStore = defineStore('dashboard', () => {
       const result = await httpclient.getStations()
       totalStations.value = result?.total
       stations.value = result?.payload ?? []
-    } catch (_) {}
+    } catch (_) {
+      // ignore
+    }
     loadingStations.value = false
   }
 
@@ -119,7 +121,9 @@ export const useDashboardStore = defineStore('dashboard', () => {
         beforeCreatedAt: todayEnd
       })
       totalCreatedToday.value = todayRes?.total
-    } catch (_) {}
+    } catch (_) {
+      // ignore
+    }
   }
 
   const setMapSelectedStation = async (station: Station | undefined) => {

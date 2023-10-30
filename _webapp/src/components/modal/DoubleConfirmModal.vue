@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const props = defineProps({
+defineProps({
   title: { type: String },
   content: { type: String },
   visible: { type: Boolean, default: false }

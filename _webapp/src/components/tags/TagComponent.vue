@@ -5,7 +5,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { type PropType, computed } from 'vue'
+import { type PropType } from 'vue'
 import { type TagData } from '@/components/tags/TagData'
 
 const props = defineProps({

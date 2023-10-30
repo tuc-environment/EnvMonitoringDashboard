@@ -121,12 +121,6 @@ const onSubmit = async (evt: Event) => {
     await register(username.value, password.value)
   }
 }
-
-const clearForm = () => {
-  username.value = ''
-  password.value = ''
-  passwordConfirm.value = ''
-}
 </script>
 
 <style scoped>
