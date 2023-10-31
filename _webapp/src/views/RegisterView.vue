@@ -5,8 +5,9 @@
     <div class="container">
       <div class="mx-auto my-5 login py-3 px-5">
         <div class="d-flex justify-content-center w-100">
-          <img class="logo" src="/tianjin-logo.png" />
+          <img class="logo" src="/logo.png" />
           <img class="logo" src="/diangong-logo.png" />
+          <img class="logo" src="/tianjin-logo.png" />
         </div>
 
         <h2 class="my-3 text-center">注册账号</h2>
@@ -58,18 +59,25 @@
             style="color: rgba(0, 0, 0, 0.5); font-size: 0.99rem"
           >
             <a
-              class="mx-2"
+              class="mx-2 small"
               style="cursor: pointer; text-decoration: none"
               href="https://www.tjcu.edu.cn/"
               target="_blank"
               >天津商业大学 <i class="bi bi-box-arrow-up-right"></i
             ></a>
             <a
-              class="mx-2"
+              class="mx-2 small"
               style="cursor: pointer; text-decoration: none"
               href="http://www.iee.cas.cn/"
               target="_blank"
               >中科院电工研究所 <i class="bi bi-box-arrow-up-right"></i
+            ></a>
+            <a
+              class="mx-2 small"
+              style="cursor: pointer; text-decoration: none"
+              href="https://www.tju.edu.cn/"
+              target="_blank"
+              >天津大学 <i class="bi bi-box-arrow-up-right"></i
             ></a>
           </div>
         </form>
