@@ -8,7 +8,7 @@
         left: 0;
         top: 0;
         background-color: rgb(17, 18, 23);
-        background-image: url('/img/background.png');
+        background-image: url('/img/background.jpg');
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
