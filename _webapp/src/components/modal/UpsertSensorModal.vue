@@ -1,10 +1,6 @@
 <template>
-  <div
-    class="modal fade"
-    :class="{ show: visible, hidden: !visible }"
-    tabindex="-1"
-    style="display: block; background-color: rgba(0, 0, 0, 0.5)"
-  >
+  <div class="modal fade" :class="{ show: visible, hidden: !visible }" tabindex="-1"
+    style="display: block; background-color: rgba(0, 0, 0, 0.5)">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
@@ -17,20 +13,13 @@
               <div class="col-md-12">
                 <div class="mb-2">
                   <div class="input-group form-control">
-                    <input
-                      type="checkbox"
-                      style="margin-right: 8px"
-                      :value="sensorVal?.visible_in_dashboard"
-                      @input="onChangeDashboardVisibility"
-                    />
+                    <input type="checkbox" style="margin-right: 8px" :checked="visibleInDashBoardVal"
+                      @input="onChangeDashboardVisibility" />
                     <label>是否在看板展示</label>
                   </div>
                 </div>
               </div>
-              <div
-                v-if="sensorVal?.name && !allOptionNames.includes(sensorVal?.name)"
-                class="col-md-12"
-              >
+              <div v-if="sensorVal?.name && !allOptionNames.includes(sensorVal?.name)" class="col-md-12">
                 <div class="mb-2">
                   <label class="form-label small">未经修改的数据项:</label>
                   <div class="input-group">
@@ -52,9 +41,7 @@
               </div>
               <div class="col-md-12">
                 <div class="mb-2">
-                  <label class="form-label small"
-                    >数据上传编码(imei-传感器设备编码-传感器型号-传感器数值index):</label
-                  >
+                  <label class="form-label small">数据上传编码(imei-传感器设备编码-传感器型号-传感器数值index):</label>
                   <div class="input-group">
                     <label>
                       {{ sensorVal?.sensor_report_code }}
@@ -74,16 +61,11 @@
               </div>
               <div class="col-md-12">
                 <div class="mb-2">
-                  <label class="form-label small">数据项</label
-                  ><span class="ms-1 text-danger">*</span>
+                  <label class="form-label small">数据项</label><span class="ms-1 text-danger">*</span>
                   <div class="input-group">
                     <select class="form-select" @input="onNameChanged">
                       <option :value="false">选择数据项</option>
-                      <option
-                        v-for="optionName in allOptionNames"
-                        :value="optionName"
-                        :selected="optionName == nameVal"
-                      >
+                      <option v-for="optionName in allOptionNames" :value="optionName" :selected="optionName == nameVal">
                         {{ optionName }}
                       </option>
                     </select>
@@ -92,16 +74,11 @@
               </div>
               <div class="col-md-12">
                 <div class="mb-2">
-                  <label class="form-label small">传感器位置</label
-                  ><span class="ms-1 text-danger">*</span>
+                  <label class="form-label small">传感器位置</label><span class="ms-1 text-danger">*</span>
                   <div class="input-group">
                     <select class="form-select" @input="onPostionChanged">
                       <option :value="false">选择传感器位置</option>
-                      <option
-                        v-for="position in positions"
-                        :value="position"
-                        :selected="position == positionVal"
-                      >
+                      <option v-for="position in positions" :value="position" :selected="position == positionVal">
                         {{ getPositionName(position) }}
                       </option>
                     </select>
@@ -111,16 +88,12 @@
 
               <div class="col-md-12">
                 <div class="mb-2">
-                  <label class="form-label small">数据取样值类型</label
-                  ><span class="ms-1 text-danger">*</span>
+                  <label class="form-label small">数据取样值类型</label><span class="ms-1 text-danger">*</span>
                   <div class="input-group">
                     <select class="form-select" @input="onSamplingMethodChanged">
                       <option :value="false">选择取样值类型</option>
-                      <option
-                        v-for="sampleMethod in sensorSamplingMethods"
-                        :value="sampleMethod"
-                        :selected="sampleMethod == sampleMethodVal"
-                      >
+                      <option v-for="sampleMethod in sensorSamplingMethods" :value="sampleMethod"
+                        :selected="sampleMethod == sampleMethodVal">
                         {{ getSampleMethodDiplayText(sampleMethod) }}
                       </option>
                     </select>
@@ -129,44 +102,22 @@
               </div>
 
               <div class="col-md-12">
-                <LabelInputComponent
-                  label="单位"
-                  type="string"
-                  placeholder="单位"
-                  :field="unitVal"
-                  @input="onUnitChanged"
-                />
+                <LabelInputComponent label="单位" type="string" placeholder="单位" :field="unitVal" @input="onUnitChanged" />
               </div>
 
               <div class="col-md-12">
-                <LabelInputComponent
-                  label="标签"
-                  type="string"
-                  placeholder="标签"
-                  :field="tagVal"
-                  @input="onTagChanged"
-                />
+                <LabelInputComponent label="标签" type="string" placeholder="标签" :field="tagVal" @input="onTagChanged" />
               </div>
 
               <div class="col-md-12">
-                <LabelInputComponent
-                  label="组"
-                  type="string"
-                  placeholder="组"
-                  :field="groupVal"
-                  @input="onGroupChanged"
-                />
+                <LabelInputComponent label="组" type="string" placeholder="组" :field="groupVal" @input="onGroupChanged" />
               </div>
             </div>
 
             <div style="text-align: center" class="mb-2">
               <button type="button" class="btn btn-success" :disabled="loading" @click="onConfirm">
                 <div v-if="loading">
-                  <span
-                    class="spinner-grow spinner-grow-sm"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>
+                  <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
                   {{ sensorVal ? '更新中...' : '创建中...' }}
                 </div>
                 <div v-if="!loading">
@@ -182,16 +133,16 @@
 </template>
 
 <script setup lang="ts">
-import LabelInputComponent from '@/components/LabelInputComponent.vue'
+import LabelInputComponent from '@/components/LabelInputComponent.vue';
 import httpclient, {
-  SensorPosition,
-  SensorSampleMethod,
-  getPositionName,
-  getSampleMethodDiplayText,
-  type Sensor
-} from '@/http-client'
-import { allOptionNames, sensorSamplingMethods } from '@/utils/constants'
-import { ref } from 'vue'
+SensorPosition,
+SensorSampleMethod,
+getPositionName,
+getSampleMethodDiplayText,
+type Sensor
+} from '@/http-client';
+import { allOptionNames, sensorSamplingMethods } from '@/utils/constants';
+import { ref } from 'vue';
 
 const props = defineProps({
   title: { type: String, default: 'Modal Title' },
@@ -204,6 +155,7 @@ const emit = defineEmits<{
 }>()
 
 const loading = ref(false)
+const visibleInDashBoardVal = ref<boolean>(false)
 const nameVal = ref<string | undefined>(undefined)
 const positionVal = ref<SensorPosition | undefined>(undefined)
 const positions: SensorPosition[] = [SensorPosition.up, SensorPosition.middle, SensorPosition.down]
@@ -212,7 +164,6 @@ const tagVal = ref<string | undefined>(undefined)
 const groupVal = ref<string | undefined>(undefined)
 const stationIdVal = ref<number | undefined>(undefined)
 const sensorVal = ref<Sensor | undefined>(undefined)
-const dashboardVisibilityVal = ref<boolean | undefined>(undefined)
 const sampleMethodVal = ref<SensorSampleMethod | undefined>(undefined)
 
 const onConfirm = async () => {
@@ -228,7 +179,7 @@ const onConfirm = async () => {
     const validPosition = position != undefined
     const validStationId = stationIdVal.value != undefined
     const sampleMethod = sampleMethodVal.value
-    const dashboardVisibility = dashboardVisibilityVal.value
+    const dashboardVisibility = visibleInDashBoardVal.value
 
     if (validName && validPosition && validStationId) {
       const result = await httpclient.upsertSensor({
@@ -253,12 +204,12 @@ const onConfirm = async () => {
     } else {
       alert('输入有误')
     }
-  } catch (_) {}
+  } catch (_) { }
   loading.value = false
 }
 
 const onChangeDashboardVisibility = (e: any) => {
-  dashboardVisibilityVal.value = e.target.value == 'true'
+  visibleInDashBoardVal.value = e.target.checked == true
 }
 
 const onNameChanged = (e: any) => {
@@ -302,10 +253,10 @@ const onGroupChanged = (e: any) => {
 
 const setSensor = (stationId: number, sensor?: Sensor) => {
   console.log(
-    `[upsert-sensor-modal] set sensor with stationId: ${stationId}, sensor: ${
-      sensor ? JSON.stringify(sensor) : undefined
+    `[upsert-sensor-modal] set sensor with stationId: ${stationId}, sensor: ${sensor ? JSON.stringify(sensor) : undefined
     }`
   )
+  visibleInDashBoardVal.value = sensor?.visible_in_dashboard ?? false
   stationIdVal.value = stationId
   sensorVal.value = sensor
   nameVal.value = sensor?.name
@@ -314,7 +265,6 @@ const setSensor = (stationId: number, sensor?: Sensor) => {
   tagVal.value = sensor?.tag
   groupVal.value = sensor?.group
   sampleMethodVal.value = sensor?.sample_method
-  dashboardVisibilityVal.value = sensor?.visible_in_dashboard
 }
 
 defineExpose({
