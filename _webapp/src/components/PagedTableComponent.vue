@@ -82,6 +82,7 @@ export default {
     async request(url: string) {
       console.log(url)
     },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     apiUrl(offset: number, limit: number, order: string): string {
       const url = new URL(this.url)
       // url.searchParams.set('offset', offset)
@@ -90,7 +91,7 @@ export default {
       return url.toString()
     },
     async clickPrevious() {
-      const offset = this.offset - this.limit
+      // const offset = this.offset - this.limit
       // if (offset < 0) offset = 0
       // await this.request(this.apiUrl(offset, this.limit, ''))
     },

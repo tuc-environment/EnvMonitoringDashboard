@@ -4,12 +4,14 @@
   <DashboardLayout>
     <div class="container">
       <div class="mx-auto my-5 login py-3 px-5">
-        <div>
+        <div class="d-flex justify-content-center w-100">
           <img class="logo" src="/logo.png" />
+          <img class="logo" src="/diangong-logo.png" />
+          <img class="logo" src="/tianjin-logo.png" />
         </div>
 
-        <h2 class="mt-3 text-center">环境监测系统 API</h2>
-        <div class="text-center">天津商业大学</div>
+        <h2 class="mt-3 text-center">光伏发电生态设计评估系统</h2>
+        <div class="text-center">天津商业大学 | 中科院电工研究所 | 天津大学</div>
 
         <div class="my-3 mb-5 text-center">
           新用户？<RouterLink to="/register" class="register-link">注册账号</RouterLink>
@@ -46,11 +48,26 @@
             class="mt-5 d-flex justify-content-center mb-2"
             style="color: rgba(0, 0, 0, 0.5); font-size: 0.99rem"
           >
-            <a
+          <a
+              class="mx-2 small"
               style="cursor: pointer; text-decoration: none"
               href="https://www.tjcu.edu.cn/"
               target="_blank"
               >天津商业大学 <i class="bi bi-box-arrow-up-right"></i
+            ></a>
+            <a
+              class="mx-2 small"
+              style="cursor: pointer; text-decoration: none"
+              href="http://www.iee.cas.cn/"
+              target="_blank"
+              >中科院电工研究所 <i class="bi bi-box-arrow-up-right"></i
+            ></a>
+            <a
+              class="mx-2 small"
+              style="cursor: pointer; text-decoration: none"
+              href="https://www.tju.edu.cn/"
+              target="_blank"
+              >天津大学 <i class="bi bi-box-arrow-up-right"></i
             ></a>
           </div>
         </form>
@@ -91,16 +108,6 @@ const login = async (username: string, password: string) => {
   requesting.value = false
 }
 
-const onSubmit = () => {
-  if (username.value.length == 0 || password.value.length == 0) {
-    alert('Username & password cannot be empty')
-  } else if (password.value.length < 6) {
-    alert('Password is least 6 digits')
-  } else {
-    login(username.value, password.value)
-  }
-}
-
 const clearForm = () => {
   username.value = ''
   password.value = ''
@@ -120,8 +127,7 @@ function preventDefault(e: Event) {
 }
 
 .logo {
-  width: 72px;
-  margin: 20px auto;
+  width: 96px;
   display: block;
   border-radius: 5px;
 }

@@ -141,6 +141,7 @@
                 <select class="form-select" @input="onLimitChanged">
                   <option
                     v-for="limitOption in [10, 20, 50, 100, 200]"
+                    :key="limitOption"
                     :value="limitOption"
                     :selected="limitOption == limitVal"
                   >
@@ -302,8 +303,6 @@ import DoubleConfirmModal from '@/components/modal/DoubleConfirmModal.vue'
 import UpsertSensorModal from '@/components/modal/UpsertSensorModal.vue'
 import LinkSensorsModal from '@/components/modal/link-sensors-model/LinkSensorsModal.vue'
 import httpclient, {
-  SensorPosition,
-  getPositionName,
   getSensorDisplayText,
   type DataRecord,
   type Sensor,
@@ -356,17 +355,17 @@ const selectedSensors = computed(() => {
     .sort((a, b) => a.id - b.id)
 })
 
-const positionName = (position: SensorPosition | undefined): string => {
-  return getPositionName(position)
-}
+// const positionName = (position: SensorPosition | undefined): string => {
+//   return getPositionName(position)
+// }
 const gotoStationsView = () => {
   router.push({ query: { view: '站点管理' } })
 }
-const viewSensorRecord = (sensorID: number) => {
-  router.push({
-    query: { view: 'Records', sensor_id: sensorID, station_id: stationID.value }
-  })
-}
+// const viewSensorRecord = (sensorID: number) => {
+//   router.push({
+//     query: { view: 'Records', sensor_id: sensorID, station_id: stationID.value }
+//   })
+// }
 const handleTemplateDownload = async () => {
   const csv = await httpclient.downloadTemplate()
   if (csv) {
@@ -632,6 +631,7 @@ const confirmEditing = async (date: Date) => {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const cancelEditing = (date: Date) => {
   rowEditingIndex.value = undefined
 }

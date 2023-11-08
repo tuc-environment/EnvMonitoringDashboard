@@ -9,7 +9,7 @@ export const hasSelectedChildren = (node: CommonNode | undefined): boolean => {
   if (!node || node.children.length == 0) {
     return node?.selected ?? false
   } else {
-    var selected: boolean = false
+    let selected: boolean = false
     for (const child of node.children) {
       selected = hasSelectedChildren(child) || selected
     }
@@ -21,7 +21,7 @@ export const allChildrenSelected = (node: CommonNode | undefined): boolean => {
   if (!node || node.children.length == 0) {
     return node?.selected ?? false
   } else {
-    var selected: boolean = false
+    let selected: boolean = false
     for (const child of node.children) {
       selected = allChildrenSelected(child) && selected
     }

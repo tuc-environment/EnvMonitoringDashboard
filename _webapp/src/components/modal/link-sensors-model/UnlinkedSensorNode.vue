@@ -40,14 +40,14 @@
 </template>
 
 <script setup lang="ts">
-import { useLinkSensorStore } from '@/stores/LinkSensorsStore'
+// import { useLinkSensorStore } from '@/stores/LinkSensorsStore'
 import { computed, onMounted, ref, watch, type PropType } from 'vue'
-import { hasSelectedChildren, type CommonNode } from './CommonNode'
+import {  type CommonNode } from './CommonNode'
 import UnlinkedSensorNode from './UnlinkedSensorNode.vue'
-const linkSensorStore = useLinkSensorStore()
+// const linkSensorStore = useLinkSensorStore()
 const selected = ref<boolean>(false)
 
-const hasChildrenSelected = computed<boolean>(() => hasSelectedChildren(props.node))
+// const hasChildrenSelected = computed<boolean>(() => hasSelectedChildren(props.node))
 
 const props = defineProps({
   node: Object as PropType<CommonNode>,
@@ -65,7 +65,7 @@ const emit = defineEmits<{
   (e: 'deselect', ids: number[]): void
 }>()
 
-watch(props, async (newVal, oldVal) => {
+watch(props, async (newVal) => {
   selected.value = newVal.node?.selected ?? false
 })
 

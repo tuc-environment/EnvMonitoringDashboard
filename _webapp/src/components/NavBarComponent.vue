@@ -6,7 +6,6 @@
           style="
             border: 0px solid white;
             border-radius: 4px;
-            padding: 5px;
             background-color: white;
             background-image: url('/logo.png');
             background-size: cover;
@@ -15,7 +14,31 @@
           "
           class="d-inline-block align-top"
         ></div>
-        <span style="font-size: 1.1rem" class="m-2">环境监测系统 API</span>
+        <div
+          style="
+            border: 0px solid white;
+            border-radius: 4px;
+            background-color: white;
+            background-image: url('/diangong-logo.png');
+            background-size: cover;
+            width: 30px;
+            height: 30px;
+          "
+          class="d-inline-block align-top"
+        ></div>
+        <div
+          style="
+            border: 0px solid white;
+            border-radius: 4px;
+            background-color: white;
+            background-image: url('/tianjin-logo.png');
+            background-size: cover;
+            width: 30px;
+            height: 30px;
+          "
+          class="d-inline-block align-top"
+        ></div>
+        <span style="font-size: 1.1rem" class="m-2">光伏发电生态设计评估系统</span>
       </a>
 
       <button

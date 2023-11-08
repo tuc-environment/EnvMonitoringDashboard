@@ -297,7 +297,7 @@ class HttpClient {
   }
 
   public async deleteStation(stationId: number): Promise<number> {
-    const resp = await this.delete<void>(`/stations/${stationId}`)
+    await this.delete<void>(`/stations/${stationId}`)
     return stationId
   }
 
@@ -413,7 +413,7 @@ class HttpClient {
   }
 
   public async deleteSensor(sensorId: number): Promise<number> {
-    const resp = await this.delete<void>(`/sensors/${sensorId}`)
+    await this.delete<void>(`/sensors/${sensorId}`)
     return sensorId
   }
 

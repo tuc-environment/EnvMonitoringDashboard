@@ -272,7 +272,7 @@ import LabelInputComponent from '@/components/LabelInputComponent.vue'
 import httpclient, { type StationPrediction } from '@/http-client'
 import { ref } from 'vue'
 
-const props = defineProps({
+defineProps({
   title: { type: String, default: 'Modal Title' },
   visible: { type: Boolean, default: false }
 })

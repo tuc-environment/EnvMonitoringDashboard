@@ -81,6 +81,7 @@
                       <option :value="false">选择数据项</option>
                       <option
                         v-for="optionName in allOptionNames"
+                        :key="optionName"
                         :value="optionName"
                         :selected="optionName == nameVal"
                       >
@@ -98,7 +99,8 @@
                     <select class="form-select" @input="onPostionChanged">
                       <option :value="false">选择传感器位置</option>
                       <option
-                        v-for="position in positions"
+                        v-for="(position, idx) in positions"
+                        :key="idx"
                         :value="position"
                         :selected="position == positionVal"
                       >
@@ -117,7 +119,8 @@
                     <select class="form-select" @input="onSamplingMethodChanged">
                       <option :value="false">选择取样值类型</option>
                       <option
-                        v-for="sampleMethod in sensorSamplingMethods"
+                        v-for="(sampleMethod, idx) in sensorSamplingMethods"
+                        :key="idx"
                         :value="sampleMethod"
                         :selected="sampleMethod == sampleMethodVal"
                       >
@@ -193,7 +196,7 @@ import httpclient, {
 import { allOptionNames, sensorSamplingMethods } from '@/utils/constants'
 import { ref } from 'vue'
 
-const props = defineProps({
+defineProps({
   title: { type: String, default: 'Modal Title' },
   visible: { type: Boolean, default: false }
 })
@@ -253,7 +256,9 @@ const onConfirm = async () => {
     } else {
       alert('输入有误')
     }
-  } catch (_) {}
+  } catch (_) {
+    // ignore
+  }
   loading.value = false
 }
 

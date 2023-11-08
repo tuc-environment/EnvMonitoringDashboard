@@ -32,7 +32,7 @@ import UnlinkedSensorTree from './UnlinkedSensorTree.vue'
 
 const treeChart = ref<InstanceType<typeof UnlinkedSensorTree> | null>(null)
 
-const props = defineProps({
+defineProps({
   visible: { type: Boolean, default: false }
 })
 
@@ -41,17 +41,17 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const loading = ref(false)
+// const loading = ref(false)
 
 const setStation = async (updatedStation: Station | undefined) => {
   treeChart.value?.setStation(updatedStation)
 }
 
-const onConfirm = async () => {
-  loading.value = true
-  await emit('onConfirm')
-  loading.value = false
-}
+// const onConfirm = async () => {
+//   loading.value = true
+//   await emit('onConfirm')
+//   loading.value = false
+// }
 
 defineExpose({
   setStation
