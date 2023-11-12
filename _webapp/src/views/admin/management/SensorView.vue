@@ -5,11 +5,7 @@
         <div class="card-body">
           <div class="d-flex align-items-center">
             <div class="h5 my-0 me-2">站点信息</div>
-            <button
-              type="button"
-              class="btn btn-sm btn-outline-primary"
-              @click="gotoStationsView()"
-            >
+            <button type="button" class="btn btn-sm btn-outline-primary" @click="gotoStationsView()">
               查看所有站点
             </button>
           </div>
@@ -42,12 +38,7 @@
 
           <div class="input-group my-2">
             <input type="file" class="form-control" @change="selectCSVFile" />
-            <button
-              class="btn btn-outline-primary"
-              type="button"
-              :disabled="disableSubmitButton"
-              @click="uploadCSVFile"
-            >
+            <button class="btn btn-outline-primary" type="button" :disabled="disableSubmitButton" @click="uploadCSVFile">
               Submit
             </button>
           </div>
@@ -63,12 +54,8 @@
                 <div class="h5 mb-0 me-2">传感器列表</div>
               </div>
               <div class="d-flex align-items-center my-2">
-                <button
-                  type="button"
-                  style="margin-right: 8px"
-                  class="btn btn-sm btn-success"
-                  @click="showCreateSensorModal"
-                >
+                <button type="button" style="margin-right: 8px" class="btn btn-sm btn-success"
+                  @click="showCreateSensorModal">
                   + 添加传感器
                 </button>
                 <button type="button" class="btn btn-sm btn-success" @click="showLinkSensorModal">
@@ -78,39 +65,21 @@
               <label class="text-secondary small mb-3">选择查看相应的传感器</label>
 
               <div style="height: 170px; overflow-y: auto">
-                <div
-                  class="form-check mb-3 d-flex align-items-center"
-                  v-for="sensor in allSensors"
-                  :key="sensor.id"
-                >
-                  <input
-                    class="form-check-input"
-                    style="margin-top: 0; flex-shrink: 0"
-                    type="checkbox"
-                    @change="onChangeSensor($event, sensor.id)"
-                  />
+                <div class="form-check mb-3 d-flex align-items-center" v-for="sensor in allSensors" :key="sensor.id">
+                  <input class="form-check-input" style="margin-top: 0; flex-shrink: 0" type="checkbox"
+                    @change="onChangeSensor($event, sensor.id)" />
                   <label class="form-check-label ms-1">
                     {{ getSensorDisplayText(sensor) }}
                   </label>
                   <div v-if="operatingSensorId == sensor.id" class="ms-auto small">
-                    <span
-                      class="spinner-grow spinner-grow-sm me-1"
-                      role="status"
-                      aria-hidden="true"
-                    ></span>
+                    <span class="spinner-grow spinner-grow-sm me-1" role="status" aria-hidden="true"></span>
                     修改中...
                   </div>
                   <div v-else class="d-flex align-items-center ms-auto">
-                    <i
-                      class="bi bi-exclamation-circle-fill text-primary mx-1"
-                      style="cursor: pointer"
-                      @click="showSensorUpsertModal(sensor)"
-                    ></i>
-                    <i
-                      class="bi bi-x-circle-fill text-danger mx-1"
-                      style="cursor: pointer"
-                      @click="onDeleteSensor(sensor.id)"
-                    ></i>
+                    <i class="bi bi-exclamation-circle-fill text-primary mx-1" style="cursor: pointer"
+                      @click="showSensorUpsertModal(sensor)"></i>
+                    <i class="bi bi-x-circle-fill text-danger mx-1" style="cursor: pointer"
+                      @click="onDeleteSensor(sensor.id)"></i>
                   </div>
                 </div>
               </div>
@@ -119,48 +88,28 @@
               <div class="h5 mb-0">时间范围</div>
               <div class="my-2">
                 <div>开始时间</div>
-                <Datepicker
-                  v-model="startDate"
-                  class="btn btn-sm btn-primary"
-                  style="cursor: pointer"
-                  @closed="onDatePickerClosed"
-                />
+                <Datepicker v-model="startDate" class="btn btn-sm btn-primary" style="cursor: pointer"
+                  @closed="onDatePickerClosed" />
               </div>
 
               <div class="my-2">
                 <div>结束时间</div>
-                <Datepicker
-                  v-model="endDate"
-                  class="btn btn-sm btn-primary"
-                  style="cursor: pointer"
-                  @closed="onDatePickerClosed"
-                />
+                <Datepicker v-model="endDate" class="btn btn-sm btn-primary" style="cursor: pointer"
+                  @closed="onDatePickerClosed" />
               </div>
               <div class="h6 mb-0">每页数据时间跨度(30mins * limit)</div>
               <div class="my-2">
                 <select class="form-select" @input="onLimitChanged">
-                  <option
-                    v-for="limitOption in [10, 20, 50, 100, 200]"
-                    :key="limitOption"
-                    :value="limitOption"
-                    :selected="limitOption == limitVal"
-                  >
+                  <option v-for="limitOption in [10, 20, 50, 100, 200]" :key="limitOption" :value="limitOption"
+                    :selected="limitOption == limitVal">
                     {{ limitOption }}
                   </option>
                 </select>
               </div>
 
-              <button
-                class="btn btn-sm btn-outline-primary my-2"
-                :disabled="totalVal <= 0"
-                @click="handleDownloadData"
-              >
+              <button class="btn btn-sm btn-outline-primary my-2" :disabled="totalVal <= 0" @click="handleDownloadData">
                 <div v-if="isDownloadData">
-                  <span
-                    class="spinner-grow spinner-grow-sm"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>
+                  <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
                   下载中...
                 </div>
                 <div v-if="!isDownloadData">下载全部数据</div>
@@ -173,39 +122,18 @@
     <div class="col-md-4 my-2">
       <div class="card h-100">
         <div class="card-body">
-          <line-chart
-            :stations="station ? [station] : []"
-            :sensors="selectedSensors"
-            :records="displayedRecords"
-            title="当前数据"
-            default-text="请选择数据项"
-            no-data-text="暂无数据"
-            :show-default-text="false"
-            :loading="loading"
-          />
+          <line-chart :stations="station ? [station] : []" :sensors="selectedSensors" :records="displayedRecords"
+            title="当前数据" default-text="请选择数据项" no-data-text="暂无数据" :show-default-text="false" :loading="loading" />
         </div>
       </div>
     </div>
-    <upsert-sensor-modal
-      ref="upsertSensorModal"
-      :visible="isShowingUpsertSensorModal"
-      :title="operatingSensorId ? '编辑传感器' : '添加传感器'"
-      @close="onUpsertSensorModalClosed"
-      @did-upsert-sensor="didUpsertSensor"
-    />
-    <link-sensors-modal
-      ref="linkSensorModal"
-      :visible="isShowingLinkSensorsModal"
-      @close="onCloseLinkedSensors"
-      @on-confirm="onConfirmLinkedSensors"
-    />
-    <double-confirm-modal
-      :visible="isShowingDeletionModal"
-      :title="'删除传感器 ' + operatingSensorId"
-      content="确定删除传感器？"
-      @close="onDeleteSensorModalClosed"
-      @on-confirm="onConfirmDeleteSensor"
-    />
+    <upsert-sensor-modal ref="upsertSensorModal" :visible="isShowingUpsertSensorModal"
+      :title="operatingSensorId ? '编辑传感器' : '添加传感器'" @close="onUpsertSensorModalClosed"
+      @did-upsert-sensor="didUpsertSensor" />
+    <link-sensors-modal ref="linkSensorModal" :visible="isShowingLinkSensorsModal" @close="onCloseLinkedSensors"
+      @on-confirm="onConfirmLinkedSensors" />
+    <double-confirm-modal :visible="isShowingDeletionModal" :title="'删除传感器 ' + operatingSensorId" content="确定删除传感器？"
+      @close="onDeleteSensorModalClosed" @on-confirm="onConfirmDeleteSensor" />
   </div>
 
   <div v-if="loading" class="mx-auto mt-5 text-center">
@@ -220,78 +148,60 @@
 
   <div v-else class="row">
     <div class="col-md-12">
-      <table class="table table-bordered align-middle">
-        <thead class="table-dark">
-          <tr>
-            <th scope="col" width="30%">时间</th>
-            <th scope="col" v-for="s in selectedSensors" :key="s.id">
-              {{ getSensorDisplayText(s) }}
-            </th>
-            <th scope="col" width="20%">操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="[date, sensorRecordMap] in recordsByTime" :key="date.toString()">
-            <td>{{ formatDatetime(date) }}</td>
-            <td v-for="sensor in selectedSensors" :key="sensor.id">
-              <div v-if="rowEditingIndex != date || sensor.id == 0">
-                <div v-if="sensorRecordMap.get(sensor.id)?.value">
-                  {{ sensorRecordMap.get(sensor.id)?.value }}
+      <div class="card">
+        <table class="table card-table align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col" width="30%">时间</th>
+              <th scope="col" v-for="s in selectedSensors" :key="s.id">
+                {{ getSensorDisplayText(s) }}
+              </th>
+              <th scope="col" width="20%">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="[date, sensorRecordMap] in recordsByTime" :key="date.toString()">
+              <td>{{ formatDatetime(date) }}</td>
+              <td v-for="sensor in selectedSensors" :key="sensor.id">
+                <div v-if="rowEditingIndex != date || sensor.id == 0">
+                  <div v-if="sensorRecordMap.get(sensor.id)?.value">
+                    {{ sensorRecordMap.get(sensor.id)?.value }}
+                  </div>
+                  <div v-else class="bg-danger w-100 h-100">N.A.</div>
                 </div>
-                <div v-else class="bg-danger w-100 h-100">N.A.</div>
-              </div>
-              <div v-else>
-                <input
-                  type="number"
-                  :value="sensorRecordMap.get(sensor.id)?.value"
-                  @input="(event) => onChangeRecordValue(event, date, sensor.id)"
-                />
-              </div>
-            </td>
-            <td>
-              <div v-if="rowUpdateingIndex == date">
-                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                修改中...
-              </div>
+                <div v-else>
+                  <input type="number" :value="sensorRecordMap.get(sensor.id)?.value"
+                    @input="(event) => onChangeRecordValue(event, date, sensor.id)" />
+                </div>
+              </td>
+              <td>
+                <div v-if="rowUpdateingIndex == date">
+                  <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                  修改中...
+                </div>
 
-              <button
-                v-if="rowEditingIndex != date && rowUpdateingIndex != date"
-                type="button"
-                class="btn btn-outline-primary btn-sm mx-2"
-                @click="setEditing(date)"
-              >
-                编辑
-              </button>
+                <button v-if="rowEditingIndex != date && rowUpdateingIndex != date" type="button"
+                  class="btn btn-outline-primary btn-sm mx-2" @click="setEditing(date)">
+                  编辑
+                </button>
 
-              <button
-                v-if="rowEditingIndex == date && rowUpdateingIndex != date"
-                type="button"
-                class="btn btn-outline-success btn-sm mx-2"
-                @click="confirmEditing(date)"
-              >
-                确定
-              </button>
+                <button v-if="rowEditingIndex == date && rowUpdateingIndex != date" type="button"
+                  class="btn btn-outline-success btn-sm mx-2" @click="confirmEditing(date)">
+                  确定
+                </button>
 
-              <button
-                v-if="rowEditingIndex == date && rowUpdateingIndex != date"
-                type="button"
-                class="btn btn-outline-secondary btn-sm mx-2"
-                @click="cancelEditing(date)"
-              >
-                取消
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <table-paginator
-        :offset="offsetVal"
-        :limit="limitVal"
-        :total="totalVal"
-        @to-previous="toPreviousPage"
-        @to-index="toOffset"
-        @to-next="toNextPage"
-      />
+                <button v-if="rowEditingIndex == date && rowUpdateingIndex != date" type="button"
+                  class="btn btn-outline-secondary btn-sm mx-2" @click="cancelEditing(date)">
+                  取消
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <table-paginator :offset="offsetVal" :limit="limitVal" :total="totalVal" @to-previous="toPreviousPage"
+        @to-index="toOffset" @to-next="toNextPage" />
+
     </div>
   </div>
 </template>

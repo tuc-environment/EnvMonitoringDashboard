@@ -67,7 +67,7 @@
           </li>
         </ul>
         <form class="form-inline" style="margin-left: 10px">
-          <a class="btn btn-warning my-sm-0" type="button" href="/login"> 登入管理后台 </a>
+          <a class="btn btn-primary my-sm-0" type="button" href="/login"> 进入管理后台 </a>
         </form>
       </div>
     </div>

@@ -4,46 +4,31 @@
 
     <div class="content d-flex flex-md-row flex-column-reverse">
       <div class="sidebar p-3">
-        <div
-          v-for="(section, sectionIdx) in sections.filter((section) => !section.hidden)"
-          :key="sectionIdx"
-        >
+        <div v-for="(section, sectionIdx) in sections.filter((section) => !section.hidden)" :key="sectionIdx">
           <h5 class="mb-4">{{ section.name }}</h5>
 
-          <SideBarButtonComponent
-            v-for="(subView, idx) in section.subViews.filter((v) => !v.hidden)"
-            :key="idx"
-            :name="subView.name"
-            :icon="subView.icon"
-            :selected="subView.name == subViewName"
-            @click="clickSideBar(subView.name)"
-          />
+          <SideBarButtonComponent v-for="(subView, idx) in section.subViews.filter((v) => !v.hidden)" :key="idx"
+            :name="subView.name" :icon="subView.icon" :selected="subView.name == subViewName"
+            @click="clickSideBar(subView.name)" />
         </div>
 
         <hr style="color: rgba(0, 0, 0, 0.2)" />
 
         <h5 class="mb-4">链接</h5>
 
-        <SideBarButtonComponent
-          name="数据看板"
-          icon="bi-card-heading"
-          right-icon="bi-box-arrow-up-right"
-          @click="open('/')"
-        />
+        <SideBarButtonComponent name="数据看板" icon="bi-card-heading" right-icon="bi-box-arrow-up-right"
+          @click="open('/')" />
 
-        <SideBarButtonComponent
-          name="天津商业大学"
-          icon="bi-info-circle"
-          right-icon="bi-box-arrow-up-right"
-          @click="open('https://www.tjcu.edu.cn/')"
-        />
+        <SideBarButtonComponent name="天津商业大学" icon="bi-info-circle" right-icon="bi-box-arrow-up-right"
+          @click="open('https://www.tjcu.edu.cn/')" />
 
-        <button
-          v-if="backButtonPath"
-          type="button"
-          class="mt-3 w-100 btn btn-outline-primary"
-          @click="back()"
-        >
+        <SideBarButtonComponent name="天津商业大学" icon="bi-info-circle" right-icon="bi-box-arrow-up-right"
+          @click="open('http://www.iee.cas.cn/')" />
+
+        <SideBarButtonComponent name="天津大学" icon="bi-info-circle" right-icon="bi-box-arrow-up-right"
+          @click="open('https://www.tju.edu.cn/')" />
+
+        <button v-if="backButtonPath" type="button" class="mt-3 w-100 btn btn-outline-primary" @click="back()">
           {{ backButtonName }}
         </button>
         <button type="button" class="mt-3 w-100 btn btn-danger" @click="logout()">登出</button>

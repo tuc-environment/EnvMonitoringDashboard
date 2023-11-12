@@ -6,7 +6,7 @@
 
     <div class="content d-flex">
       <div class="main flex-grow-1 w-100 h-100">
-        <div class="container-fluid">
+        <div class="container h-100" style="max-width: 1660px;">
           <slot />
         </div>
       </div>
