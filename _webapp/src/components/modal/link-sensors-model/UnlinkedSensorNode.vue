@@ -42,7 +42,7 @@
 <script setup lang="ts">
 // import { useLinkSensorStore } from '@/stores/LinkSensorsStore'
 import { computed, onMounted, ref, watch, type PropType } from 'vue'
-import {  type CommonNode } from './CommonNode'
+import { type CommonNode } from './CommonNode'
 import UnlinkedSensorNode from './UnlinkedSensorNode.vue'
 // const linkSensorStore = useLinkSensorStore()
 const selected = ref<boolean>(false)
