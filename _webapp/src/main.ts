@@ -1,5 +1,6 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap'
+import '@tabler/core'
+import '@tabler/core/dist/css/tabler.min.css'
+import '@tabler/icons-vue'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import './assets/main.css'
 import 'vue3-loading-overlay/dist/vue3-loading-overlay.css'
