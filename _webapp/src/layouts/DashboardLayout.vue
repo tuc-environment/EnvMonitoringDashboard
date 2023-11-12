@@ -6,7 +6,9 @@
 
     <div class="content d-flex">
       <div class="main flex-grow-1 w-100 h-100">
-        <slot />
+        <div class="container-fluid">
+          <slot />
+        </div>
       </div>
     </div>
   </div>
@@ -26,7 +28,7 @@ import NavBarComponent from '@/components/NavBarComponent.vue'
 }
 
 .content {
-  height: calc(100vh - 56px);
+  height: calc(100vh - 59px);
   overflow: auto;
 }
 
@@ -38,7 +40,7 @@ import NavBarComponent from '@/components/NavBarComponent.vue'
 }
 
 .content {
-  margin-top: 56px;
+  margin-top: 59px;
 }
 
 .sidebar {

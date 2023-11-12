@@ -139,7 +139,7 @@ export default {
 }
 
 .content {
-  margin-top: 56px;
+  margin-top: 59px;
 }
 
 .sidebar {
@@ -163,7 +163,7 @@ export default {
   }
 
   .content {
-    height: calc(100vh - 56px);
+    height: calc(100vh - 59px);
   }
 
   .sidebar {
