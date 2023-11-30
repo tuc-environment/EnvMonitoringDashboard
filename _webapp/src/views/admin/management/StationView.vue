@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main-content">
     <div class="d-flex my-1 align-items-center">
       <button type="button" class="btn btn-success my-2" @click="onAddButtonClicked">
         + 添加站点
@@ -15,62 +15,64 @@
         @to-index="toOffset"
         @to-next="toNextPage"
       />
-      <table class="table table-bordered align-middle">
-        <thead class="table-dark">
-          <tr>
-            <th scope="col" width="10%">站点编号</th>
-            <th scope="col" width="20%">名称</th>
-            <th scope="col" width="15%">纬度</th>
-            <th scope="col" width="15%">经度</th>
-            <th scope="col" width="10%">海拔</th>
-            <th scope="col" width="30%">操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="station in allStations" :key="station.id">
-            <td>{{ station.id }}</td>
-            <td>{{ station.name }}</td>
-            <td>{{ station.lat }}</td>
-            <td>{{ station.lng }}</td>
-            <td>{{ station.altitude }}</td>
-            <td>
-              <div v-if="operatingStationId == station.id">
-                <button class="btn btn-sm">
-                  <span
-                    class="spinner-grow spinner-grow-sm me-2"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>
-                  修改中...
-                </button>
-              </div>
-              <div v-else>
-                <button
-                  type="button"
-                  class="btn btn-outline-success btn-sm mx-2"
-                  @click="viewSensorData(station.id)"
-                >
-                  查看所有传感器
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-primary btn-sm mx-2"
-                  @click="showStationUpsertModal(station)"
-                >
-                  编辑
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger btn-sm mx-2"
-                  @click="onDeleteStation(station.id)"
-                >
-                  删除
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="card">
+        <table class="table card-table align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col" width="10%">站点编号</th>
+              <th scope="col" width="20%">名称</th>
+              <th scope="col" width="15%">纬度</th>
+              <th scope="col" width="15%">经度</th>
+              <th scope="col" width="10%">海拔</th>
+              <th scope="col" width="30%">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="station in allStations" :key="station.id">
+              <td>{{ station.id }}</td>
+              <td>{{ station.name }}</td>
+              <td>{{ station.lat }}</td>
+              <td>{{ station.lng }}</td>
+              <td>{{ station.altitude }}</td>
+              <td>
+                <div v-if="operatingStationId == station.id">
+                  <button class="btn btn-sm">
+                    <span
+                      class="spinner-grow spinner-grow-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                    修改中...
+                  </button>
+                </div>
+                <div v-else>
+                  <button
+                    type="button"
+                    class="btn btn-outline-success btn-sm mx-2"
+                    @click="viewSensorData(station.id)"
+                  >
+                    查看所有传感器
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm mx-2"
+                    @click="showStationUpsertModal(station)"
+                  >
+                    编辑
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger btn-sm mx-2"
+                    @click="onDeleteStation(station.id)"
+                  >
+                    删除
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div v-else class="mt-5 w-100 text-center">
       <div class="spinner-border"></div>

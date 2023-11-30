@@ -38,6 +38,20 @@
           @click="open('https://www.tjcu.edu.cn/')"
         />
 
+        <SideBarButtonComponent
+          name="天津商业大学"
+          icon="bi-info-circle"
+          right-icon="bi-box-arrow-up-right"
+          @click="open('http://www.iee.cas.cn/')"
+        />
+
+        <SideBarButtonComponent
+          name="天津大学"
+          icon="bi-info-circle"
+          right-icon="bi-box-arrow-up-right"
+          @click="open('https://www.tju.edu.cn/')"
+        />
+
         <button
           v-if="backButtonPath"
           type="button"
@@ -139,7 +153,7 @@ export default {
 }
 
 .content {
-  margin-top: 56px;
+  margin-top: 59px;
 }
 
 .sidebar {
@@ -163,7 +177,7 @@ export default {
   }
 
   .content {
-    height: calc(100vh - 56px);
+    height: calc(100vh - 59px);
   }
 
   .sidebar {

@@ -15,7 +15,7 @@
             <div style="font-size: 4rem">
               <strong>联系我们</strong>
             </div>
-            <div style="font-size: 1.2rem">天津商业大学</div>
+            <div style="font-size: 1.2rem">天津商业大学 | 中科院电工研究所 | 天津大学</div>
           </div>
         </div>
       </div>
@@ -65,7 +65,28 @@
           </div>
         </div>
       </div>
+
+      <div class="container my-5">
+        <div class="row align-items-center my-3">
+          <div class="col-md-6 my-2 text-center">
+            <img class="rounded w-100" src="/tianjin-map.png" style="aspect-ratio: 16/9" />
+          </div>
+          <div class="col-md-6 my-2">
+            <div class="h1">天津大学</div>
+            <div class="my-3">
+              <div class="h5">地址</div>
+              <div>天津市南开区卫津路92号</div>
+            </div>
+            <div class="my-3">
+              <div class="h5">网站</div>
+              <div><a href="https://www.tju.edu.cn/">https://www.tju.edu.cn/</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <div style="height: 64px"></div>
   </DashboardLayout>
 </template>
 

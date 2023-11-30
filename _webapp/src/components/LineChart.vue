@@ -16,9 +16,13 @@
       {{ noDataText }}
     </div>
 
-    <div v-else class="w-100 h-100 text-dark">
-      <div v-if="showSelections" class="d-flex flex-row">
-        <select v-if="availablePositions.length > 0" class="form-select" @input="onPositionChanged">
+    <div v-else class="d-flex flex-column w-100 h-100 text-dark">
+      <div v-if="showSelections" class="d-flex flex-row mb-3">
+        <select
+          v-if="availablePositions.length > 0"
+          class="form-select form-select-sm me-2"
+          @input="onPositionChanged"
+        >
           <option :value="false">可选位置</option>
           <option
             v-for="(position, idx) in availablePositions"
@@ -29,7 +33,11 @@
             {{ getPositionName(position) }}
           </option>
         </select>
-        <select v-if="avaialebleTags.length > 0" class="form-select" @input="onTagChanged">
+        <select
+          v-if="avaialebleTags.length > 0"
+          class="form-select form-select-sm me-2"
+          @input="onTagChanged"
+        >
           <option :value="false">可选深度</option>
           <option
             v-for="tag in avaialebleTags"
@@ -40,7 +48,11 @@
             {{ tag }}
           </option>
         </select>
-        <select v-if="avaialebleGroups.length > 0" class="form-select" @input="onGroupChanged">
+        <select
+          v-if="avaialebleGroups.length > 0"
+          class="form-select form-select-sm me-2"
+          @input="onGroupChanged"
+        >
           <option :value="false">可选组</option>
           <option
             v-for="(group, idx) in avaialebleGroups"
@@ -53,7 +65,7 @@
         </select>
         <select
           v-if="availableOptionNames.length > 0"
-          class="form-select"
+          class="form-select form-select-sm"
           @input="onOptionNameChanged"
         >
           <option :value="false">可选数据项</option>
@@ -67,7 +79,15 @@
           </option>
         </select>
       </div>
-      <apexchart height="100%" type="line" :options="chartOptions" :series="series" />
+      <div class="flex-grow-1 w-100">
+        <apexchart
+          width="100%"
+          height="100%"
+          type="line"
+          :options="chartOptions"
+          :series="series"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -108,19 +128,34 @@ const chartOptions = computed(() => {
   const dates: Date[] = getDatesFromRecords(props.records)
   return {
     theme: {
-      palette: 'palette2'
+      palette: 'palette7'
     },
     chart: {
-      // foreColor: '#d3d3d3'
+      animations: { easing: 'linear' }
+    },
+    dataLabels: { enabled: false },
+    stroke: {
+      width: 2,
+      lineCap: 'round',
+      curve: 'smooth'
     },
     xaxis: {
       type: 'datetime',
       min: getMinDate(dates),
       max: getMaxDate(dates),
-      title: {
-        text: '时间',
-        offsetX: '-50%'
+      labels: { show: false },
+      tooltip: { enabled: false },
+      crossharis: { show: false },
+      axisBorder: { show: false },
+      axisTicks: { show: false }
+    },
+    tooltip: {
+      x: {
+        format: 'dd MMM HH:mm'
       }
+    },
+    legend: {
+      show: false
     }
   }
 })

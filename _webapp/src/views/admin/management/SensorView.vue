@@ -220,70 +220,76 @@
 
   <div v-else class="row">
     <div class="col-md-12">
-      <table class="table table-bordered align-middle">
-        <thead class="table-dark">
-          <tr>
-            <th scope="col" width="30%">时间</th>
-            <th scope="col" v-for="s in selectedSensors" :key="s.id">
-              {{ getSensorDisplayText(s) }}
-            </th>
-            <th scope="col" width="20%">操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="[date, sensorRecordMap] in recordsByTime" :key="date.toString()">
-            <td>{{ formatDatetime(date) }}</td>
-            <td v-for="sensor in selectedSensors" :key="sensor.id">
-              <div v-if="rowEditingIndex != date || sensor.id == 0">
-                <div v-if="sensorRecordMap.get(sensor.id)?.value">
-                  {{ sensorRecordMap.get(sensor.id)?.value }}
+      <div class="card">
+        <table class="table card-table align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col" width="30%">时间</th>
+              <th scope="col" v-for="s in selectedSensors" :key="s.id">
+                {{ getSensorDisplayText(s) }}
+              </th>
+              <th scope="col" width="20%">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="[date, sensorRecordMap] in recordsByTime" :key="date.toString()">
+              <td>{{ formatDatetime(date) }}</td>
+              <td v-for="sensor in selectedSensors" :key="sensor.id">
+                <div v-if="rowEditingIndex != date || sensor.id == 0">
+                  <div v-if="sensorRecordMap.get(sensor.id)?.value">
+                    {{ sensorRecordMap.get(sensor.id)?.value }}
+                  </div>
+                  <div v-else class="bg-danger w-100 h-100">N.A.</div>
                 </div>
-                <div v-else class="bg-danger w-100 h-100">N.A.</div>
-              </div>
-              <div v-else>
-                <input
-                  type="number"
-                  :value="sensorRecordMap.get(sensor.id)?.value"
-                  @input="(event) => onChangeRecordValue(event, date, sensor.id)"
-                />
-              </div>
-            </td>
-            <td>
-              <div v-if="rowUpdateingIndex == date">
-                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
-                修改中...
-              </div>
+                <div v-else>
+                  <input
+                    type="number"
+                    :value="sensorRecordMap.get(sensor.id)?.value"
+                    @input="(event) => onChangeRecordValue(event, date, sensor.id)"
+                  />
+                </div>
+              </td>
+              <td>
+                <div v-if="rowUpdateingIndex == date">
+                  <span
+                    class="spinner-grow spinner-grow-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  修改中...
+                </div>
 
-              <button
-                v-if="rowEditingIndex != date && rowUpdateingIndex != date"
-                type="button"
-                class="btn btn-outline-primary btn-sm mx-2"
-                @click="setEditing(date)"
-              >
-                编辑
-              </button>
+                <button
+                  v-if="rowEditingIndex != date && rowUpdateingIndex != date"
+                  type="button"
+                  class="btn btn-outline-primary btn-sm mx-2"
+                  @click="setEditing(date)"
+                >
+                  编辑
+                </button>
 
-              <button
-                v-if="rowEditingIndex == date && rowUpdateingIndex != date"
-                type="button"
-                class="btn btn-outline-success btn-sm mx-2"
-                @click="confirmEditing(date)"
-              >
-                确定
-              </button>
+                <button
+                  v-if="rowEditingIndex == date && rowUpdateingIndex != date"
+                  type="button"
+                  class="btn btn-outline-success btn-sm mx-2"
+                  @click="confirmEditing(date)"
+                >
+                  确定
+                </button>
 
-              <button
-                v-if="rowEditingIndex == date && rowUpdateingIndex != date"
-                type="button"
-                class="btn btn-outline-secondary btn-sm mx-2"
-                @click="cancelEditing(date)"
-              >
-                取消
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                <button
+                  v-if="rowEditingIndex == date && rowUpdateingIndex != date"
+                  type="button"
+                  class="btn btn-outline-secondary btn-sm mx-2"
+                  @click="cancelEditing(date)"
+                >
+                  取消
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <table-paginator
         :offset="offsetVal"
         :limit="limitVal"

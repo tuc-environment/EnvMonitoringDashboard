@@ -146,11 +146,3 @@ const onModalClosed = () => {
 dashboardStore.loadStations()
 dashboardStore.loadTotalCounts()
 </script>
-
-<style scoped>
-.row > * {
-  padding-left: 0;
-  padding-right: 0;
-}
-</style>
-@/http-client

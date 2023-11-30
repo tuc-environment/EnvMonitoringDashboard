@@ -1,17 +1,15 @@
 <template>
-  <div class="dashboard-card w-100 h-100 p-2 d-flex flex-column">
-    <div>
-      <b>{{ title }}</b>
-    </div>
-    <div
-      class="my-2 w-100 text-center flex-grow-1 d-flex flex-column justify-content-center"
-      style="overflow: auto"
-    >
-      <div class="w-100 h-100" :class="{ 'd-none': loading }">
-        <slot />
-      </div>
-      <div :class="{ 'd-none': !loading }">
-        <div class="spinner-border" role="status"></div>
+  <div class="card w-100 h-100">
+    <div class="card-status-top bg-success"></div>
+    <div class="card-body d-flex flex-column">
+      <div class="card-title">{{ title }}</div>
+      <div class="text-center flex-grow-1">
+        <div class="h-100" :class="{ 'd-none': loading }">
+          <slot />
+        </div>
+        <div :class="{ 'd-none': !loading }">
+          <div class="spinner-border" role="status"></div>
+        </div>
       </div>
     </div>
   </div>

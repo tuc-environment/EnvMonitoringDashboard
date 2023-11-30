@@ -13,7 +13,7 @@
         </div>
       </div>
 
-      <div v-else>
+      <div v-else class="d-flex align-items-center">
         <input
           class="form-check-input me-2"
           type="checkbox"
