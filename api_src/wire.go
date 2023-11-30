@@ -21,12 +21,14 @@ var appSet = wire.NewSet(
 	logger.NewLogger,
 	// store
 	store.NewDBClient,
+	store.NewRawDBClient,
 	// service
 	service.NewAccountService,
 	service.NewStationService,
 	service.NewRecordService,
 	service.NewSensorService,
 	service.NewDeviceService,
+	service.NewRawDataService,
 	// api
 	controller.NewNoRouteAPI,
 	controller.NewDataAPI,
@@ -34,6 +36,7 @@ var appSet = wire.NewSet(
 	controller.NewStationAPI,
 	controller.NewRecordAPI,
 	controller.NewSensorAPI,
+	controller.NewCronController,
 )
 
 func InitializeApp(webappFS fs.FS) (*app.App, error) {

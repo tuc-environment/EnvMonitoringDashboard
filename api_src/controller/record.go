@@ -199,7 +199,7 @@ func (api *RecordAPI) GetRecords(g *gin.Context) {
 		limit = &limitV
 	}
 
-	records, err, count := api.recordService.GetRecords(sensorIds, startTime, endTime, afterCreatedAt, beforeCreatedAt, offset, limit)
+	records, count, err := api.recordService.GetRecords(sensorIds, startTime, endTime, afterCreatedAt, beforeCreatedAt, offset, limit)
 	if err != nil {
 		c.BadRequest(err)
 	} else {

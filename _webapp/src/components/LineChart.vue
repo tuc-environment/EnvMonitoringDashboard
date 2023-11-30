@@ -21,7 +21,8 @@
         <select v-if="availablePositions.length > 0" class="form-select" @input="onPositionChanged">
           <option :value="false">可选位置</option>
           <option
-            v-for="(position, idx) in availablePositions" :key="idx"
+            v-for="(position, idx) in availablePositions"
+            :key="idx"
             :value="position"
             :selected="position == selectedPosition"
           >
@@ -30,7 +31,12 @@
         </select>
         <select v-if="avaialebleTags.length > 0" class="form-select" @input="onTagChanged">
           <option :value="false">可选深度</option>
-          <option v-for="tag in avaialebleTags" :key="tag" :value="tag" :selected="selectedTag == tag">
+          <option
+            v-for="tag in avaialebleTags"
+            :key="tag"
+            :value="tag"
+            :selected="selectedTag == tag"
+          >
             {{ tag }}
           </option>
         </select>

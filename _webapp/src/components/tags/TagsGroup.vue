@@ -4,7 +4,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {  type PropType,  } from 'vue'
+import { type PropType } from 'vue'
 import Tag from '@/components/tags/TagComponent.vue'
 import type { TagData } from './TagData'
 

@@ -33,7 +33,7 @@ func NewRecordService(c *config.Config, db *store.DBClient, logger *logger.Logge
 	return &RecordService{c, db, logger}
 }
 
-func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endTime *time.Time, afterCreatedAt *time.Time, beforeCreatedAt *time.Time, offset *int, limit *int) (*[]Record, error, *int64) {
+func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endTime *time.Time, afterCreatedAt *time.Time, beforeCreatedAt *time.Time, offset *int, limit *int) (*[]Record, *int64, error) {
 	log := s.logger.Sugar()
 	defer log.Sync()
 	var records []Record
@@ -104,9 +104,9 @@ func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endT
 	err := query.Where("time >= ?", queryStartTime).Where("time < ?", queryEndTime).Order("time asc").Find(&records).Error
 	if err != nil {
 		log.Errorf("get records with error: %s\n", err.Error())
-		return nil, err, nil
+		return nil, nil, err
 	} else {
-		return &records, nil, &total
+		return &records, &total, nil
 	}
 }
 

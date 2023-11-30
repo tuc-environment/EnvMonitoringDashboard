@@ -12,17 +12,21 @@ type Config struct {
 
 	HASH_SALT string
 
-	DB_DRIVER            string
-	DB_CONNECTION_STRING string
+	DB_DRIVER                string
+	DB_CONNECTION_STRING     string
+	RAW_DB_DRIVER            string
+	RAW_DB_CONNECTION_STRING string
 }
 
 func NewConfig() *Config {
 	return &Config{
 		PORT: GetenvInt("PORT", 8080),
 
-		HASH_SALT:            GetenvString("HASH_SALT", "tuc-environment"),
-		DB_DRIVER:            GetenvString("DB_DRIVER", "sqlite"),
-		DB_CONNECTION_STRING: GetenvString("DB_CONNECTION_STRING", "db.sqlite"),
+		HASH_SALT:                GetenvString("HASH_SALT", "tuc-environment"),
+		DB_DRIVER:                GetenvString("DB_DRIVER", "sqlite"),
+		DB_CONNECTION_STRING:     GetenvString("DB_CONNECTION_STRING", "db.sqlite"),
+		RAW_DB_DRIVER:            GetenvString("RAW_DB_DRIVER", "mssql"),
+		RAW_DB_CONNECTION_STRING: GetenvString("RAW_DB_CONNECTION_STRING", ""),
 	}
 }
 

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-contrib/cors"
+	"github.com/go-co-op/gocron"
 
 	_ "EnvMonitoringDashboard/api_src/docs"
 
@@ -29,6 +30,7 @@ func NewEngine(
 	recordAPI *controller.RecordAPI,
 	sensorAPI *controller.SensorAPI,
 	dataAPI *controller.DataAPI,
+	cronController *controller.CronController,
 ) (*gin.Engine, error) {
 	gin.SetMode(gin.ReleaseMode)
 	e := gin.New()
@@ -66,7 +68,7 @@ func NewEngine(
 	api.GET("/sensors", sensorAPI.GetSensors)
 	api.GET("/sensors/unassigned", sensorAPI.GetUnassignedSensors)
 	api.DELETE("/sensors/:sensor_id", sensorAPI.DeleteSensor)
-	api.POST("/devices/report", recordAPI.DeviceReportRecords)
+
 	// authorised required apis
 	api.Use(accountAPI.AuthMiddleware)
 	{
@@ -77,5 +79,15 @@ func NewEngine(
 
 	// append docs
 	e.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	scheduler := gocron.NewScheduler(time.UTC)
+	scheduler.Cron("10,40 * * * *").Do(func() {
+		logSugar := log.Sugar()
+		defer logSugar.Sync()
+		logSugar.Infoln("trigger cron job at ", time.Now().Format("2006/01/02 15:04:05"))
+		cronController.Fetch()
+	})
+	scheduler.StartAsync()
+
 	return e, nil
 }

@@ -40,7 +40,13 @@ func InitializeApp(webappFS fs.FS) (*app.App, error) {
 	recordAPI := controller.NewRecordAPI(configConfig, loggerLogger, recordService, deviceService)
 	sensorAPI := controller.NewSensorAPI(configConfig, loggerLogger, sensorService)
 	dataAPI := controller.NewDataAPI()
-	engine, err := app.NewEngine(webappFS, configConfig, loggerLogger, noRouteAPI, accountAPI, stationAPI, recordAPI, sensorAPI, dataAPI)
+	rawDBClient, err := store.NewRawDBClient(configConfig)
+	if err != nil {
+		return nil, err
+	}
+	rawDataService := service.NewRawDataService(configConfig, rawDBClient, loggerLogger)
+	cronController := controller.NewCronController(configConfig, loggerLogger, rawDataService, deviceService)
+	engine, err := app.NewEngine(webappFS, configConfig, loggerLogger, noRouteAPI, accountAPI, stationAPI, recordAPI, sensorAPI, dataAPI, cronController)
 	if err != nil {
 		return nil, err
 	}
@@ -50,4 +56,4 @@ func InitializeApp(webappFS fs.FS) (*app.App, error) {
 
 // wire.go:
 
-var appSet = wire.NewSet(app.NewEngine, config.NewConfig, logger.NewLogger, store.NewDBClient, service.NewAccountService, service.NewStationService, service.NewRecordService, service.NewSensorService, service.NewDeviceService, controller.NewNoRouteAPI, controller.NewDataAPI, controller.NewAccountAPI, controller.NewStationAPI, controller.NewRecordAPI, controller.NewSensorAPI)
+var appSet = wire.NewSet(app.NewEngine, config.NewConfig, logger.NewLogger, store.NewDBClient, store.NewRawDBClient, service.NewAccountService, service.NewStationService, service.NewRecordService, service.NewSensorService, service.NewDeviceService, service.NewRawDataService, controller.NewNoRouteAPI, controller.NewDataAPI, controller.NewAccountAPI, controller.NewStationAPI, controller.NewRecordAPI, controller.NewSensorAPI, controller.NewCronController)
