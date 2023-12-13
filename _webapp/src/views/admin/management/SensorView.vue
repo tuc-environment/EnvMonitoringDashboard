@@ -493,8 +493,6 @@ const updateSensorRecords = async (showLoading: boolean) => {
 
 const refresh = async () => {
   loading.value = true
-  station.value = undefined
-  allSensors.value = []
   selectedSensorIDs.value = []
 
   endDate.value.setDate(startDate.value.getDate() + 1)
@@ -525,10 +523,10 @@ const onUpsertSensorModalClosed = () => {
   operatingSensorId.value = undefined
 }
 
-const didUpsertSensor = () => {
+const didUpsertSensor = async () => {
   isShowingUpsertSensorModal.value = false
   operatingSensorId.value = undefined
-  refresh()
+  await refresh()
 }
 
 const showSensorUpsertModal = (sensor: Sensor) => {
