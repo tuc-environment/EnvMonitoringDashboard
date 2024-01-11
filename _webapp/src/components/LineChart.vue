@@ -135,9 +135,12 @@ const chartOptions = computed(() => {
     },
     dataLabels: { enabled: false },
     stroke: {
-      width: 2,
-      lineCap: 'round',
-      curve: 'smooth'
+      width: 1,
+      lineCap: 'round'
+      // curve: 'smooth'
+    },
+    markers: {
+      size: 3
     },
     xaxis: {
       type: 'datetime',
@@ -188,9 +191,12 @@ const series = computed(() => {
           record.value
       )
       if (relatedRecords.length > 1) {
-        var data: (Date | number)[][] = []
+        var data: { x: Date; y: number }[] = []
         for (var record of relatedRecords) {
-          data.push([record.time!, record.value!])
+          data.push({
+            x: record.time!,
+            y: record.value!
+          })
         }
         const station = stations.find((station) => station.id == sensor.station_id)
         const displayText = station

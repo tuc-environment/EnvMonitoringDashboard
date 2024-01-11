@@ -94,6 +94,9 @@ func (s *RecordService) GetRecords(sensorIds *[]uint, startTime *time.Time, endT
 	} else {
 		queryEndTime = queryStartTime.Add(time.Minute * time.Duration(300))
 	}
+	if endTime != nil && endTime.Before(queryEndTime) && endTime.After(queryStartTime) {
+		queryEndTime = *endTime
+	}
 
 	log.Infof("query start time: %v, end time: %v\n", queryStartTime, queryEndTime)
 

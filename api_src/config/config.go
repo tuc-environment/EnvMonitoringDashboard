@@ -4,6 +4,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv/autoload"
 )
 
@@ -19,6 +20,7 @@ type Config struct {
 }
 
 func NewConfig() *Config {
+	godotenv.Load()
 	return &Config{
 		PORT: GetenvInt("PORT", 8080),
 

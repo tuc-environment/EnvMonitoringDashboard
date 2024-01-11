@@ -77,7 +77,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
     if (sensors.length > 0) {
       try {
         const startDate = new Date()
-        startDate.setDate(startDate.getDay() - 180)
+        startDate.setDate(startDate.getDate() - 180)
         const result = await httpclient.getRecords({
           sensorIDs: sensors.map((sensor) => sensor.id),
           offset: 0,
