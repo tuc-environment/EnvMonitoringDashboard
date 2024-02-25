@@ -146,7 +146,7 @@ const chartOptions = computed(() => {
       type: 'datetime',
       min: getMinDate(dates),
       max: getMaxDate(dates),
-      labels: { show: false },
+      labels: { show: true },
       tooltip: { enabled: false },
       crossharis: { show: false },
       axisBorder: { show: false },
