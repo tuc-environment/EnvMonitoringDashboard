@@ -39,7 +39,7 @@
         />
 
         <SideBarButtonComponent
-          name="天津商业大学"
+          name="中国科学院电工研究所"
           icon="bi-info-circle"
           right-icon="bi-box-arrow-up-right"
           @click="open('http://www.iee.cas.cn/')"
