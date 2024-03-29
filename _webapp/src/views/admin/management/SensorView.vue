@@ -140,7 +140,7 @@
               <div class="my-2">
                 <select class="form-select" @input="onLimitChanged">
                   <option
-                    v-for="limitOption in [10, 20, 50, 100, 200]"
+                    v-for="limitOption in [10, 20, 50, 100, 200, 1000]"
                     :key="limitOption"
                     :value="limitOption"
                     :selected="limitOption == limitVal"
