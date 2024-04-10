@@ -76,8 +76,8 @@ export const useDashboardStore = defineStore('dashboard', () => {
     const sensors = treeSensorsSelected.value
     if (sensors.length > 0) {
       try {
-        const startDate = new Date()
-        startDate.setDate(startDate.getDate() - 180)
+        const currentDate = new Date()
+        const startDate = new Date(currentDate.getTime() - 14 * 24 * 60 * 60 * 1000)
         const result = await httpclient.getRecords({
           sensorIDs: sensors.map((sensor) => sensor.id),
           offset: 0,
@@ -159,8 +159,8 @@ export const useDashboardStore = defineStore('dashboard', () => {
               .filter((sensor) => sensor.id && sensor.name && soilOptionNames.includes(sensor.name))
               .map((sensor) => sensor.id) as number[])
           : []
-        const startDate = new Date()
-        startDate.setDate(startDate.getDay() - 180)
+        const currentDate = new Date()
+        const startDate = new Date(currentDate.getTime() - 14 * 24 * 60 * 60 * 1000)
         console.log(`[dashboard-store] half year before: ${startDate}`)
 
         const airRecordRes = await httpclient.getRecords({
