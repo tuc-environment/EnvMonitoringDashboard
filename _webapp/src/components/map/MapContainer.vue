@@ -48,7 +48,8 @@ const initMap = async () => {
       pitch: 0,
       viewMode: '2D',
       clickable: true,
-      keyboardEnable: false
+      keyboardEnable: false,
+      mapStyle: 'amap://styles/fresh'
     })
     aMap.plugin('AMap.moveAnimation', function () {})
     map.on('click', clickMapHandler)

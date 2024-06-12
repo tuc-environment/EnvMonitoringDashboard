@@ -1,91 +1,113 @@
 <template>
   <DashboardLayout>
-    <div class="p-2 d-flex flex-column w-100 h-100">
-      <div class="row align-items-stretch mx-1">
-        <div class="col-md-6 col-lg-3 col-xl-3 p-2">
-          <DashboardCardComponent title="站点数量" :loading="!dashboardStore.$state.totalStations">
-            <div style="font-size: 4rem">
-              {{ formatDisplayNumber(dashboardStore.$state.totalStations ?? 0) }}
-            </div>
-          </DashboardCardComponent>
-        </div>
-        <div class="col-md-6 col-lg-3 col-xl-3 p-2">
-          <DashboardCardComponent title="传感器数量" :loading="!dashboardStore.$state.totalSensors">
-            <div style="font-size: 4rem">
-              {{ formatDisplayNumber(dashboardStore.$state.totalSensors ?? 0) }}
-            </div>
-          </DashboardCardComponent>
-        </div>
-        <div class="col-md-6 col-lg-3 col-xl-3 p-2">
-          <DashboardCardComponent title="数据总量" :loading="!dashboardStore.$state.totalRecords">
-            <div style="font-size: 4rem">
-              {{ formatDisplayNumber(dashboardStore.$state.totalRecords ?? 0) }}
-            </div>
-          </DashboardCardComponent>
-        </div>
-        <div class="col-md-6 col-lg-3 col-xl-3 p-2">
-          <DashboardCardComponent title="今日更新数据量">
-            <div style="font-size: 4rem">
-              {{ formatDisplayNumber(dashboardStore.$state.totalCreatedToday ?? 0) }}
-            </div>
-          </DashboardCardComponent>
-        </div>
+    <div class="mt-5 mb-2 text-center">
+      <h1>光伏电站环境影响监测和评估系统</h1>
+      <div class="mx-auto" style="max-width: 480px">
+        本环境监测系统依托光伏发电系统生态环境监测分析硬件平台，通过高质量、高频率的环境参数监测，实现对光伏电站建设对周边生态环境的全面评估。
       </div>
+    </div>
 
-      <div class="row align-items-stretch flex-grow-1 mx-1">
-        <div class="col-lg-12 col-xl-8 p-2">
-          <DashboardCardComponent title="站点位置" class="info-card">
-            <map-container
-              ref="mapContainer"
-              @did-select-station="selectStationHandler"
-              @on-confirm-prediction-marker="onPredictionMarkerConfirmed"
-            />
-          </DashboardCardComponent>
-        </div>
-        <div class="col-lg-12 col-xl-4 p-2">
-          <div class="h-100 d-flex flex-column justify-content-between">
-            <div class="mb-3" style="flex: 1">
-              <DashboardCardComponent
-                :title="
-                  dashboardStore.$state.selectedStation
-                    ? `${dashboardStore.$state.selectedStation.name} - 空气参数`
-                    : '空气参数'
-                "
-              >
-                <line-chart
-                  :sensors="dashboardStore.$state.airRelatedSensors"
-                  :records="dashboardStore.$state.airRelatedRecords"
-                  :show-default-text="!dashboardStore.$state.selectedStation"
-                  :loading="dashboardStore.$state.loadingDataForStation"
-                  :show-selections="true"
-                  default-text="点击地图选择站点查看数据"
-                  no-data-text="暂无数据"
-                />
-              </DashboardCardComponent>
-            </div>
-            <div style="flex: 1">
-              <DashboardCardComponent
-                :title="
-                  dashboardStore.$state.selectedStation
-                    ? `${dashboardStore.$state.selectedStation.name} - 土壤参数`
-                    : '土壤参数'
-                "
-              >
-                <line-chart
-                  :sensors="dashboardStore.$state.soilRelatedSensors"
-                  :records="dashboardStore.$state.soilRelatedRecords"
-                  :show-default-text="!dashboardStore.$state.selectedStation"
-                  :loading="dashboardStore.$state.loadingDataForStation"
-                  :show-selections="true"
-                  default-text="点击地图选择站点查看数据"
-                  no-data-text="暂无数据"
-                />
-              </DashboardCardComponent>
-            </div>
+    <div class="my-2">
+      <div class="row mx-auto" style="max-width: 640px">
+        <div class="col-md-3 col-6 p-2 text-center">
+          <div style="font-size: 3rem" class="text-success">
+            {{ formatDisplayNumber(dashboardStore.$state.totalStations ?? 0) }}
           </div>
+          <div>站点数量</div>
+        </div>
+        <div class="col-md-3 col-6 p-2 text-center">
+          <div style="font-size: 3rem" class="text-success">
+            {{ formatDisplayNumber(dashboardStore.$state.totalSensors ?? 0) }}
+          </div>
+          <div>传感器数量</div>
+        </div>
+        <div class="col-md-3 col-6 p-2 text-center">
+          <div style="font-size: 3rem" class="text-success">
+            {{ formatDisplayNumber(dashboardStore.$state.totalRecords ?? 0) }}
+          </div>
+          <div>数据总量</div>
+        </div>
+        <div class="col-md-3 col-6 p-2 text-center">
+          <div style="font-size: 3rem" class="text-success">
+            {{ formatDisplayNumber(dashboardStore.$state.totalCreatedToday ?? 0) }}
+          </div>
+          <div>今日更新数据量</div>
         </div>
       </div>
     </div>
+
+    <hr />
+
+    <div class="my-2">
+      <div class="text-center mx-auto mb-2">
+        <h2>站点位置</h2>
+        <div class="mx-auto" style="max-width: 480px">
+          点击地图站点查看站点数据，或者新建预测站点。
+        </div>
+      </div>
+
+      <div class="row mx-auto" style="max-width: 720px; aspect-ratio: 4/3">
+        <div class="col-md-12 p-2">
+          <map-container
+            ref="mapContainer"
+            @did-select-station="selectStationHandler"
+            @on-confirm-prediction-marker="onPredictionMarkerConfirmed"
+          />
+        </div>
+      </div>
+
+      <div class="row mx-auto">
+        <div class="col-md-6 p-2">
+          <div class="text-center my-2">
+            {{
+              dashboardStore.$state.selectedStation
+                ? `${dashboardStore.$state.selectedStation.name} - 空气参数`
+                : '空气参数'
+            }}
+          </div>
+          <line-chart
+            :sensors="dashboardStore.$state.airRelatedSensors"
+            :records="dashboardStore.$state.airRelatedRecords"
+            :show-default-text="!dashboardStore.$state.selectedStation"
+            :loading="dashboardStore.$state.loadingDataForStation"
+            :show-selections="true"
+            default-text="点击地图选择站点查看数据"
+            no-data-text="暂无数据"
+          />
+        </div>
+        <div class="col-md-6 p-2">
+          <div class="text-center my-2">
+            {{
+              dashboardStore.$state.selectedStation
+                ? `${dashboardStore.$state.selectedStation.name} - 土壤参数`
+                : '土壤参数'
+            }}
+          </div>
+          <line-chart
+            :sensors="dashboardStore.$state.soilRelatedSensors"
+            :records="dashboardStore.$state.soilRelatedRecords"
+            :show-default-text="!dashboardStore.$state.selectedStation"
+            :loading="dashboardStore.$state.loadingDataForStation"
+            :show-selections="true"
+            default-text="点击地图选择站点查看数据"
+            no-data-text="暂无数据"
+          />
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <div class="my-2 text-center">
+      <div class="mx-auto text-secondary small" style="max-width: 320px">
+        Environmental Impact Monitoring and Assessment System for Photovoltaic Power Plants
+      </div>
+      <div class="mx-auto text-secondary small" style="max-width: 320px">
+        All Rights Reserved © 2024
+      </div>
+    </div>
+
+    <div style="height: 64px"></div>
   </DashboardLayout>
 
   <PredictionModalComponent
@@ -97,7 +119,6 @@
 </template>
 
 <script setup lang="ts">
-import DashboardCardComponent from '@/components/DashboardCardComponent.vue'
 import LineChart from '@/components/LineChart.vue'
 import MapContainer from '@/components/map/MapContainer.vue'
 import PredictionModalComponent from '@/components/modal/PredictionModalComponent.vue'
