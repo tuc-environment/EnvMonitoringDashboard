@@ -80,14 +80,16 @@ const props = defineProps({
 const noData = computed(() => !props.records || props.records?.length == 0)
 const showDefaultText = computed(() => props.showDefaultText)
 
+const chartRef = ref<InstanceType<typeof ApexCharts> | null>(null)
+
 const chartOptions = computed(() => {
-  const dates: Date[] = getDatesFromRecords(props.records)
+  // const dates: Date[] = getDatesFromRecords(props.records)
   return {
     theme: {
       palette: 'palette7'
     },
     chart: {
-      animations: { enabled: false }
+      animations: { enabled: false },
     },
     dataLabels: { enabled: false },
     stroke: {
@@ -100,13 +102,14 @@ const chartOptions = computed(() => {
     },
     xaxis: {
       type: 'datetime',
-      min: getMinDate(dates),
-      max: getMaxDate(dates),
+      // min: getMinDate(dates.value),
+      // max: getMaxDate(dates.value),
       labels: { show: true },
       tooltip: { enabled: false },
       crossharis: { show: false },
       axisBorder: { show: false },
-      axisTicks: { show: true }
+      axisTicks: { show: true },
+      tickPlacement: 'on',
     },
     tooltip: {
       x: {
@@ -276,7 +279,7 @@ const onOptionNameChanged = (e: any) => {
 watch(
   () => availablePositions.value,
   (position) => {
-    if (position.length > 0) {
+    if (position.length > 0 && props.showSelections) {
       selectedPosition.value = position[0]
     }
   }
@@ -285,7 +288,7 @@ watch(
 watch(
   () => avaialebleTags.value,
   (tags) => {
-    if (tags.length > 0) {
+    if (tags.length > 0 && props.showSelections) {
       selectedTag.value = tags[0]
     }
   }
@@ -294,7 +297,7 @@ watch(
 watch(
   () => avaialebleGroups.value,
   (groups) => {
-    if (groups.length > 0) {
+    if (groups.length > 0 && props.showSelections) {
       selectedGroup.value = groups[0]
     }
   }
@@ -303,11 +306,10 @@ watch(
 watch(
   () => availableOptionNames.value,
   (options) => {
-    if (options.length > 0) {
+    if (options.length > 0 && props.showSelections) {
       selectedOptionName.value = options[0]
     }
   }
 )
 
 </script>
-@/http-client
