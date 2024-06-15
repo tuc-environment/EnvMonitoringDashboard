@@ -1,92 +1,48 @@
 <template>
-  <div class="w-100 h-100" style="min-height: 240px">
+  <div class="w-100 h-100" style="min-height: 360px">
     <div v-if="loading" class="w-100 h-100 text-center d-flex flex-column justify-content-center">
       <div class="mx-auto spinner-border"></div>
     </div>
-    <div
-      v-else-if="showDefaultText"
-      class="small text-center text-secondary w-100 h-100 d-flex flex-column justify-content-center"
-    >
+    <div v-else-if="showDefaultText"
+      class="small text-center text-secondary w-100 h-100 d-flex flex-column justify-content-center">
       {{ defaultText }}
     </div>
-    <div
-      v-else-if="noData"
-      class="small text-center text-secondary w-100 h-100 d-flex flex-column justify-content-center"
-    >
+    <div v-else-if="noData"
+      class="small text-center text-secondary w-100 h-100 d-flex flex-column justify-content-center">
       {{ noDataText }}
     </div>
 
     <div v-else class="d-flex flex-column w-100 h-100 text-dark">
       <div v-if="showSelections" class="d-flex flex-row mb-3">
-        <select
-          v-if="availablePositions.length > 0"
-          class="form-select form-select-sm me-2"
-          @input="onPositionChanged"
-        >
+        <select v-if="availablePositions.length > 0" class="form-select form-select-sm me-2" @input="onPositionChanged">
           <option :value="false">可选位置</option>
-          <option
-            v-for="(position, idx) in availablePositions"
-            :key="idx"
-            :value="position"
-            :selected="position == selectedPosition"
-          >
+          <option v-for="(position, idx) in availablePositions" :key="idx" :value="position"
+            :selected="position == selectedPosition">
             {{ getPositionName(position) }}
           </option>
         </select>
-        <select
-          v-if="avaialebleTags.length > 0"
-          class="form-select form-select-sm me-2"
-          @input="onTagChanged"
-        >
+        <select v-if="avaialebleTags.length > 0" class="form-select form-select-sm me-2" @input="onTagChanged">
           <option :value="false">可选深度</option>
-          <option
-            v-for="tag in avaialebleTags"
-            :key="tag"
-            :value="tag"
-            :selected="selectedTag == tag"
-          >
+          <option v-for="tag in avaialebleTags" :key="tag" :value="tag" :selected="selectedTag == tag">
             {{ tag }}
           </option>
         </select>
-        <select
-          v-if="avaialebleGroups.length > 0"
-          class="form-select form-select-sm me-2"
-          @input="onGroupChanged"
-        >
+        <select v-if="avaialebleGroups.length > 0" class="form-select form-select-sm me-2" @input="onGroupChanged">
           <option :value="false">可选组</option>
-          <option
-            v-for="(group, idx) in avaialebleGroups"
-            :key="idx"
-            :value="group"
-            :selected="selectedGroup == group"
-          >
+          <option v-for="(group, idx) in avaialebleGroups" :key="idx" :value="group" :selected="selectedGroup == group">
             {{ group }}
           </option>
         </select>
-        <select
-          v-if="availableOptionNames.length > 0"
-          class="form-select form-select-sm"
-          @input="onOptionNameChanged"
-        >
+        <select v-if="availableOptionNames.length > 0" class="form-select form-select-sm" @input="onOptionNameChanged">
           <option :value="false">可选数据项</option>
-          <option
-            v-for="optionName in availableOptionNames"
-            :key="optionName"
-            :value="optionName"
-            :selected="selectedOptionName == optionName"
-          >
+          <option v-for="optionName in availableOptionNames" :key="optionName" :value="optionName"
+            :selected="selectedOptionName == optionName">
             {{ optionName }}
           </option>
         </select>
       </div>
       <div class="flex-grow-1 w-100">
-        <apexchart
-          width="100%"
-          height="100%"
-          type="line"
-          :options="chartOptions"
-          :series="series"
-        />
+        <apexchart width="100%" height="100%" type="line" :options="chartOptions" :series="series" />
       </div>
     </div>
   </div>
@@ -100,8 +56,8 @@ import {
   type DataRecord,
   type Sensor,
   type Station
-} from '@/http-client'
-import { computed, ref, type PropType } from 'vue'
+} from '@/http-client';
+import { computed, ref, watch, type PropType } from 'vue';
 
 const props = defineProps({
   records: Array as PropType<DataRecord[]>,
@@ -131,7 +87,7 @@ const chartOptions = computed(() => {
       palette: 'palette7'
     },
     chart: {
-      animations: { easing: 'linear' }
+      animations: { enabled: false }
     },
     dataLabels: { enabled: false },
     stroke: {
@@ -150,7 +106,7 @@ const chartOptions = computed(() => {
       tooltip: { enabled: false },
       crossharis: { show: false },
       axisBorder: { show: false },
-      axisTicks: { show: false }
+      axisTicks: { show: true }
     },
     tooltip: {
       x: {
@@ -194,7 +150,7 @@ const series = computed(() => {
         var data: { x: Date; y: number }[] = []
         for (var record of relatedRecords) {
           data.push({
-            x: record.time!,
+            x: new Date(record.time!),
             y: record.value!
           })
         }
@@ -316,5 +272,42 @@ const onOptionNameChanged = (e: any) => {
     selectedOptionName.value = undefined
   }
 }
+
+watch(
+  () => availablePositions.value,
+  (position) => {
+    if (position.length > 0) {
+      selectedPosition.value = position[0]
+    }
+  }
+)
+
+watch(
+  () => avaialebleTags.value,
+  (tags) => {
+    if (tags.length > 0) {
+      selectedTag.value = tags[0]
+    }
+  }
+)
+
+watch(
+  () => avaialebleGroups.value,
+  (groups) => {
+    if (groups.length > 0) {
+      selectedGroup.value = groups[0]
+    }
+  }
+)
+
+watch(
+  () => availableOptionNames.value,
+  (options) => {
+    if (options.length > 0) {
+      selectedOptionName.value = options[0]
+    }
+  }
+)
+
 </script>
 @/http-client
