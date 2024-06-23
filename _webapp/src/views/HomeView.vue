@@ -1,53 +1,41 @@
 <template>
-  <DashboardLayout>
-    <div class="mt-5 mb-2 text-center">
-      <h1>光伏电站环境影响监测和评估系统</h1>
-      <div class="mx-auto" style="max-width: 480px">
-        本环境监测系统依托光伏发电系统生态环境监测分析硬件平台，通过高质量、高频率的环境参数监测，实现对光伏电站建设对周边生态环境的全面评估。
-      </div>
+  <div class="home-container p-3">
+    <div class="header">光伏发电生态设计评估系统</div>
+
+    <!-- nav buttons -->
+
+    <div class="mx-auto d-flex" style="width: 90%; margin-top: -10px">
+      <ButtonComponent class="me-5" title="数据看板" />
+      <ButtonComponent class="me-auto" title="数据对比" />
+      <ButtonComponent class="ms-auto" title="联系我们" />
+      <ButtonComponent class="ms-5" title="进入管理后台" />
     </div>
 
-    <div class="my-2">
-      <div class="row mx-auto" style="max-width: 640px">
-        <div class="col-md-3 col-6 p-2 text-center">
-          <div style="font-size: 3rem" class="text-success">
-            {{ formatDisplayNumber(dashboardStore.$state.totalStations ?? 0) }}
-          </div>
-          <div>站点数量</div>
-        </div>
-        <div class="col-md-3 col-6 p-2 text-center">
-          <div style="font-size: 3rem" class="text-success">
-            {{ formatDisplayNumber(dashboardStore.$state.totalSensors ?? 0) }}
-          </div>
-          <div>传感器数量</div>
-        </div>
-        <div class="col-md-3 col-6 p-2 text-center">
-          <div style="font-size: 3rem" class="text-success">
-            {{ formatDisplayNumber(dashboardStore.$state.totalRecords ?? 0) }}
-          </div>
-          <div>数据总量</div>
-        </div>
-        <div class="col-md-3 col-6 p-2 text-center">
-          <div style="font-size: 3rem" class="text-success">
-            {{ formatDisplayNumber(dashboardStore.$state.totalCreatedToday ?? 0) }}
-          </div>
-          <div>今日更新数据量</div>
-        </div>
-      </div>
+    <!-- status -->
+    <div class="mx-auto my-3 d-flex justify-content-between" style="width: 60%">
+      <ButtonComponent2
+        title="站点数量"
+        :value="formatDisplayNumber(dashboardStore.$state.totalStations ?? 0)"
+      />
+      <ButtonComponent2
+        title="传感器数量"
+        :value="formatDisplayNumber(dashboardStore.$state.totalSensors ?? 0)"
+      />
+      <ButtonComponent2
+        title="数据总量"
+        :value="formatDisplayNumber(dashboardStore.$state.totalRecords ?? 0)"
+      />
+      <ButtonComponent2
+        title="今日更新数据量"
+        :value="formatDisplayNumber(dashboardStore.$state.totalCreatedToday ?? 0)"
+      />
     </div>
 
-    <hr />
-
-    <div class="my-2">
-      <div class="text-center mx-auto mb-2">
-        <h2>站点位置</h2>
-        <div class="mx-auto" style="max-width: 480px">
-          点击地图站点查看站点数据，或者新建预测站点。
-        </div>
-      </div>
-
-      <div class="row mx-auto" style="max-width: 720px; aspect-ratio: 4/3">
-        <div class="col-md-12 p-2">
+    <!-- content -->
+    <div class="d-flex">
+      <!-- left -->
+      <div>
+        <div class="left-container">
           <map-container
             ref="mapContainer"
             @did-select-station="selectStationHandler"
@@ -56,8 +44,9 @@
         </div>
       </div>
 
-      <div class="row mx-auto">
-        <div class="col-md-6 p-2">
+      <!-- right -->
+      <div>
+        <div class="right-top-container">
           <div class="text-center my-2">
             {{
               dashboardStore.$state.selectedStation
@@ -75,7 +64,7 @@
             no-data-text="暂无数据"
           />
         </div>
-        <div class="col-md-6 p-2">
+        <div class="right-bottom-container">
           <div class="text-center my-2">
             {{
               dashboardStore.$state.selectedStation
@@ -95,20 +84,7 @@
         </div>
       </div>
     </div>
-
-    <hr />
-
-    <div class="my-2 text-center">
-      <div class="mx-auto text-secondary small" style="max-width: 320px">
-        Environmental Impact Monitoring and Assessment System for Photovoltaic Power Plants
-      </div>
-      <div class="mx-auto text-secondary small" style="max-width: 320px">
-        All Rights Reserved © 2024
-      </div>
-    </div>
-
-    <div style="height: 64px"></div>
-  </DashboardLayout>
+  </div>
 
   <PredictionModalComponent
     ref="predictionModal"
@@ -119,12 +95,14 @@
 </template>
 
 <script setup lang="ts">
+import ButtonComponent from '@/components/home/ButtonComponent.vue'
+import ButtonComponent2 from '@/components/home/ButtonComponent2.vue'
+
 import LineChart from '@/components/LineChart.vue'
 import MapContainer from '@/components/map/MapContainer.vue'
 import PredictionModalComponent from '@/components/modal/PredictionModalComponent.vue'
 import TreeChart from '@/components/tree/TreeComponent.vue'
 import { type Station } from '@/http-client'
-import DashboardLayout from '@/layouts/DashboardLayout.vue'
 import { useDashboardStore } from '@/stores/DashboardStore'
 import { formatDisplayNumber } from '@/utils/utils'
 import { ref } from 'vue'
@@ -167,3 +145,51 @@ const onModalClosed = () => {
 dashboardStore.loadStations()
 dashboardStore.loadTotalCounts()
 </script>
+
+<style scoped lang="scss">
+.home-container {
+  background-image: url('./home/bg.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  width: 100%;
+  height: 100%;
+}
+
+.header {
+  color: green;
+  font-size: 24px;
+  background-image: url('./home/top.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  text-align: center;
+}
+
+.left-container {
+  background-image: url('./home/left-container.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  width: 480px;
+  height: 320px;
+}
+
+.right-top-container {
+  background-image: url('./home/right-top-container.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  width: 480px;
+  height: 160px;
+}
+
+.right-bottom-container {
+  background-image: url('./home/right-bottom-container.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  width: 480px;
+  height: 160px;
+}
+</style>
