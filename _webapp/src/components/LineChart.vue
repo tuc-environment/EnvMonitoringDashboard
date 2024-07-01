@@ -1,5 +1,5 @@
 <template>
-  <div class="w-100 h-100" style="min-height: 360px">
+  <div class="w-100 h-100">
     <div v-if="loading" class="w-100 h-100 text-center d-flex flex-column justify-content-center">
       <div class="mx-auto spinner-border"></div>
     </div>

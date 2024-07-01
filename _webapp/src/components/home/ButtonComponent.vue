@@ -1,13 +1,22 @@
 <template>
-  <div class="custom-btn d-flex align-items-center justify-content-center">
+  <div class="custom-btn d-flex align-items-center justify-content-center" @click="onClick">
     {{ title }}
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps({
-  title: String
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const props = defineProps({
+  title: String,
+  link: String
 })
+
+function onClick() {
+  window.location.href = props.link!
+}
 </script>
 
 <style scoped lang="scss">

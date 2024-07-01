@@ -1,14 +1,14 @@
 <template>
-  <div class="home-container p-3">
+  <div class="home-container p-3 d-flex flex-column">
     <div class="header">光伏发电生态设计评估系统</div>
 
     <!-- nav buttons -->
 
     <div class="mx-auto d-flex" style="width: 90%; margin-top: -10px">
-      <ButtonComponent class="me-5" title="数据看板" />
-      <ButtonComponent class="me-auto" title="数据对比" />
-      <ButtonComponent class="ms-auto" title="联系我们" />
-      <ButtonComponent class="ms-5" title="进入管理后台" />
+      <ButtonComponent class="me-5" title="数据看板" link="/"/>
+      <ButtonComponent class="me-auto" title="数据对比" link="/cross-station"/>
+      <ButtonComponent class="ms-auto" title="联系我们" link="/contact-us"/>
+      <ButtonComponent class="ms-5" title="进入管理后台" link="/login"/>
     </div>
 
     <!-- status -->
@@ -32,9 +32,9 @@
     </div>
 
     <!-- content -->
-    <div class="d-flex">
+    <div class="d-flex justify-content-between flex-grow-1" style="min-height: 0">
       <!-- left -->
-      <div>
+      <div style="width: 59%; height: 100%">
         <div class="left-container">
           <map-container
             ref="mapContainer"
@@ -45,8 +45,8 @@
       </div>
 
       <!-- right -->
-      <div>
-        <div class="right-top-container">
+      <div style="width: 39%; height: 100%" class="d-flex flex-column justify-content-between">
+        <div class="right-top-container d-flex flex-column" >
           <div class="text-center my-2">
             {{
               dashboardStore.$state.selectedStation
@@ -55,6 +55,7 @@
             }}
           </div>
           <line-chart
+            class="flex-grow-1" style="min-height: 0;"
             :sensors="dashboardStore.$state.airRelatedSensors"
             :records="dashboardStore.$state.airRelatedRecords"
             :show-default-text="!dashboardStore.$state.selectedStation"
@@ -64,7 +65,7 @@
             no-data-text="暂无数据"
           />
         </div>
-        <div class="right-bottom-container">
+        <div class="right-bottom-container d-flex flex-column">
           <div class="text-center my-2">
             {{
               dashboardStore.$state.selectedStation
@@ -73,6 +74,7 @@
             }}
           </div>
           <line-chart
+            class="flex-grow-1" style="min-height: 0;"
             :sensors="dashboardStore.$state.soilRelatedSensors"
             :records="dashboardStore.$state.soilRelatedRecords"
             :show-default-text="!dashboardStore.$state.selectedStation"
@@ -148,18 +150,17 @@ dashboardStore.loadTotalCounts()
 
 <style scoped lang="scss">
 .home-container {
-  background-image: url('./home/bg.png');
+  background-image: url('/home/bg.png');
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;
-  width: 100%;
   height: 100%;
 }
 
 .header {
   color: green;
   font-size: 24px;
-  background-image: url('./home/top.png');
+  background-image: url('/home/top.png');
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;
@@ -167,29 +168,31 @@ dashboardStore.loadTotalCounts()
 }
 
 .left-container {
-  background-image: url('./home/left-container.png');
+  background-image: url('/home/left-container.png');
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;
-  width: 480px;
-  height: 320px;
+  padding: 36px;
+  height: 100%;
 }
 
 .right-top-container {
-  background-image: url('./home/right-top-container.png');
+  background-image: url('/home/right-top-container.png');
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;
-  width: 480px;
-  height: 160px;
+  padding: 30px 36px 0px 36px;
+  width: 100%;
+  height: 48%;
 }
 
 .right-bottom-container {
-  background-image: url('./home/right-bottom-container.png');
+  background-image: url('/home/right-bottom-container.png');
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% 100%;
-  width: 480px;
-  height: 160px;
+  padding: 0px 36px 30px 36px;
+  width: 100%;
+  height: 48%;
 }
 </style>
