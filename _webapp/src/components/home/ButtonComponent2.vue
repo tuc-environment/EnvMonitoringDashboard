@@ -20,7 +20,7 @@ defineProps({
   text-align: center;
   width: 168px;
   height: 72px;
-  background-image: url('./home/button2.png');
+  background-image: url('/home/button2.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: center;
