@@ -25,7 +25,7 @@ function onClick() {
   text-align: center;
   width: 108px;
   height: 32px;
-  background-image: url('./home/button.png');
+  background-image: url('/home/button.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: center;
@@ -33,6 +33,6 @@ function onClick() {
 
 .custom-btn:hover {
   cursor: pointer;
-  background-image: url('./home/button-hover.png');
+  background-image: url('/home/button-hover.png');
 }
 </style>
