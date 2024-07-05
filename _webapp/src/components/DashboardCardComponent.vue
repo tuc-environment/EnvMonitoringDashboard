@@ -1,7 +1,7 @@
 <template>
   <div class="card w-100 h-100">
     <div class="card-status-top bg-success"></div>
-    <div class="card-body d-flex flex-column">
+    <div class="card-body d-flex flex-column" style="overflow: scroll;">
       <div class="card-title">{{ title }}</div>
       <div class="text-center flex-grow-1">
         <div class="h-100" :class="{ 'd-none': loading }">
