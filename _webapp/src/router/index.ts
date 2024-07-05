@@ -31,11 +31,11 @@ const router = createRouter({
       name: 'login',
       component: LoginView
     },
-    {
-      path: '/register',
-      name: 'register',
-      component: RegisterView
-    },
+    // {
+    //   path: '/register',
+    //   name: 'register',
+    //   component: RegisterView
+    // },
     {
       path: '/admin',
       name: 'admin',

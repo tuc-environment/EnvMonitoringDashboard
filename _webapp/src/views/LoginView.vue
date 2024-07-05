@@ -13,9 +13,9 @@
         <h2 class="mt-3 text-center">光伏发电生态设计评估系统</h2>
         <div class="text-center">天津商业大学 | 中科院电工研究所 | 天津大学</div>
 
-        <div class="my-3 mb-5 text-center">
+        <!-- <div class="my-3 mb-5 text-center">
           新用户？<RouterLink to="/register" class="register-link">注册账号</RouterLink>
-        </div>
+        </div> -->
 
         <div v-if="errorMsg" class="alert alert-danger" role="alert">{{ errorMsg }}</div>
 
