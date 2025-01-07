@@ -14,7 +14,7 @@ type Record struct {
 	SensorId    uint      `json:"sensor_id,omitempty" gorm:"uniqueIndex:sensor_time"`
 	Value       float64   `json:"value,omitempty"`
 	Time        time.Time `json:"time,omitempty" gorm:"uniqueIndex:sensor_time"`
-	RecordIndex uint64    `json:"record_index,omitempty"`
+	RecordIndex *uint64   `json:"record_index,omitempty"`
 }
 
 type RecordService struct {

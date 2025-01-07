@@ -1736,7 +1736,7 @@ func (s *DeviceService) ReceiveData(data string) error {
 				SensorId:    dbSensor.ID,
 				Value:       recordValue,
 				Time:        recordCreateTime,
-				RecordIndex: recordIndexValue,
+				RecordIndex: &recordIndexValue,
 			}
 			parsedRecords = append(parsedRecords, record)
 			recordDataIndex += 1

@@ -73,7 +73,8 @@ func (api *RecordAPI) UploadRecords(g *gin.Context) {
 					sensorIds = append(sensorIds, column)
 				}
 			} else if columnIndex > 0 {
-				time, err := time.Parse("2006/1/2 15:04:05", line[0])
+				loc := time.FixedZone("UTC+8", 8*60*60)
+				t, err := time.ParseInLocation("2006/1/2 15:04:05", line[0], loc)
 				if err != nil {
 					c.BadRequest(errors.New(fmt.Sprintf("failed to parse %s, error: %s", line[0], err.Error())))
 					return
@@ -93,7 +94,7 @@ func (api *RecordAPI) UploadRecords(g *gin.Context) {
 					record := service.Record{
 						SensorId: uint(sensorId),
 						Value:    value,
-						Time:     time,
+						Time:     t,
 					}
 					records = append(records, record)
 				}
