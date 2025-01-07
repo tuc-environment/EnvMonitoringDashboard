@@ -27,6 +27,16 @@
                   </div>
                 </div>
               </div>
+              <div class="col-md-12">
+                <div class="mb-2">
+                  <label class="form-label small">传感器ID:</label>
+                  <div class="input-group">
+                    <label>
+                      {{ sensorVal?.id }}
+                    </label>
+                  </div>
+                </div>
+              </div>
               <div
                 v-if="sensorVal?.name && !allOptionNames.includes(sensorVal?.name)"
                 class="col-md-12"
@@ -74,8 +84,10 @@
               </div>
               <div class="col-md-12">
                 <div class="mb-2">
-                  <label class="form-label small">数据项</label
-                  ><span class="ms-1 text-danger">*</span>
+                  <div class="d-flex flex-row">
+                    <label class="form-label small">数据项</label>
+                    <span class="ms-1 text-danger">*</span>
+                  </div>
                   <div class="input-group">
                     <select class="form-select" @input="onNameChanged">
                       <option :value="false">选择数据项</option>
@@ -93,8 +105,10 @@
               </div>
               <div class="col-md-12">
                 <div class="mb-2">
-                  <label class="form-label small">传感器位置</label
-                  ><span class="ms-1 text-danger">*</span>
+                  <div class="d-flex flex-row">
+                    <label class="form-label small">传感器位置</label>
+                    <span class="ms-1 text-danger">*</span>
+                  </div>
                   <div class="input-group">
                     <select class="form-select" @input="onPostionChanged">
                       <option :value="false">选择传感器位置</option>
@@ -113,8 +127,10 @@
 
               <div class="col-md-12">
                 <div class="mb-2">
-                  <label class="form-label small">数据取样值类型</label
-                  ><span class="ms-1 text-danger">*</span>
+                  <div class="d-flex flex-row">
+                    <label class="form-label small">数据取样值类型</label>
+                    <span class="ms-1 text-danger">*</span>
+                  </div>
                   <div class="input-group">
                     <select class="form-select" @input="onSamplingMethodChanged">
                       <option :value="false">选择取样值类型</option>
