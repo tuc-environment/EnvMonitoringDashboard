@@ -49,13 +49,13 @@
             class="mt-5 d-flex justify-content-center mb-2"
             style="color: rgba(0, 0, 0, 0.5); font-size: 0.99rem"
           >
-            <a
+            <!-- <a
               class="mx-2 small"
               style="cursor: pointer; text-decoration: none"
               href="https://www.tjcu.edu.cn/"
               target="_blank"
               >天津商业大学 <i class="bi bi-box-arrow-up-right"></i
-            ></a>
+            ></a> -->
             <a
               class="mx-2 small"
               style="cursor: pointer; text-decoration: none"
