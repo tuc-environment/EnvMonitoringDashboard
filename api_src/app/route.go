@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/gin-contrib/cors"
-	"github.com/go-co-op/gocron"
 
 	_ "EnvMonitoringDashboard/api_src/docs"
 
@@ -80,20 +79,20 @@ func NewEngine(
 	// append docs
 	e.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	scheduler := gocron.NewScheduler(time.UTC)
-	scheduler.Cron("10,40 * * * *").Do(func() {
-		logSugar := log.Sugar()
-		defer logSugar.Sync()
-		logSugar.Infoln("trigger cron job at ", time.Now().Format("2006/01/02 15:04:05"))
-		defer func() {
-			if r := recover(); r != nil {
-				logSugar.Errorln("Recovered. Error:\n", r)
-			}
-		}()
-		// may panic if 3rd party db not available
-		cronController.Fetch()
-	})
-	scheduler.StartAsync()
+	// scheduler := gocron.NewScheduler(time.UTC)
+	// scheduler.Cron("10,40 * * * *").Do(func() {
+	// 	logSugar := log.Sugar()
+	// 	defer logSugar.Sync()
+	// 	logSugar.Infoln("trigger cron job at ", time.Now().Format("2006/01/02 15:04:05"))
+	// 	defer func() {
+	// 		if r := recover(); r != nil {
+	// 			logSugar.Errorln("Recovered. Error:\n", r)
+	// 		}
+	// 	}()
+	// 	// may panic if 3rd party db not available
+	// 	cronController.Fetch()
+	// })
+	// scheduler.StartAsync()
 
 	return e, nil
 }

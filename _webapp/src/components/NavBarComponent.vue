@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg" style="z-index: 1000">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">
-        <div
+        <!-- <div
           style="
             border: 0px solid white;
             border-radius: 4px;
@@ -13,7 +13,7 @@
             height: 30px;
           "
           class="d-inline-block align-top"
-        ></div>
+        ></div> -->
         <div
           style="
             border: 0px solid white;

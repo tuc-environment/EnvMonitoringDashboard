@@ -5,13 +5,14 @@
     <div class="container">
       <div class="mx-auto my-5 login py-3 px-5">
         <div class="d-flex justify-content-center w-100">
-          <img class="logo" src="/logo.png" />
+          <!-- <img class="logo" src="/logo.png" /> -->
           <img class="logo" src="/diangong-logo.png" />
           <img class="logo" src="/tianjin-logo.png" />
         </div>
 
         <h2 class="mt-3 text-center">光伏发电生态设计评估系统</h2>
-        <div class="text-center">天津商业大学 | 中科院电工研究所 | 天津大学</div>
+        <!-- <div class="text-center">天津商业大学 | 中科院电工研究所 | 天津大学</div> -->
+        <div class="text-center">中科院电工研究所 | 天津大学</div>
 
         <!-- <div class="my-3 mb-5 text-center">
           新用户？<RouterLink to="/register" class="register-link">注册账号</RouterLink>
@@ -84,7 +85,7 @@ import BackgroundComponent from '@/components/BackgroundComponent.vue'
 import httpclient from '@/http-client'
 import DashboardLayout from '@/layouts/DashboardLayout.vue'
 import { ref } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 const errorMsg = ref('')
 const username = ref('')

@@ -15,12 +15,13 @@
             <div style="font-size: 4rem">
               <strong>联系我们</strong>
             </div>
-            <div style="font-size: 1.2rem">天津商业大学 | 中科院电工研究所 | 天津大学</div>
+            <!-- <div style="font-size: 1.2rem">天津商业大学 | 中科院电工研究所 | 天津大学</div> -->
+            <div style="font-size: 1.2rem">中科院电工研究所 | 天津大学</div>
           </div>
         </div>
       </div>
 
-      <div class="container my-5">
+      <!-- <div class="container my-5">
         <div class="row align-items-center my-3">
           <div class="col-md-6 my-2 text-center">
             <img class="rounded w-100" src="/tianjin-map.png" style="aspect-ratio: 16/9" />
@@ -41,7 +42,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <div class="container my-5">
         <div class="row align-items-center my-3">
@@ -91,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import DashboardLayout from '@/layouts/DashboardLayout.vue'
+import DashboardLayout from '@/layouts/DashboardLayout.vue';
 </script>
 
 <style scoped>

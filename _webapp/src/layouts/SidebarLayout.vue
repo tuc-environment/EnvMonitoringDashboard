@@ -31,12 +31,12 @@
           @click="open('/')"
         />
 
-        <SideBarButtonComponent
+        <!-- <SideBarButtonComponent
           name="天津商业大学"
           icon="bi-info-circle"
           right-icon="bi-box-arrow-up-right"
           @click="open('https://www.tjcu.edu.cn/')"
-        />
+        /> -->
 
         <SideBarButtonComponent
           name="中国科学院电工研究所"

@@ -5,7 +5,7 @@
     <div class="container">
       <div class="mx-auto my-5 login py-3 px-5">
         <div class="d-flex justify-content-center w-100">
-          <img class="logo" src="/logo.png" />
+          <!-- <img class="logo" src="/logo.png" /> -->
           <img class="logo" src="/diangong-logo.png" />
           <img class="logo" src="/tianjin-logo.png" />
         </div>
@@ -58,13 +58,13 @@
             class="mt-5 d-flex justify-content-center mb-2"
             style="color: rgba(0, 0, 0, 0.5); font-size: 0.99rem"
           >
-            <a
+            <!-- <a
               class="mx-2 small"
               style="cursor: pointer; text-decoration: none"
               href="https://www.tjcu.edu.cn/"
               target="_blank"
               >天津商业大学 <i class="bi bi-box-arrow-up-right"></i
-            ></a>
+            ></a> -->
             <a
               class="mx-2 small"
               style="cursor: pointer; text-decoration: none"

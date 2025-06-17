@@ -10,10 +10,9 @@ import (
 //go:embed _webapp/dist
 var embedWebappFS embed.FS
 
-//	@title			天津商业大学环境监测系统API
+//	@title			环境监测系统API
 //	@version		1.0
-//	@description	天津商业大学环境监测系统API文档
-//	@termsOfService	https://www.tjcu.edu.cn/
+//	@description	环境监测系统API文档
 
 //	@host		localhost:8080
 //	@BasePath	/api
